@@ -1,5 +1,11 @@
 # Occupant Thermostat Int: Simulation
 
+Install requirements:
+
+```console
+pip install -r requirements.txt
+```
+
 ## EnergyPlus Simulation
 
 Execute the following if buildings have not already been set in [settings.yaml](settings.yaml) otherwise, skip this step. Will need to have a `DOE_XStock` database:
