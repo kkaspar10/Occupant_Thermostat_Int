@@ -33,6 +33,17 @@ building_selection:
     - Cluster_1_SPs
     - Cluster_1_SPs
     - Cluster_1_SPs
+    bldg_ids:
+    - 430942
+    - 288697
+    - 387179
+    - 319918
+    - 525859
+    - 216895
+    - 425540
+    - 79194
+    - 508889
+    - 460412
 energyplus_run_period:
     begin_month: 1
     begin_day_of_month: 1
