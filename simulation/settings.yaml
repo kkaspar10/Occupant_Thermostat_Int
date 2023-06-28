@@ -1,0 +1,42 @@
+seed: 0
+idd_filepath: /Applications/EnergyPlus-9-6-0/PreProcess/IDFVersionUpdater/V9-6-0-Energy+.idd
+database_filepath: /Users/kingsleyenweye/Desktop/INTELLIGENT_ENVIRONMENT_LAB/doe_xstock/database.db
+resstock_dataset:
+    dataset_type: resstock
+    weather_data: amy2018
+    year_of_publication: 2021
+    release: 1
+location: VT, Chittenden County
+months:
+- 1
+- 2
+- 3
+years:
+    train:
+    - 2020
+    - 2021
+    test:
+    - 2022
+partial_load_iterations: 4
+max_workers: 5
+building_selection:
+    count: 10
+    unmet_hour_proportion_limit: 0.03424657534246575
+    setpoint_ids:
+    - Cluster_0_SPs
+    - Cluster_0_SPs
+    - Cluster_0_SPs
+    - Cluster_0_SPs
+    - Cluster_0_SPs
+    - Cluster_1_SPs
+    - Cluster_1_SPs
+    - Cluster_1_SPs
+    - Cluster_1_SPs
+    - Cluster_1_SPs
+energyplus_run_period:
+    begin_month: 1
+    begin_day_of_month: 1
+    begin_year: 2018
+    end_month: 3
+    end_day_of_month: 31
+    end_year: 2018
