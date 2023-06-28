@@ -181,3 +181,7 @@ examples/*
 reward_exploration_simulation_output/
 reward_exploration.sh
 test_notebooks/
+
+# occupant-thermostat-int
+simulation/data/energyplus_simulation/*/*/*
+!simulation/data/energyplus_simulation/*/*/*-partial.err

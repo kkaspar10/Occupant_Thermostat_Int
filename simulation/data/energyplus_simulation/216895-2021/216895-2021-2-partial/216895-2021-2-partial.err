@@ -1,0 +1,136 @@
+Program Version,EnergyPlus, Version 9.6.0-f420c06a69, YMD=2023.06.28 13:18,
+   ** Warning ** Timestep: Requested number (1) is less than the suggested minimum of 4.
+   **   ~~~   ** Please see entry for Timestep in Input/Output Reference for discussion of considerations.
+   ** Warning ** RunPeriod: object=RUN PERIOD 1, start weekday (MONDAY) does not match the start year (2021), corrected to FRIDAY.
+   ** Warning ** Weather file location will be used rather than entered (IDF) Location object.
+   **   ~~~   ** ..Location object=BURLINGTON INTERNATIONAL AP_VT_USA
+   **   ~~~   ** ..Weather File Location=045d47N-073d75W - - NASA/POWER WMO#=-
+   **   ~~~   ** ..due to location differences, Latitude difference=[1.00] degrees, Longitude difference=[0.60] degrees.
+   **   ~~~   ** ..Time Zone difference=[0.0] hour(s), Elevation difference=[62.41] percent, [63.03] meters.
+   ** Warning ** For Schedule:File="CLOTHES_DRYER_EXHAUST", Blank Schedule Type Limits Name input -- will not be validated.
+   ************* Note that the following warning(s) may/will occur if you have not enclosed your zone completely.
+   ** Warning ** Entered Zone Volumes differ from calculated zone volume(s).
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** CalculateZoneVolume: 1 zone is not fully enclosed. For more details use:  Output:Diagnostics,DisplayExtrawarnings; 
+   ** Warning ** The Standard Ratings is calculated for Coil:Cooling:DX:SingleSpeed = RES AC COOLING COIL but not at the AHRI test condition due to curve out of bound.
+   **   ~~~   **  Review the Standard Ratings calculations in the Engineering Reference for this coil type. Also, use Output:Diagnostics, DisplayExtraWarnings for further guidance.
+   ** Warning ** Check input. Pump nominal power or motor efficiency is set to 0, for pump=PUMP VARIABLE SPEED 1
+   ************* Testing Individual Branch Integrity
+   ************* All Branches passed integrity testing
+   ************* Testing Individual Supply Air Path Integrity
+   ************* All Supply Air Paths passed integrity testing
+   ************* Testing Individual Return Air Path Integrity
+   ************* All Return Air Paths passed integrity testing
+   ************* No node connection errors were found.
+   ************* Beginning Simulation
+   ** Warning ** CalcEquipmentFlowRates: Target water temperature is greater than the hot water temperature
+   **   ~~~   **  During Warmup, Environment=RUN PERIOD 1, at Simulation time=01/01 06:45 - 07:00
+   **   ~~~   ** ...target water temperature       = 43.333 C
+   **   ~~~   ** ...hot water temperature       = 40.797 C
+   **   ~~~   ** ...Note: target water temperature should be less than or equal to the hot water temperature
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "RES AC COOLING COIL" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -11.10
+   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/01 01:00 - 01:05
+   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="RES AC COOLING COIL" - Air volume flow rate per watt of rated total cooling capacity is out of range at 6.728E-005 m3/s/W.
+   **   ~~~   **  Environment=RUN PERIOD 1, at Simulation time=01/01 19:00 - 20:00
+   **   ~~~   ** Expected range for VolumeFlowPerRatedTotalCapacity=[2.684E-005--6.713E-005]
+   **   ~~~   ** Possible causes include inconsistent air flow rates in system components,
+   **   ~~~   ** or variable air volume [VAV] system using incorrect coil type.
+   ** Warning ** CalcEquipmentFlowRates: Target water temperature is greater than the hot water temperature
+   **   ~~~   **  Environment=RUN PERIOD 1, at Simulation time=01/03 08:00 - 09:00
+   **   ~~~   ** ...target water temperature       = 43.333 C
+   **   ~~~   ** ...hot water temperature       = 37.673 C
+   **   ~~~   ** ...Note: target water temperature should be less than or equal to the hot water temperature
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: Target water temperature is greater than the hot water temperature
+   **   ~~~   **  Environment=RUN PERIOD 1, at Simulation time=01/03 21:00 - 22:00
+   **   ~~~   ** ...target water temperature       = 43.333 C
+   **   ~~~   ** ...hot water temperature       = 38.629 C
+   **   ~~~   ** ...Note: target water temperature should be less than or equal to the hot water temperature
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: Target water temperature is greater than the hot water temperature
+   **   ~~~   **  Environment=RUN PERIOD 1, at Simulation time=01/04 10:00 - 11:00
+   **   ~~~   ** ...target water temperature       = 52.666 C
+   **   ~~~   ** ...hot water temperature       = 50.564 C
+   **   ~~~   ** ...Note: target water temperature should be less than or equal to the hot water temperature
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= "U.S. AVG  COMMERCIAL-ELECTRICITY" has no energy cost. 
+   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.
+   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= "U.S. AVG  COMMERCIAL-DISTILLATE OIL" has no energy cost. 
+   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.
+   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= "U.S. AVG  COMMERCIAL-RESIDUAL OIL" has no energy cost. 
+   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.
+   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= "U.S. AVG  COMMERCIAL-NATURAL GAS" has no energy cost. 
+   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.
+   ** Warning ** The resource referenced by LifeCycleCost:UsePriceEscalation= "U.S. AVG  COMMERCIAL-COAL" has no energy cost. 
+   **   ~~~   ** ... It is likely that the wrong resource is used. The resource should match the meter used in Utility:Tariff.
+   ************* Simulation Error Summary *************
+   ** Warning ** The following Report Variables were requested but not generated -- check.rdd file
+   **   ~~~   ** Either the IDF did not contain these elements, the variable name is misspelled,
+   **   ~~~   ** or the requested variable is an advanced output which requires Output : Diagnostics, DisplayAdvancedReportVariables;
+   ************* Key=*, VarName=ZONE IDEAL LOADS ZONE SENSIBLE COOLING ENERGY, Frequency=TimeStep
+   ************* Key=*, VarName=ZONE IDEAL LOADS ZONE SENSIBLE HEATING ENERGY, Frequency=TimeStep
+   ************* Key=*, VarName=ZONE IDEAL LOADS ZONE SENSIBLE COOLING RATE, Frequency=TimeStep
+   ************* Key=*, VarName=ZONE IDEAL LOADS ZONE SENSIBLE HEATING RATE, Frequency=TimeStep
+   ************* Key=*, VarName=ZONE PREDICTED SENSIBLE LOAD TO SETPOINT HEAT TRANSFER ENERGY, Frequency=TimeStep
+   ************* There are 4 unused schedules in input.
+   ************* There are 84 unused week schedules in input.
+   ************* There are 56 unused day schedules in input.
+   ************* Use Output:Diagnostics,DisplayUnusedSchedules; to see them.
+   *************
+   ************* ===== Recurring Surface Error Summary =====
+   ************* The following surface error messages occurred.
+   *************
+   ************* Base Surface does not surround subsurface errors occurring...
+   ************* Check that the GlobalGeometryRules object is expressing the proper starting corner and direction [CounterClockwise/Clockwise]
+   *************
+   ** Warning ** Base surface does not surround subsurface (CHKSBS), Overlap Status=No-Overlap
+   **   ~~~   **   The base surround errors occurred 1 times.
+   **   ~~~   ** Surface "SURFACE 12" misses SubSurface "UNIT 1 - SURFACE 5 - DOOR"
+   *************
+   **   ~~~   **   The base surround errors occurred 1 times (total).
+   *************
+   *************
+   ************* ===== Recurring Error Summary =====
+   ************* The following recurring error messages occurred.
+   *************
+   *************  ** Warning ** RES SHOWER" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 2005 total times;
+   *************  **   ~~~   **   during Warmup 43 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=43.322827  Min=5.239374
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="RES AC COOLING COIL" - Low condenser dry-bulb temperature error continues...
+   *************  **   ~~~   **   This error occurred 2000 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-1.000000E-002 [C]  Min=-24.84 [C]
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="RES AC COOLING COIL" - Air volume flow rate per watt of rated total cooling capacity is out of range error continues...
+   *************  **   ~~~   **   This error occurred 15668 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=6.975436E-005  Min=6.713013E-005
+   *************
+   *************  ** Warning ** RES SINK" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 1831 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=43.325953  Min=5.239976
+   *************
+   *************  ** Warning ** RES BATH" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 305 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=43.331689  Min=5.348912
+   *************
+   *************  ** Warning ** RES CW" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 4599 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=51.393651  Min=5.248157
+   *************
+   ************* EnergyPlus Warmup Error Summary. During Warmup: 1 Warning; 0 Severe Errors.
+   ************* EnergyPlus Sizing Error Summary. During Sizing: 0 Warning; 0 Severe Errors.
+   ************* EnergyPlus Completed Successfully-- 26427 Warning; 0 Severe Errors; Elapsed Time=00hr 00min  8.31sec
