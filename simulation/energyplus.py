@@ -20,6 +20,8 @@ ENERGYPLUS_SIMULATION_OUTPUT_DIRECTORY = os.path.join(DATA_DIRECTORY, 'energyplu
 LSTM_TRAIN_DATA_DIRECTORY = os.path.join(DATA_DIRECTORY, 'lstm_train_data')
 
 def simulate():
+    """EnergyPlus simulations for selected buildings."""
+    
     settings = get_settings()
     setpoint_data = pd.read_csv(os.path.join('data', 'SP_Averages_by_Cluster.csv'))
 
