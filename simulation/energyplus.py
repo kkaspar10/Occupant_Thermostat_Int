@@ -130,7 +130,7 @@ def simulate():
             'cooling_load',
             'heating_load',
             'setpoint'
-        ]].to_csv(os.path.join(LSTM_TRAIN_DATA_DIRECTORY, f'{bldg_id}.csv'), index=False)
+        ]].sort_values(['resstock_building_id', 'simulation_reference', 'year', 'timestep']).to_csv(os.path.join(LSTM_TRAIN_DATA_DIRECTORY, f'{bldg_id}.csv'), index=False)
 
 def select_buildings():
     metadata = get_valid_buildings()
