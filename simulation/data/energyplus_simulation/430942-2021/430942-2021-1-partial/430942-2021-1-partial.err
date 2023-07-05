@@ -1,4 +1,4 @@
-Program Version,EnergyPlus, Version 9.6.0-f420c06a69, YMD=2023.06.28 13:13,
+Program Version,EnergyPlus, Version 9.6.0-f420c06a69, YMD=2023.06.30 12:56,
    ** Warning ** Timestep: Requested number (1) is less than the suggested minimum of 4.
    **   ~~~   ** Please see entry for Timestep in Input/Output Reference for discussion of considerations.
    ** Warning ** RunPeriod: object=RUN PERIOD 1, start weekday (MONDAY) does not match the start year (2021), corrected to FRIDAY.
@@ -95,4 +95,4 @@ Program Version,EnergyPlus, Version 9.6.0-f420c06a69, YMD=2023.06.28 13:13,
    *************
    ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.
    ************* EnergyPlus Sizing Error Summary. During Sizing: 0 Warning; 0 Severe Errors.
-   ************* EnergyPlus Completed Successfully-- 5695 Warning; 0 Severe Errors; Elapsed Time=00hr 00min  6.31sec
+   ************* EnergyPlus Completed Successfully-- 5695 Warning; 0 Severe Errors; Elapsed Time=00hr 00min  4.92sec

@@ -7,6 +7,7 @@ import shutil
 import sqlite3
 import sys
 from doe_xstock.database import SQLiteDatabase
+from doe_xstock.data import CityLearnData
 from doe_xstock.lstm import TrainData
 from doe_xstock.utilities import get_data_from_path, read_json, write_data, write_json
 import pandas as pd
@@ -18,22 +19,26 @@ OSM_DIRECTORY = os.path.join(DATA_DIRECTORY, 'osm')
 SCHEDULES_DIRECTORY = os.path.join(DATA_DIRECTORY, 'schedules')
 ENERGYPLUS_SIMULATION_OUTPUT_DIRECTORY = os.path.join(DATA_DIRECTORY, 'energyplus_simulation')
 LSTM_TRAIN_DATA_DIRECTORY = os.path.join(DATA_DIRECTORY, 'lstm_train_data')
+SCHEMA_DIRECTORY = os.path.join(DATA_DIRECTORY, 'schema')
 
 def simulate():
+    """Runs EnergyPlus simulations for selected buildings and sets LSTM train and CityLearn input data."""
+    
     settings = get_settings()
     setpoint_data = pd.read_csv(os.path.join('data', 'SP_Averages_by_Cluster.csv'))
 
-    if os.path.isdir(LSTM_TRAIN_DATA_DIRECTORY):
-        shutil.rmtree(LSTM_TRAIN_DATA_DIRECTORY)
-    else:
-        pass
+    for d in [LSTM_TRAIN_DATA_DIRECTORY, SCHEMA_DIRECTORY]:
+        if os.path.isdir(d):
+            shutil.rmtree(d)
+        else:
+            pass
 
-    os.makedirs(LSTM_TRAIN_DATA_DIRECTORY, exist_ok=True)
+        os.makedirs(d, exist_ok=True)
 
     for bldg_id, setpoint_id in zip(settings['building_selection']['bldg_ids'], settings['building_selection']['setpoint_ids']):
         data_list = []
 
-        for year in settings['years']['train']:
+        for year in settings['years']['train'] + settings['years']['test']:
             epw = get_data_from_path(os.path.join('data', 'EPW_Files', f'WeatherFile_EPW_Full_{year}.epw'))
             osm = get_data_from_path(os.path.join(OSM_DIRECTORY, f'{bldg_id}.osm'))
             schedules = read_json(os.path.join(SCHEDULES_DIRECTORY, f'{bldg_id}.json'))
@@ -69,14 +74,39 @@ def simulate():
                 output_directory=output_directory,
             )
             results = ltd.simulate_partial_loads()
+            
+            # collect lstm train data for current year
+            if year in settings['years']['train']:
+                for reference, data in results.items():
+                    data = pd.DataFrame(data)
+                    data['resstock_building_id'] = bldg_id
+                    data['simulation_reference'] = int(reference.split('-')[-2])
+                    data['year'] = year
+                    data_list.append(data)
+            else:
+                pass
 
-            for reference, data in results.items():
-                data = pd.DataFrame(data)
-                data['resstock_building_id'] = bldg_id
-                data['simulation_reference'] = int(reference.split('-')[-2])
-                data['year'] = year
-                data_list.append(data)
+            # write CityLearn input data
+            year_schema_directory = os.path.join(SCHEMA_DIRECTORY, str(year))
+            os.makedirs(year_schema_directory, exist_ok=True)
+            data = CityLearnData.get_building_data(**{
+                'energyplus_output_directory': ENERGYPLUS_SIMULATION_OUTPUT_DIRECTORY,
+                'simulation_id': simulation_id,
+                'bldg_id': bldg_id,
+                **settings['resstock_dataset']
+            })
+            data['Solar Generation (W/kW)'] = 0.0
+            data.to_csv(os.path.join(year_schema_directory, f'{bldg_id}.csv'), index=False)
 
+            weather_data_filepath = os.path.join(year_schema_directory, 'weather.csv')
+
+            if not os.path.isfile(weather_data_filepath):
+                weather_data = pd.read_parquet(os.path.join(DATA_DIRECTORY, 'CityLearn_Weather_Files', f'weather_{year}_Final.parquet'))
+                weather_data.to_csv(weather_data_filepath, index=False)
+            else:
+                pass
+
+        # write lstm train data
         data = pd.concat(data_list, ignore_index=True, sort=False)
         data['location'] = settings['location']
         data['ecobee_building_id'] = None
@@ -100,7 +130,7 @@ def simulate():
             'cooling_load',
             'heating_load',
             'setpoint'
-        ]].to_csv(os.path.join(LSTM_TRAIN_DATA_DIRECTORY, f'{bldg_id}.csv'), index=False)
+        ]].sort_values(['resstock_building_id', 'simulation_reference', 'year', 'timestep']).to_csv(os.path.join(LSTM_TRAIN_DATA_DIRECTORY, f'{bldg_id}.csv'), index=False)
 
 def select_buildings():
     metadata = get_valid_buildings()
@@ -195,7 +225,7 @@ def set_simulation_input():
 
     settings = get_settings()
 
-    for d in [OSM_DIRECTORY, SCHEDULES_DIRECTORY, LSTM_TRAIN_DATA_DIRECTORY]:
+    for d in [OSM_DIRECTORY, SCHEDULES_DIRECTORY, LSTM_TRAIN_DATA_DIRECTORY, SCHEMA_DIRECTORY]:
         if os.path.isdir(d):
             shutil.rmtree(d)
         else:
