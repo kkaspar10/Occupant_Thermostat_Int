@@ -10,6 +10,11 @@
 ## Just one curve for each type of occupant is included for simplification,
 ## as generally more of the SP interactions were SP increases in winter.
 
+## These functions calculate a probability of interaction. In deployment, a random number needs to be generated.
+## If the random number is less than the probability, then the action is taken. For example, if the probability
+## is calculated as 0.20 (20%) and the random number is 14, then that means the action is taken. Thus, a 
+## random number between 1 and 100 must be generated and compared to the probability at each time step.
+
 ## All functions are a probability of T_indoor rounded to the nearest 0.5 degrees C
 
 def calculate_prob(a, b, T_indoor_C_rounded):
@@ -18,7 +23,7 @@ def calculate_prob(a, b, T_indoor_C_rounded):
 ##Probability of a SP Increase equations:
 
 ##Occupant Type 1: Tolerant (Generally prefers lower indoor temperatures in winter)
-a_tolerant_home = 14.13
+a_tolerant_home = 28.22
 b_tolerant_home = -1.64
 
 a_tolerant_away = 15.24
