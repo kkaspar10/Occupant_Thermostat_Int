@@ -8,6 +8,7 @@ from citylearn.base import Environment
 from citylearn.data import EnergySimulation, CarbonIntensity, Pricing, Weather
 from citylearn.dynamics import Dynamics, LSTMDynamics
 from citylearn.energy_model import Battery, ElectricHeater, HeatPump, PV, StorageTank
+from citylearn.occupant import Occupant, LogisticRegressionOccupant
 from citylearn.preprocessing import Normalize, PeriodicNormalization
 
 class Building(Environment):
@@ -82,7 +83,7 @@ class Building(Environment):
         self.periodic_normalized_observation_space_limits = None
         self.observation_space = self.estimate_observation_space()
         self.action_space = self.estimate_action_space()
-        self.__set_without_partial_load_variables()
+        self.__set_dynamic_variables()
 
         arg_spec = inspect.getfullargspec(super().__init__)
         kwargs = {
@@ -541,7 +542,7 @@ class Building(Environment):
     @energy_simulation.setter
     def energy_simulation(self, energy_simulation: EnergySimulation):
         self.__energy_simulation = energy_simulation
-        self.__set_without_partial_load_variables()
+        self.__set_dynamic_variables()
 
     @weather.setter
     def weather(self, weather: Weather):
@@ -795,7 +796,12 @@ class Building(Environment):
     def update_dynamics(self):
         r"""Update building dynamics e.g. space indoor temperature, relative humidity, etc."""
 
-        return
+        raise NotImplementedError
+    
+    def update_setpoints(self):
+        """Update building indoor temperature dry-bulb temperature, humidity, etc setpoint using occupant interaction model."""
+
+        raise NotImplementedError
 
     def update_cooling(self, cooling_device_action: float, cooling_storage_action: float):
         r"""Update cooling demand and charge/discharge `cooling_storage` for next time step.
@@ -809,7 +815,10 @@ class Building(Environment):
         """
 
         if cooling_device_action is not None and not math.isnan(cooling_device_action):
-            self.update_cooling_demand(cooling_device_action)
+            try:
+                self.update_cooling_demand(cooling_device_action)
+            except NotImplementedError:
+                pass
         else:
             pass
 
@@ -825,7 +834,7 @@ class Building(Environment):
     def update_cooling_demand(self, action: float):
         r"""Update space cooling demand for next time step."""
 
-        return
+        raise NotImplementedError
 
     def update_heating(self, heating_device_action: float, heating_storage_action: float):
         r"""Update heating demand and charge/discharge `heating_storage` for next time step.
@@ -839,7 +848,10 @@ class Building(Environment):
         """
 
         if heating_device_action is not None and not math.isnan(heating_device_action):
-            self.update_heating_demand(heating_device_action)
+            try:
+                self.update_heating_demand(heating_device_action)
+            except NotImplementedError:
+                pass
         else:
             pass
 
@@ -858,7 +870,7 @@ class Building(Environment):
     def update_heating_demand(self, action: float):
         r"""Update space heating demand for next time step."""
 
-        return
+        raise NotImplementedError
 
     def update_dhw(self, action: float):
         r"""Charge/discharge `dhw_storage`.
@@ -1111,13 +1123,14 @@ class Building(Environment):
  
         return spaces.Box(low=np.array(low_limit, dtype='float32'), high=np.array(high_limit, dtype='float32'))
     
-    def __set_without_partial_load_variables(self):
+    def __set_dynamic_variables(self):
         """Set temperature and loads at their ideal state when neither 
         cooling nor heating device is controlled to affect temperature."""
 
         self.__cooling_demand_without_partial_load = self.energy_simulation.cooling_demand.copy()
         self.__heating_demand_without_partial_load = self.energy_simulation.heating_demand.copy()
         self.__indoor_dry_bulb_temperature_without_partial_load = self.energy_simulation.indoor_dry_bulb_temperature.copy()
+        self.__indoor_dry_bulb_temperature_set_point = self.energy_simulation.indoor_dry_bulb_temperature_set_point.copy()
 
     def autosize_cooling_device(self, **kwargs):
         """Autosize `cooling_device` `nominal_power` to minimum power needed to always meet `cooling_demand`.
@@ -1251,6 +1264,7 @@ class Building(Environment):
         self.energy_simulation.cooling_demand = self.__cooling_demand_without_partial_load.copy()
         self.energy_simulation.heating_demand = self.__heating_demand_without_partial_load.copy()
         self.energy_simulation.indoor_dry_bulb_temperature = self.__indoor_dry_bulb_temperature_without_partial_load.copy()
+        self.energy_simulation.indoor_dry_bulb_temperature_set_point = self.__indoor_dry_bulb_temperature_set_point.copy()
 
     def update_variables(self):
         """Update cooling, heating, dhw and net electricity consumption as well as net electricity consumption cost and carbon emissions."""
@@ -1296,7 +1310,7 @@ class Building(Environment):
         self.__net_electricity_consumption_emission.append(max(0, net_electricity_consumption*self.carbon_intensity.carbon_intensity[self.time_step]))
 
 class DynamicsBuilding(Building):
-    r"""Base class for temperature dynamic building.
+    r"""Base class for temperature dynamics building.
 
     Parameters
     ----------
@@ -1375,7 +1389,7 @@ class LSTMDynamicsBuilding(DynamicsBuilding):
         """Update the dynamics model input time series, Advance all energy storage and electric devices,
         and PV to next `time_step` then predict and update indoor dry-bulb temperature for new `time_step`."""
 
-        self.dynamics._model_input = self.update_model_input()
+        self.dynamics._model_input = self.update_dynamics_input()
         super().next_time_step()
 
         if self.simulate_dynamics:
@@ -1413,7 +1427,7 @@ class LSTMDynamicsBuilding(DynamicsBuilding):
         
         # preprocess input
         key = 'indoor_dry_bulb_temperature'
-        model_input = self.update_model_input()
+        model_input = self.update_dynamics_input()
 
         for i, k in enumerate(self.dynamics.input_observation_names):
             if k == key:
@@ -1450,7 +1464,7 @@ class LSTMDynamicsBuilding(DynamicsBuilding):
         # so the cooling demand update and this temperature update are set at the same time step
         self.energy_simulation.indoor_dry_bulb_temperature[self.time_step] = indoor_dry_bulb_temperature.item()
 
-    def update_model_input(self) -> List[List[float]]:
+    def update_dynamics_input(self) -> List[List[float]]:
         """Updates and returns the input time series for the dynmaics prediction model.
 
         Updates the model input with the input variables for the current time step. 
@@ -1557,3 +1571,33 @@ class LSTMDynamicsBuilding(DynamicsBuilding):
 
         else:
             pass
+
+class OccupantInteractionBuilding(LSTMDynamicsBuilding):
+    def __init__(self, *args, occupant: Occupant, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.occupant = occupant
+
+    def next_time_step(self):
+        super().next_time_step()
+        self.occupant.next_time_step()
+
+        if self.simulate_dynamics:
+            self.update_setpoints()
+        else:
+            pass   
+
+class LogisticRegressionOccupantInteractionBuilding(OccupantInteractionBuilding):
+    def __init__(self, *args, occupant: LogisticRegressionOccupant, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.occupant = occupant
+
+    def update_setpoints(self):
+        current_setpoint = self.energy_simulation.indoor_dry_bulb_temperature_set_point[self.time_step]
+        previous_setpoint = self.energy_simulation.indoor_dry_bulb_temperature_set_point[self.time_step - 1]
+        current_temperature = self.energy_simulation.indoor_dry_bulb_temperature[self.time_step]
+        previous_temperature = self.energy_simulation.indoor_dry_bulb_temperature[self.time_step - 1]
+        interaction_input = current_temperature
+        delta_input = [current_setpoint, previous_setpoint, previous_temperature - previous_setpoint]
+        model_input = (interaction_input, delta_input)       
+        setpoint_delta = self.occupant.predict(model_input)
+        self.energy_simulation.indoor_dry_bulb_temperature[self.time_step] = current_setpoint + setpoint_delta   
