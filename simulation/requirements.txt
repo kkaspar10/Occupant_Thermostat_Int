@@ -1,3 +1,2 @@
 git+https://github.com/intelligent-environments-lab/doe_xstock.git
-ipykernel==6.15.0
 pyyaml
