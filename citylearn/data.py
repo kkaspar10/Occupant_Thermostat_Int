@@ -251,4 +251,11 @@ class CarbonIntensity:
     """
 
     def __init__(self, carbon_intensity: Iterable[float]):
-        self.carbon_intensity = np.array(carbon_intensity, dtype = float)
+        self.carbon_intensity = np.array(carbon_intensity, dtype=float)
+
+class LogisticRegressionOccupantParameters:
+    def __init__(self, a: Iterable[float], b: Iterable[float]):
+        # setting dynamic parameters
+        # (can we give a and b another name that is clearer about what they represent?)
+        self.a = np.array(a, dtype=float)
+        self.b = np.array(b, dtype=float)
