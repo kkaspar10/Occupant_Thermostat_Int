@@ -1,10 +1,8 @@
 import inspect
 import logging
-import os
-from pathlib import Path
-import pickle
-from typing import Any, List, Mapping, Tuple, Union
+from typing import Any, List, Mapping
 from gym import spaces
+import numpy as np
 from citylearn.base import Environment
 from citylearn.citylearn import CityLearnEnv
 
@@ -31,7 +29,8 @@ class Agent(Environment):
         self.observation_names = self.env.observation_names
         self.observation_space = self.env.observation_space
         self.action_space = self.env.action_space
-        self.building_information = self.env.get_building_information()
+        self.episode_time_steps = self.env.time_steps
+        self.building_metadata = self.env.get_metadata()['buildings']
 
         arg_spec = inspect.getfullargspec(super().__init__)
         kwargs = {
@@ -58,12 +57,16 @@ class Agent(Environment):
         """Format of valid actions."""
 
         return self.__action_space
+    
+    @property
+    def episode_time_steps(self) -> int:
+        return self.__episode_time_steps
 
     @property
-    def building_information(self) -> List[Mapping[str, Any]]:
-        """Building metadata."""
+    def building_metadata(self) -> List[Mapping[str, Any]]:
+        """Building(s) metadata."""
 
-        return self.__building_information
+        return self.__building_metadata
 
     @property
     def action_dimension(self) -> List[int]:
@@ -89,29 +92,28 @@ class Agent(Environment):
     def action_space(self, action_space: List[spaces.Box]):
         self.__action_space = action_space
 
-    @building_information.setter
-    def building_information(self, building_information: List[Mapping[str, Any]]):
-        self.__building_information = building_information
+    @episode_time_steps.setter
+    def episode_time_steps(self, episode_time_steps: int):
+        """Number of time steps in one episode."""
+
+        self.__episode_time_steps = episode_time_steps
+
+    @building_metadata.setter
+    def building_metadata(self, building_metadata: List[Mapping[str, Any]]):
+        self.__building_metadata = building_metadata
 
     @actions.setter
     def actions(self, actions: List[List[Any]]):
         for i in range(len(self.action_space)):
             self.__actions[i][self.time_step] = actions[i]
 
-    def learn(
-            self, episodes: int = None, keep_env_history: bool = None, env_history_directory: Union[str, Path] = None, 
-            deterministic: bool = None, deterministic_finish: bool = None, logging_level: int = None
-        ):
+    def learn(self, episodes: int = None, deterministic: bool = None, deterministic_finish: bool = None, logging_level: int = None):
         """Train agent.
 
         Parameters
         ----------
         episodes: int, default: 1
-            Number of training episode greater :math:`\ge 1`.
-        keep_env_history: bool, default: False
-            Indicator to store environment state at the end of each episode.
-        env_history_directory: Union[str, Path], optional
-            Directory to save environment history to.
+            Number of training episode :math:`\ge 1`.
         deterministic: bool, default: False
             Indicator to take deterministic actions i.e. strictly exploit the learned policy.
         deterministic_finish: bool, default: False
@@ -121,87 +123,49 @@ class Agent(Environment):
         """
         
         episodes = 1 if episodes is None else episodes
-        keep_env_history = False if keep_env_history is None else keep_env_history
         deterministic_finish = False if deterministic_finish is None else deterministic_finish
         deterministic = False if deterministic is None else deterministic
         self.__set_logger(logging_level)
 
-        if keep_env_history:
-            env_history_directory = Path(f'citylearn_learning_{self.env.uid}') if env_history_directory is None else env_history_directory
-            os.makedirs(env_history_directory, exist_ok=True)
-            
-        else:
-            pass
-
         for episode in range(episodes):
             deterministic = deterministic or (deterministic_finish and episode >= episodes - 1)
             observations = self.env.reset()
+            done = False
+            time_step = 0
+            rewards_list = []
 
-            while not self.env.done:
+            while not done:
                 actions = self.predict(observations, deterministic=deterministic)
 
                 # apply actions to citylearn_env
-                next_observations, rewards, _, _ = self.env.step(actions)
+                next_observations, rewards, done, _ = self.env.step(actions)
+                rewards_list.append(rewards)
 
                 # update
                 if not deterministic:
-                    self.update(observations, actions, rewards, next_observations, done=self.env.done)
+                    self.update(observations, actions, rewards, next_observations, done=done)
                 else:
                     pass
 
                 observations = [o for o in next_observations]
 
                 logging.debug(
-                    f'Time step: {self.env.time_step}/{self.env.time_steps - 1},'\
-                        f' Episode: {episode}/{episodes - 1},'\
+                    f'Time step: {time_step + 1}/{self.episode_time_steps},'\
+                        f' Episode: {episode + 1}/{episodes},'\
                             f' Actions: {actions},'\
                                 f' Rewards: {rewards}'
                 )
 
-            # store episode's env to disk
-            if keep_env_history:
-                self.__save_env(episode, env_history_directory)
-            else:
-                pass
+                time_step += 1
 
-    def get_env_history(self, directory: Union[str, Path], episodes: List[int] = None) -> Tuple[CityLearnEnv]:
-        """Return tuple of :py:class:`citylearn.citylearn.CityLearnEnv` objects at terminal point for simulated episodes.
-
-        Parameters
-        ----------
-        directory: Union[str, Path]
-            Directory path where :py:class:`citylearn.citylearn.CityLearnEnv` pickled files are stored.
-        episodes: List[int], optional
-            Episodes whose environment should be returned. If None, all environments for all episodes
-            are returned.
-
-        Returns
-        -------
-        env_history: Tuple[CityLearnEnv]
-            :py:class:`citylearn.citylearn.CityLearnEnv` objects.
-        """
-        
-        env_history = ()
-        episodes = sorted([
-            int(f.split(directory)[-1].split('.')[0]) for f in os.listdir(directory) if f.endswith('.pkl')
-        ]) if episodes is None else episodes
-
-        for episode in episodes:
-            filepath = os.path.join(directory, f'{int(episode)}.pkl')
-
-            with (open(filepath, 'rb')) as f:
-                env_history += (pickle.load(f),)
-
-        return env_history
-
-    def __save_env(self, episode: int, directory: Path):
-        """Save current environment state to pickle file."""
-
-        filepath = os.path.join(directory, f'{int(episode)}.pkl')
-
-        with open(filepath, 'wb') as f:
-            pickle.dump(self.env, f)
-
+            rewards = np.array(rewards_list, dtype='float')
+            rewards_summary = {
+                'min': rewards.min(axis=0),
+                'max': rewards.max(axis=0),
+                'sum': rewards.sum(axis=0),
+                'mean': rewards.mean(axis=0)
+            }
+            logging.info(f'Completed episode: {episode + 1}/{episodes}, Reward: {rewards_summary}')
 
     def predict(self, observations: List[List[float]], deterministic: bool = None) -> List[List[float]]:
         """Provide actions for current time step.

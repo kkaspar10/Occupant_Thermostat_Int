@@ -1,4 +1,5 @@
 import random
+from typing import Any, Mapping
 import uuid
 
 class Environment:
@@ -8,7 +9,7 @@ class Environment:
     ----------
     seconds_per_time_step: float, default: 3600.0
         Number of seconds in 1 `time_step` and must be set to >= 1.
-    random_seed : int
+    random_seed : int, optional
         Pseudorandom number generator seed for repeatable results.
     """
     
@@ -55,6 +56,15 @@ class Environment:
         else:
             assert seconds_per_time_step >= 1, 'seconds_per_time_step >= 1'
             self.__seconds_per_time_step = seconds_per_time_step
+
+    def get_metadata(self) -> Mapping[str, Any]:
+        """Returns general static information."""
+
+        return {
+            'uid': self.uid,
+            'random_seed': self.random_seed,
+            'seconds_per_time_step': self.seconds_per_time_step
+        }
 
     def next_time_step(self):
         r"""Advance to next `time_step` value.
