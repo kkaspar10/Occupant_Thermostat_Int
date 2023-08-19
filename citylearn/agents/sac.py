@@ -9,7 +9,7 @@ try:
 except (ModuleNotFoundError, ImportError) as e:
     raise Exception("This functionality requires you to install torch. You can install torch by : pip install torch torchvision, or for more detailed instructions please visit https://pytorch.org.")
 
-from citylearn.agents.rbc import RBC
+from citylearn.agents.rbc import RBC, BasicBatteryRBC, BasicRBC, HourRBC, OptimizedRBC
 from citylearn.agents.rlc import RLC
 from citylearn.citylearn import CityLearnEnv
 from citylearn.preprocessing import Encoder, RemoveFeature
@@ -208,7 +208,13 @@ class SAC(RLC):
         return actions
             
     def get_exploration_prediction(self, observations: List[List[float]]) -> List[List[float]]:
-        """Return randomly sampled actions from `action_space` multiplied by :attr:`action_scaling_coefficient`."""
+        """Return randomly sampled actions from `action_space` multiplied by :attr:`action_scaling_coefficient`.
+        
+        Returns
+        -------
+        actions: List[List[float]]
+            Action values.
+        """
 
         # random actions
         return [list(self.action_scaling_coefficient*s.sample()) for s in self.action_space]
@@ -285,27 +291,87 @@ class SACRBC(SAC):
     
     def __init__(self, env: CityLearnEnv, rbc: RBC = None, **kwargs: Any):
         super().__init__(env, **kwargs)
-        self.__set_rbc(rbc, **kwargs)
+        self.rbc = RBC(env, **kwargs) if rbc is None else rbc
 
-    @property
-    def rbc(self) -> RBC:
-        """:py:class:`citylearn.agents.rbc.RBC` or child class, used to select actions during exploration."""
+    def get_exploration_prediction(self, states: List[float]) -> List[float]:
+        """Return actions using :class:`RBC`.
+        
+        Returns
+        -------
+        actions: List[float]
+            Action values.
+        """
 
-        return self.__rbc
+        return self.rbc.predict(states)
     
-    def __set_rbc(self, rbc: RBC, **kwargs):
-        if rbc is None:
-            rbc = RBC(self.env, **kwargs)
-        
-        elif isinstance(rbc, RBC):
-            pass
+class SACHourRBC(SACRBC):
+    r"""Uses :py:class:`citylearn.agents.rbc.HourRBC` to select action during exploration before using :py:class:`citylearn.agents.sac.SAC`.
 
-        else:
-            rbc = rbc(self.env, **kwargs)
-        
-        self.__rbc = rbc
+    Parameters
+    ----------
+    env: CityLearnEnv
+        CityLearn environment.
+    
+    Other Parameters
+    ----------------
+    **kwargs : Any
+        Other keyword arguments used to initialize super class.
+    """
+    
+    def __init__(self, env: CityLearnEnv, **kwargs: Any):
+        super().__init__(env, **kwargs)
+        self.rbc = OptimizedRBC(env, **kwargs)
 
-    def get_exploration_prediction(self, observations: List[float]) -> List[float]:
-        """Return actions using :class:`RBC`."""
+class SACBasicRBC(SACRBC):
+    r"""Uses :py:class:`citylearn.agents.rbc.BasicRBC` to select action during exploration before using :py:class:`citylearn.agents.sac.SAC`.
 
-        return self.rbc.predict(observations)
+    Parameters
+    ----------
+    env: CityLearnEnv
+        CityLearn environment.
+    
+    Other Parameters
+    ----------------
+    **kwargs : Any
+        Other keyword arguments used to initialize super class.
+    """
+    
+    def __init__(self, env: CityLearnEnv, **kwargs: Any):
+        super().__init__(env, **kwargs)
+        self.rbc = BasicRBC(env, **kwargs)
+
+class SACOptimizedRBC(SACRBC):
+    r"""Uses :py:class:`citylearn.agents.rbc.OptimizedRBC` to select action during exploration before using :py:class:`citylearn.agents.sac.SAC`.
+
+    Parameters
+    ----------
+    env: CityLearnEnv
+        CityLearn environment.
+    
+    Other Parameters
+    ----------------
+    **kwargs : Any
+        Other keyword arguments used to initialize super class.
+    """
+    
+    def __init__(self, env: CityLearnEnv, **kwargs: Any):
+        super().__init__(env, **kwargs)
+        self.rbc = OptimizedRBC(env, **kwargs)
+
+class SACBasicBatteryRBC(SACRBC):
+    r"""Uses :py:class:`citylearn.agents.rbc.BasicBatteryRBC` to select action during exploration before using :py:class:`citylearn.agents.sac.SAC`.
+
+    Parameters
+    ----------
+    env: CityLearnEnv
+        CityLearn environment.
+    
+    Other Parameters
+    ----------------
+    **kwargs : Any
+        Other keyword arguments used to initialize super class.
+    """
+    
+    def __init__(self, env: CityLearnEnv, **kwargs: Any):
+        super().__init__(env, **kwargs)
+        self.rbc = BasicBatteryRBC(env, **kwargs)

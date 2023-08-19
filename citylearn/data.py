@@ -223,13 +223,13 @@ class Pricing:
     Parameters
     ----------
     electricity_pricing : np.array
-        Electricity pricing time series in [$/kWh].
+        Electricity pricing time series in [$].
     electricity_pricing_predicted_6h : np.array
-        Electricity pricing 6 hours ahead prediction time series in [$/kWh].
+        Electricity pricing 6 hours ahead prediction time series in [$].
     electricity_pricing_predicted_12h : np.array
-        Electricity pricing 12 hours ahead prediction time series in [$/kWh].
+        Electricity pricing 12 hours ahead prediction time series in [$].
     electricity_pricing_predicted_24h : np.array
-        Electricity pricing 24 hours ahead prediction time series in [$/kWh].
+        Electricity pricing 24 hours ahead prediction time series in [$].
     """
 
     def __init__(
@@ -251,11 +251,4 @@ class CarbonIntensity:
     """
 
     def __init__(self, carbon_intensity: Iterable[float]):
-        self.carbon_intensity = np.array(carbon_intensity, dtype=float)
-
-class LogisticRegressionOccupantParameters:
-    def __init__(self, a: Iterable[float], b: Iterable[float]):
-        # setting dynamic parameters
-        # (can we give a and b another name that is clearer about what they represent?)
-        self.a = np.array(a, dtype=float)
-        self.b = np.array(b, dtype=float)
+        self.carbon_intensity = np.array(carbon_intensity, dtype = float)
