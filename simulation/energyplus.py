@@ -2,30 +2,277 @@ import argparse
 import inspect
 import os
 from pathlib import Path
-import re
 import shutil
-import sqlite3
 import sys
 from doe_xstock.database import SQLiteDatabase
 from doe_xstock.data import CityLearnData
 from doe_xstock.lstm import TrainData
 from doe_xstock.utilities import get_data_from_path, read_json, write_data, write_json
+import numpy as np
 import pandas as pd
 import yaml
+from citylearn.data import DataSet
+from occ_citylearn import OCCCityLearnEnv
 
+ROOT_DIRECTORY = os.path.join(*Path(os.path.dirname(__file__)).absolute().parts[0:-1])
+SIMULATION_ROOT_DIRECTORY = os.path.join(ROOT_DIRECTORY, 'simulation')
+DATA_DIRECTORY = os.path.join(SIMULATION_ROOT_DIRECTORY, 'data')
 DATA_DIRECTORY = os.path.join(Path(os.path.dirname(__file__)).absolute(), 'data')
-SETTINGS_FILEPATH = 'settings.yaml'
+SETTINGS_FILEPATH = os.path.join(SIMULATION_ROOT_DIRECTORY, 'settings.yaml')
 OSM_DIRECTORY = os.path.join(DATA_DIRECTORY, 'osm')
 SCHEDULES_DIRECTORY = os.path.join(DATA_DIRECTORY, 'schedules')
 ENERGYPLUS_SIMULATION_OUTPUT_DIRECTORY = os.path.join(DATA_DIRECTORY, 'energyplus_simulation')
 LSTM_TRAIN_DATA_DIRECTORY = os.path.join(DATA_DIRECTORY, 'lstm_train_data')
+EPW_DIRECTORY = os.path.join(DATA_DIRECTORY, 'EPW_Files')
+CITYLEARN_WEATHER_DATA_DIRECTORY = os.path.join(DATA_DIRECTORY, 'CityLearn_Weather_Files')
+# LSTM_MODEL_DIRECTORY = os.path.join(DATA_DIRECTORY, 'lstm_pth')
+LSTM_MODEL_DIRECTORY = os.path.join('/Users/kingsleyenweye/Library/CloudStorage/GoogleDrive-nweye@utexas.edu/My Drive/citylearn_v2/LSTM model')
+INTERACTION_MODEL_DIRECTORY = os.path.join(ROOT_DIRECTORY, 'citylearn', 'Interaction_Models')
 SCHEMA_DIRECTORY = os.path.join(DATA_DIRECTORY, 'schema')
+
+def build_schema():
+    dynamics_normalization_minimum = pd.read_csv(os.path.join(LSTM_MODEL_DIRECTORY, 'normalization_minimum.csv'), index_col=0)
+    dynamics_normalization_maximum = pd.read_csv(os.path.join(LSTM_MODEL_DIRECTORY, 'normalization_maximum.csv'), index_col=0)
+    settings = get_settings()
+    years = settings['years']['train'] + settings['years']['test']
+    episode_time_steps = []
+    data_list = []
+
+    if os.path.isdir(SCHEMA_DIRECTORY):
+        shutil.rmtree(SCHEMA_DIRECTORY)
+    else:
+        pass
+
+    os.makedirs(SCHEMA_DIRECTORY)
+    
+    # set weather data
+    for i, y in enumerate(years):
+        filepath = os.path.join(CITYLEARN_WEATHER_DATA_DIRECTORY, f'weather_{y}_Final.parquet')
+        data = pd.read_parquet(filepath)
+        
+        # remove 29th of Feb to be consistent
+        data = data[(data['datetime'].dt.strftime('%d-%m')!='29-02')].copy()
+        data = data.drop(columns=['datetime'], errors='ignore')
+        data_list.append(data)
+
+        # set training episode splits
+        if y in settings['years']['train']:
+            if i == 0:
+                episode_time_steps.append((0, data.shape[0] - 1))
+            else:
+                start = episode_time_steps[-1][1] + 1
+                end = start + data.shape[0] - 1
+                episode_time_steps.append((start, end))
+        else:
+            pass
+    
+    weather_data = pd.concat(data_list, ignore_index=True)
+    weather_data.to_csv(os.path.join(SCHEMA_DIRECTORY, 'weather.csv'), index=False)
+    
+    # write schema
+    # general
+    schema = DataSet.get_schema(settings['schema_template'])
+    schema['root_directory'] = None
+    schema['central_agent'] = True
+    schema['simulation_start_time_step'] = 0
+    schema['simulation_end_time_step'] = weather_data.shape[0] - 1
+    schema['episode_time_steps'] = episode_time_steps
+    schema['rolling_episode_split'] = False
+    schema['random_episode_split'] = False
+
+    # set observations and action
+    for t in ['observations', 'actions']:
+        for k in schema[t]:
+            if k in settings[f'active_{t}']:
+                schema[t][k]['active'] = True
+            
+            else:
+                schema[t][k]['active'] = False
+
+    # set reward function
+    schema['reward_function'] = settings['reward_function']
+
+    # set buildings
+    schema['buildings'] = {}
+
+    for bldg_id, setpoint_id in zip(settings['building_selection']['bldg_ids'], settings['building_selection']['setpoint_ids']):
+        bldg_name = str(bldg_id)
+
+        # get simulation data for building
+        data_list = []
+
+        for y in years:
+            data = get_citylearn_building_data(bldg_id, f'{bldg_id}-{y}')
+            data_list.append(data)
+
+        simulation_data = pd.concat(data_list, ignore_index=True)
+        simulation_data.to_csv(os.path.join(SCHEMA_DIRECTORY, f'{bldg_name}.csv'), index=False)
+
+        # set random seed
+        np.random.seed(int(bldg_id))
+        
+        # general building info
+        schema['buildings'][bldg_name] = {
+            'type': settings['building_type'],
+            'include': True,
+            'energy_simulation': f'{bldg_name}.csv',
+            'weather': 'weather.csv',
+            'carbon_intensity': None,
+            'pricing': None,
+            'inactive_observations': [],
+            'inactive_actions': [],
+        }
+
+        # heat pump for heating
+        schema['buildings'][bldg_name]['heating_device'] = {
+            'type': settings['heating_device_type'],
+            'autosize': True,
+            'autosize_attributes': {'safety_factor': 1.0},
+            'attributes': {
+                'nominal_power': None,
+                'efficiency': np.random.uniform(
+                    settings['heating_device_efficiency']['minimum'],
+                    settings['heating_device_efficiency']['maximum'],
+                ),
+                'target_cooling_temperature': 8.0,
+                'target_heating_temperature': np.random.uniform(
+                    settings['heating_device_target_heating_temperature']['minimum'],
+                    settings['heating_device_target_heating_temperature']['maximum'],
+                )
+            }
+        }
+
+        # electric heater for DHW heating
+        schema['buildings'][bldg_name]['dhw_device'] = {
+            'type': settings['dhw_device_type'],
+            'autosize': True,
+            'autosize_attributes': {'safety_factor': 1.0},
+            'attributes': {
+                'nominal_power': None,
+                'efficiency': np.random.uniform(
+                    settings['dhw_device_efficiency']['minimum'],
+                    settings['dhw_device_efficiency']['maximum'],
+                ),
+            }
+        }
+        
+        # temperature dynamics
+        # source_filepath = os.path.join(LSTM_MODEL_DIRECTORY, [f for f in os.listdir(LSTM_MODEL_DIRECTORY) if bldg_name in f][0])
+
+        dynamics_bldg_name = bldg_name
+        source_filepath = os.path.join(LSTM_MODEL_DIRECTORY, f'VT, Chittenden County_{bldg_name}.pth')
+            
+        if not os.path.isfile(source_filepath):
+            dynamics_bldg_name = settings['dynamics']['default_lstm_model']
+            source_filepath = os.path.join(LSTM_MODEL_DIRECTORY, f'VT, Chittenden County_{dynamics_bldg_name}.pth')
+            
+        else:
+            pass
+
+        destination_filepath = os.path.join(SCHEMA_DIRECTORY, f'{dynamics_bldg_name}.pth')
+        shutil.copy(source_filepath, destination_filepath)
+        schema['buildings'][bldg_name]['dynamics'] = {}
+        
+        for m in ['cooling', 'heating']:
+            schema['buildings'][bldg_name]['dynamics'][m] = {
+                'type': settings['dynamics']['type'],
+                'attributes': {
+                    'input_size': dynamics_normalization_minimum.shape[1],
+                    'hidden_size': settings['dynamics']['attributes']['hidden_size'],
+                    'num_layers': settings['dynamics']['attributes']['num_layers'],
+                    'lookback': settings['dynamics']['attributes']['lookback'],
+                    'filename': f'{dynamics_bldg_name}.pth',
+                    'input_normalization_minimum': dynamics_normalization_minimum.loc[int(dynamics_bldg_name)].values.tolist(),
+                    'input_normalization_maximum': dynamics_normalization_maximum.loc[int(dynamics_bldg_name)].values.tolist(),
+                    'input_observation_names': settings['dynamics']['attributes']['input_observation_names'][m]
+                }
+            }
+
+        # occupant
+        occupant_type = 'Tolerant' if setpoint_id == 'Cluster_0_SPs' else 'Average'
+        increase_source_filepath = os.path.join(INTERACTION_MODEL_DIRECTORY, f'{occupant_type}_Amount_SP_Increase.pkl')
+        decrease_source_filepath = os.path.join(INTERACTION_MODEL_DIRECTORY, f'{occupant_type}_Amount_SP_Decrease.pkl')
+        increase_destination_filename = f'{bldg_id}_setpoint_increase.pkl'
+        increase_destination_filepath = os.path.join(SCHEMA_DIRECTORY, increase_destination_filename)
+        decrease_destination_filename = f'{bldg_id}_setpoint_decrease.pkl'
+        decrease_destination_filepath = os.path.join(SCHEMA_DIRECTORY, decrease_destination_filename)
+        shutil.copy(increase_source_filepath, increase_destination_filepath)
+        shutil.copy(decrease_source_filepath, decrease_destination_filepath)
+        parameters_filename = f'{bldg_id}_occupant_parameters.csv'
+        parameters_filepath = os.path.join(SCHEMA_DIRECTORY, parameters_filename)
+        parameters = get_occupant_parameters(simulation_data, occupant_type)
+        parameters.to_csv(parameters_filepath, index=False)
+        schema['buildings'][bldg_name]['occupant'] = {
+            'type': settings['occupant']['type'],
+            'parameters_filename': parameters_filename,
+            'attributes': {
+                'setpoint_increase_model_filename': increase_destination_filename,
+                'setpoint_decrease_model_filename': decrease_destination_filename,
+                'delta_output_map': settings['occupant']['attributes']['delta_output_map'],
+            }
+        }
+
+    
+    # env initialization check and sizing
+    try:
+        env = OCCCityLearnEnv(schema, root_directory=SCHEMA_DIRECTORY)
+        print('Passed env initialization test')
+    except Exception as e:
+        print('Failed env initialization test')
+        raise e
+    
+    for b in env.buildings:
+        schema['buildings'][b.name]['heating_device']['autosize'] = False
+        schema['buildings'][b.name]['dhw_device']['autosize'] = False
+        schema['buildings'][b.name]['heating_device']['attributes']['nominal_power'] = b.heating_device.nominal_power
+        schema['buildings'][b.name]['dhw_device']['attributes']['nominal_power'] = b.dhw_device.nominal_power
+
+    write_json(os.path.join(SCHEMA_DIRECTORY, 'schema.json'), schema)
+
+def get_occupant_parameters(data, occupant_type):
+    """Get LogisticRegressionOccupant a and b parameters time series."""
+
+    settings = get_settings()
+    parameters = settings['occupant']['parameters'][occupant_type]
+    data['a'] = None
+    data['b'] = None
+
+    for _, status_parameters in parameters.items():
+        for h in status_parameters['hours']:
+            data.loc[
+                (data['Hour']>=h[0] + 1) 
+                & (data['Hour']<=h[1] + 1),
+                ('a', 'b')
+            ] = (status_parameters['a'], status_parameters['b'])
+
+
+    assert data[['a', 'b']].isnull().sum().sum() == 0, 'Null parameters found'
+
+    data = data[['a', 'b']].copy()
+
+    return data
+
+def get_citylearn_building_data(bldg_id, simulation_id):
+    """Get CityLearn input data from E+ simulation database."""
+    
+    settings = get_settings()
+    data = CityLearnData.get_building_data(**{
+        'simulation_output_directory': ENERGYPLUS_SIMULATION_OUTPUT_DIRECTORY,
+        'simulation_id': simulation_id,
+        'bldg_id': bldg_id,
+        **settings['resstock_dataset']
+    })
+    data['Solar Generation (W/kW)'] = 0.0
+    data['Cooling Load (kWh)'] = 0.0
+    data = data[data['Month'].isin(settings['months'])].copy()
+
+    return data
 
 def simulate():
     """Runs EnergyPlus simulations for selected buildings and sets LSTM train and CityLearn input data."""
     
     settings = get_settings()
-    setpoint_data = pd.read_csv(os.path.join('data', 'SP_Averages_by_Cluster.csv'))
+    setpoint_data = pd.read_csv(os.path.join(DATA_DIRECTORY, 'SP_Averages_by_Cluster.csv'))
 
     for d in [LSTM_TRAIN_DATA_DIRECTORY, SCHEMA_DIRECTORY]:
         if os.path.isdir(d):
@@ -39,7 +286,7 @@ def simulate():
         data_list = []
 
         for year in settings['years']['train'] + settings['years']['test']:
-            epw = get_data_from_path(os.path.join('data', 'EPW_Files', f'WeatherFile_EPW_Full_{year}.epw'))
+            epw = get_data_from_path(os.path.join(EPW_DIRECTORY, f'WeatherFile_EPW_Full_{year}.epw'))
             osm = get_data_from_path(os.path.join(OSM_DIRECTORY, f'{bldg_id}.osm'))
             schedules = read_json(os.path.join(SCHEDULES_DIRECTORY, f'{bldg_id}.json'))
             setpoints = (setpoint_data[setpoint_id] - 32.0)*5.0/9.0 # F -> C
@@ -61,57 +308,33 @@ def simulate():
                 epw=epw,
                 schedules=schedules,
                 setpoints=setpoints,
-                run_period_begin_month=settings['energyplus_run_period']['begin_month'],
-                run_period_begin_day_of_month=settings['energyplus_run_period']['begin_day_of_month'],
-                run_period_begin_year=year,
-                run_period_end_month=settings['energyplus_run_period']['end_month'],
-                run_period_end_day_of_month=settings['energyplus_run_period']['end_day_of_month'],
-                run_period_end_year=year,
                 seed=settings['seed'],
                 iterations=settings['partial_load_iterations'],
                 max_workers=settings['max_workers'],
                 simulation_id=simulation_id,
                 output_directory=output_directory,
             )
-            results = ltd.simulate_partial_loads()
+            _, partial_loads_data = ltd.run()
             
             # collect lstm train data for current year
             if year in settings['years']['train']:
-                for reference, data in results.items():
-                    data = pd.DataFrame(data)
-                    data['resstock_building_id'] = bldg_id
-                    data['simulation_reference'] = int(reference.split('-')[-2])
+                for k, v in partial_loads_data.items():
+                    data = pd.DataFrame(v)
+                    data['simulation_reference'] = k
                     data['year'] = year
                     data_list.append(data)
-            else:
-                pass
 
-            # write CityLearn input data
-            year_schema_directory = os.path.join(SCHEMA_DIRECTORY, str(year))
-            os.makedirs(year_schema_directory, exist_ok=True)
-            data = CityLearnData.get_building_data(**{
-                'energyplus_output_directory': ENERGYPLUS_SIMULATION_OUTPUT_DIRECTORY,
-                'simulation_id': simulation_id,
-                'bldg_id': bldg_id,
-                **settings['resstock_dataset']
-            })
-            data['Solar Generation (W/kW)'] = 0.0
-            data.to_csv(os.path.join(year_schema_directory, f'{bldg_id}.csv'), index=False)
-
-            weather_data_filepath = os.path.join(year_schema_directory, 'weather.csv')
-
-            if not os.path.isfile(weather_data_filepath):
-                weather_data = pd.read_parquet(os.path.join(DATA_DIRECTORY, 'CityLearn_Weather_Files', f'weather_{year}_Final.parquet'))
-                weather_data.to_csv(weather_data_filepath, index=False)
             else:
                 pass
 
         # write lstm train data
         data = pd.concat(data_list, ignore_index=True, sort=False)
-        data['location'] = settings['location']
+        data = data[data['month'].isin(settings['months'])].copy()
+        data['resstock_county_id'] = settings['resstock_county_id']
+        data['resstock_building_id'] = bldg_id
         data['ecobee_building_id'] = None
         data[[
-            'location',
+            'resstock_county_id',
             'resstock_building_id',
             'ecobee_building_id',
             'simulation_reference',
@@ -130,90 +353,51 @@ def simulate():
             'cooling_load',
             'heating_load',
             'setpoint'
-        ]].sort_values(['resstock_building_id', 'simulation_reference', 'year', 'timestep']).to_csv(os.path.join(LSTM_TRAIN_DATA_DIRECTORY, f'{bldg_id}.csv'), index=False)
+        ]].sort_values(['simulation_reference', 'year', 'timestep']).to_csv(os.path.join(LSTM_TRAIN_DATA_DIRECTORY, f'{bldg_id}.csv'), index=False)
 
 def select_buildings():
-    metadata = get_valid_buildings()
-    select_n_buildings(metadata)
+    data = get_valid_buildings()
+    select_n_buildings(data)
     set_simulation_input()
 
 def get_valid_buildings():
     """select valid buildings."""
 
     settings = get_settings()
-    location_query = f"(t.in_resstock_county_id = '{settings['location']}' AND t.month IN {str(tuple(settings['months']))})"
-    con = sqlite3.connect(settings['database_filepath'])
-    con.create_function('REGEXP', 2, regexp)
-    metadata = pd.read_sql(f"""
-    WITH t AS (
-        SELECT
-            t.in_resstock_county_id,
-            t.metadata_id,
-            t.cluster_label,
-            ROW_NUMBER() OVER (
-                PARTITION BY t.in_resstock_county_id, t.cluster_label 
-                ORDER BY t.proportion_unmet_hour) AS rank_unmet_hour,
-            t.proportion_unmet_hour,
-            t.count_unmet_hour,
-            t.min_delta,
-            t.max_delta
-        FROM (
-            SELECT
-                t.in_resstock_county_id,
-                t.metadata_id,
-                t.cluster_label,
-                SUM(t.count_unmet_hour)/SUM(t.count_timestep) proportion_unmet_hour,
-                SUM(t.count_unmet_hour) AS count_unmet_hour,
-                MIN(t.min_delta) AS min_delta,
-                MAX(t.max_delta) AS max_delta
-            FROM energyplus_simulation_monthly_unmet_hour_summary t
-            WHERE {location_query}
-            AND t.metadata_id NOT IN (SELECT metadata_id FROM energyplus_simulation_error)
-            AND t.metadata_id IN (SELECT metadata_id FROM model WHERE osm REGEXP 'OS:AirLoopHVAC:UnitarySystem')
-            GROUP BY
-                t.in_resstock_county_id,
-                t.metadata_id,
-                t.cluster_label
-        ) t
-    )
-
+    data = get_database().query_table(f"""
     SELECT
-        t.cluster_label,
-        t.proportion_unmet_hour,
-        t.count_unmet_hour,
-        t.min_delta,
-        t.max_delta,
-        t.metadata_id,
-        m.bldg_id,
-        t.in_resstock_county_id,
-        m.in_sqft,
-        m.in_geometry_floor_area,
-        m.in_occupants,
-        m.in_orientation,
-        m.in_pv_system_size,
-        m.in_vintage,
-        m.in_roof_area_ft_2,
-        m.in_window_area_ft_2
-    FROM t
-    LEFT JOIN metadata m ON m.id = t.metadata_id
-    WHERE 
-        t.proportion_unmet_hour <= {settings['building_selection']['unmet_hour_proportion_limit']}
-        AND (m.in_pv_system_size IS NULL OR m.in_pv_system_size = '' OR m.in_pv_system_size = 'None')
-    ORDER BY m.bldg_id
-    """, con)
+        p.bldg_id,
+        r.label
+    FROM (
+        SELECT 
+            bldg_id,
+            MAX(point_five_degree_partial_unmet/730.0) AS unmet_proportion
+        FROM dynamic_lstm_train_data_thermal_comfort_summary 
+        WHERE 
+            timestep_resolution = 'monthly'
+            AND in_resstock_county_id = '{settings['resstock_county_id']}'
+        GROUP BY
+            bldg_id
+    ) p
+    LEFT JOIN metadata m ON m.bldg_id = p.bldg_id
+    LEFT JOIN metadata_clustering_label r ON r.metadata_id = m.id
+    INNER JOIN optimal_metadata_clustering o ON o.clustering_id = r.clustering_id
+    CROSS JOIN constant c
+    WHERE p.unmet_proportion <= c.ashrae_maximum_unmet_hour_proportion
+    ORDER BY p.bldg_id, r.label
+    ;
+    """)
 
-    con.close()
+    return data
 
-    return metadata
-
-def select_n_buildings(metadata):
+def select_n_buildings(data):
     """select desired number of buildings from valid buildings."""  
     
     settings = get_settings()
     settings['building_selection']['bldg_ids'] = []
 
     while len(settings['building_selection']['bldg_ids']) < settings['building_selection']['count']:
-        for _, v in metadata[~metadata['bldg_id'].isin(settings['building_selection']['bldg_ids'])].groupby('cluster_label'):
+        for _, v in data[~data['bldg_id'].isin(settings['building_selection']['bldg_ids'])].groupby('label'):
             settings['building_selection']['bldg_ids'] += v['bldg_id'].sample(1, random_state=settings['seed']).tolist()
 
     settings['building_selection']['bldg_ids'] = settings['building_selection']['bldg_ids'][:settings['building_selection']['count']]
@@ -271,21 +455,21 @@ def get_settings():
 
     return settings
 
-def regexp(expr, item):
-    reg = re.compile(expr)
-    return reg.search(item) is not None
-
 def main():
     parser = argparse.ArgumentParser(prog='occupant-thermostat-int-energyplus', description='Run EnergyPlus simulations to get LSTM train data.')
     subparsers = parser.add_subparsers(title='subcommands', required=True, dest='subcommands')
     
     # select buildings
-    subparser_simulate = subparsers.add_parser('select_buildings', description='Select n buildings from DOE_XStock database if exists.')
-    subparser_simulate.set_defaults(func=select_buildings)
+    subparser_select_buildings = subparsers.add_parser('select_buildings', description='Select n buildings from DOE_XStock database if exists.')
+    subparser_select_buildings.set_defaults(func=select_buildings)
 
     # simulate
     subparser_simulate = subparsers.add_parser('simulate', description='EnergyPlus simulations on selected buildings.')
     subparser_simulate.set_defaults(func=simulate)
+
+    # build schema
+    subparser_build_schema = subparsers.add_parser('build_schema', description='Set CityLearn schemas.')
+    subparser_build_schema.set_defaults(func=build_schema)
 
     args = parser.parse_args()
     arg_spec = inspect.getfullargspec(args.func)
