@@ -6,7 +6,7 @@ resstock_dataset:
     weather_data: amy2018
     year_of_publication: 2021
     release: 1
-location: VT, Chittenden County
+resstock_county_id: VT, Chittenden County
 months:
 - 1
 - 2
@@ -21,7 +21,6 @@ partial_load_iterations: 4
 max_workers: 5
 building_selection:
     count: 10
-    unmet_hour_proportion_limit: 0.03424657534246575
     setpoint_ids:
     - Cluster_0_SPs
     - Cluster_0_SPs
@@ -34,20 +33,144 @@ building_selection:
     - Cluster_1_SPs
     - Cluster_1_SPs
     bldg_ids:
-    - 430942
-    - 288697
-    - 387179
-    - 319918
-    - 525859
-    - 216895
-    - 425540
-    - 79194
+    - 247942
+    - 20199
+    - 481052
+    - 498771
+    - 199613
+    - 75252
+    - 546814
+    - 4421
     - 508889
-    - 460412
+    - 79194
 energyplus_run_period:
     begin_month: 1
     begin_day_of_month: 1
     begin_year: 2018
-    end_month: 3
-    end_day_of_month: 31
+    end_month: 4
+    end_day_of_month: 1
     end_year: 2018
+schema_template: baeda_3dem
+active_actions:
+- heating_device
+active_observations:
+- day_type
+- hour
+- outdoor_dry_bulb_temperature
+- outdoor_dry_bulb_temperature_predicted_6h
+- outdoor_dry_bulb_temperature_predicted_12h
+- outdoor_dry_bulb_temperature_predicted_24h
+- indoor_dry_bulb_temperature
+- net_electricity_consumption
+- occupant_count
+- indoor_dry_bulb_temperature_set_point
+reward_function:
+    type: citylearn.reward_function.ComfortReward
+    attributes:
+        band: 2.0
+building_type: occ_citylearn.LogisticRegressionOccupantInteractionBuilding
+heating_device_type: citylearn.energy_model.HeatPump
+heating_device_efficiency:
+    minimum: 0.2
+    maximum: 0.3
+heating_device_target_heating_temperature:
+    minimum: 45.0
+    maximum: 48.0
+dhw_device_efficiency:
+    minimum: 0.85
+    maximum: 0.95
+dhw_device_type: citylearn.energy_model.ElectricHeater
+dynamics:
+    type: citylearn.dynamics.LSTMDynamics
+    default_lstm_model: 508889
+    attributes:
+        hidden_size: 32
+        num_layers: 2
+        lookback: 12
+        input_observation_names:
+            cooling:
+            - direct_solar_irradiance
+            - diffuse_solar_irradiance
+            - outdoor_dry_bulb_temperature
+            - indoor_dry_bulb_temperature_set_point
+            - occupant_count
+            - cooling_demand
+            - month_sin
+            - month_cos
+            - hour_sin
+            - hour_cos
+            - day_type_sin
+            - day_type_cos
+            - indoor_dry_bulb_temperature
+            heating:
+            - direct_solar_irradiance
+            - diffuse_solar_irradiance
+            - outdoor_dry_bulb_temperature
+            - indoor_dry_bulb_temperature_set_point
+            - occupant_count
+            - heating_demand
+            - month_sin
+            - month_cos
+            - hour_sin
+            - hour_cos
+            - day_type_sin
+            - day_type_cos
+            - indoor_dry_bulb_temperature
+occupant:
+    type: occ_citylearn.LogisticRegressionOccupant
+    parameters:
+        Tolerant:
+            occupied:
+                a: 28.22
+                b: -1.64
+                hours:
+                    -
+                        - 6
+                        - 8
+                    -
+                        - 17
+                        - 23
+            unoccupied:
+                a: 15.24
+                b: -1.03
+                hours:
+                    -
+                        - 9
+                        - 16
+            sleep:
+                a: 21.16
+                b: -1.43
+                hours:
+                    -
+                        - 0
+                        - 5
+        Average:
+            occupied:
+                a: 29.36
+                b: -1.57
+                hours:
+                    -
+                        - 6
+                        - 8
+                    -
+                        - 17
+                        - 23
+            unoccupied:
+                a: 15.10
+                b: -0.96
+                hours:
+                    -
+                        - 9
+                        - 16
+            sleep:
+                a: 26.31
+                b: -1.56
+                hours:
+                    -
+                        - 0
+                        - 5
+                    
+    attributes:
+        delta_output_map:
+            0: 0.5
+            1: 1.5
