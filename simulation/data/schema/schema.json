@@ -1,0 +1,1817 @@
+{
+  "root_directory": null,
+  "central_agent": true,
+  "simulation_start_time_step": 0,
+  "simulation_end_time_step": 6479,
+  "episode_time_steps": [
+    [
+      0,
+      2159
+    ],
+    [
+      2160,
+      4319
+    ]
+  ],
+  "rolling_episode_split": false,
+  "random_episode_split": false,
+  "seconds_per_time_step": 3600.0,
+  "observations": {
+    "month": {
+      "active": false,
+      "shared_in_central_agent": true
+    },
+    "day_type": {
+      "active": true,
+      "shared_in_central_agent": true
+    },
+    "hour": {
+      "active": true,
+      "shared_in_central_agent": true
+    },
+    "daylight_savings_status": {
+      "active": false,
+      "shared_in_central_agent": true
+    },
+    "outdoor_dry_bulb_temperature": {
+      "active": true,
+      "shared_in_central_agent": true
+    },
+    "outdoor_dry_bulb_temperature_predicted_6h": {
+      "active": true,
+      "shared_in_central_agent": true
+    },
+    "outdoor_dry_bulb_temperature_predicted_12h": {
+      "active": true,
+      "shared_in_central_agent": true
+    },
+    "outdoor_dry_bulb_temperature_predicted_24h": {
+      "active": true,
+      "shared_in_central_agent": true
+    },
+    "outdoor_relative_humidity": {
+      "active": false,
+      "shared_in_central_agent": true
+    },
+    "outdoor_relative_humidity_predicted_6h": {
+      "active": false,
+      "shared_in_central_agent": true
+    },
+    "outdoor_relative_humidity_predicted_12h": {
+      "active": false,
+      "shared_in_central_agent": true
+    },
+    "outdoor_relative_humidity_predicted_24h": {
+      "active": false,
+      "shared_in_central_agent": true
+    },
+    "diffuse_solar_irradiance": {
+      "active": false,
+      "shared_in_central_agent": true
+    },
+    "diffuse_solar_irradiance_predicted_6h": {
+      "active": false,
+      "shared_in_central_agent": true
+    },
+    "diffuse_solar_irradiance_predicted_12h": {
+      "active": false,
+      "shared_in_central_agent": true
+    },
+    "diffuse_solar_irradiance_predicted_24h": {
+      "active": false,
+      "shared_in_central_agent": true
+    },
+    "direct_solar_irradiance": {
+      "active": false,
+      "shared_in_central_agent": true
+    },
+    "direct_solar_irradiance_predicted_6h": {
+      "active": false,
+      "shared_in_central_agent": true
+    },
+    "direct_solar_irradiance_predicted_12h": {
+      "active": false,
+      "shared_in_central_agent": true
+    },
+    "direct_solar_irradiance_predicted_24h": {
+      "active": false,
+      "shared_in_central_agent": true
+    },
+    "carbon_intensity": {
+      "active": false,
+      "shared_in_central_agent": true
+    },
+    "indoor_dry_bulb_temperature": {
+      "active": true,
+      "shared_in_central_agent": false
+    },
+    "average_unmet_cooling_setpoint_difference": {
+      "active": false,
+      "shared_in_central_agent": false
+    },
+    "indoor_relative_humidity": {
+      "active": false,
+      "shared_in_central_agent": false
+    },
+    "non_shiftable_load": {
+      "active": false,
+      "shared_in_central_agent": false
+    },
+    "solar_generation": {
+      "active": false,
+      "shared_in_central_agent": false
+    },
+    "cooling_storage_soc": {
+      "active": false,
+      "shared_in_central_agent": false
+    },
+    "heating_storage_soc": {
+      "active": false,
+      "shared_in_central_agent": false
+    },
+    "dhw_storage_soc": {
+      "active": false,
+      "shared_in_central_agent": false
+    },
+    "electrical_storage_soc": {
+      "active": false,
+      "shared_in_central_agent": false
+    },
+    "net_electricity_consumption": {
+      "active": true,
+      "shared_in_central_agent": false
+    },
+    "electricity_pricing": {
+      "active": false,
+      "shared_in_central_agent": true
+    },
+    "electricity_pricing_predicted_6h": {
+      "active": false,
+      "shared_in_central_agent": true
+    },
+    "electricity_pricing_predicted_12h": {
+      "active": false,
+      "shared_in_central_agent": true
+    },
+    "electricity_pricing_predicted_24h": {
+      "active": false,
+      "shared_in_central_agent": true
+    },
+    "cooling_device_cop": {
+      "active": false,
+      "shared_in_central_agent": false
+    },
+    "heating_device_cop": {
+      "active": false,
+      "shared_in_central_agent": false
+    },
+    "cooling_demand": {
+      "active": false,
+      "shared_in_central_agent": false
+    },
+    "heating_demand": {
+      "active": false,
+      "shared_in_central_agent": false
+    },
+    "occupant_count": {
+      "active": true,
+      "shared_in_central_agent": false
+    },
+    "indoor_dry_bulb_temperature_set_point": {
+      "active": true,
+      "shared_in_central_agent": false
+    },
+    "indoor_dry_bulb_temperature_delta": {
+      "active": false,
+      "shared_in_central_agent": false
+    }
+  },
+  "actions": {
+    "cooling_storage": {
+      "active": false
+    },
+    "heating_storage": {
+      "active": false
+    },
+    "dhw_storage": {
+      "active": false
+    },
+    "electrical_storage": {
+      "active": false
+    },
+    "cooling_device": {
+      "active": false
+    },
+    "heating_device": {
+      "active": true
+    }
+  },
+  "agent": {
+    "type": "citylearn.agents.sac.SACBasicRBC",
+    "attributes": {
+      "hidden_dimension": [
+        256,
+        256
+      ],
+      "discount": 0.9,
+      "tau": 0.005,
+      "lr": 0.001,
+      "batch_size": 512,
+      "replay_buffer_capacity": 100000.0,
+      "standardize_start_time_step": 2928,
+      "end_exploration_time_step": 2929,
+      "action_scaling_coef": 0.5,
+      "reward_scaling": 5.0,
+      "update_per_time_step": 2,
+      "alpha": 1.0
+    }
+  },
+  "reward_function": {
+    "type": "citylearn.reward_function.ComfortReward",
+    "attributes": {
+      "band": 2.0
+    }
+  },
+  "buildings": {
+    "247942": {
+      "type": "occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
+      "include": true,
+      "energy_simulation": "247942.csv",
+      "weather": "weather.csv",
+      "carbon_intensity": null,
+      "pricing": null,
+      "inactive_observations": [],
+      "inactive_actions": [],
+      "heating_device": {
+        "type": "citylearn.energy_model.HeatPump",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.0
+        },
+        "attributes": {
+          "nominal_power": 13.155387087792267,
+          "efficiency": 0.21383226617698697,
+          "target_cooling_temperature": 8.0,
+          "target_heating_temperature": 46.19387500752791
+        }
+      },
+      "dhw_device": {
+        "type": "citylearn.energy_model.ElectricHeater",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.0
+        },
+        "attributes": {
+          "nominal_power": 7.548050632465659,
+          "efficiency": 0.9025417698676382
+        }
+      },
+      "dynamics": {
+        "cooling": {
+          "type": "citylearn.dynamics.LSTMDynamics",
+          "attributes": {
+            "input_size": 13,
+            "hidden_size": 32,
+            "num_layers": 2,
+            "lookback": 12,
+            "filename": "247942.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -28.3,
+              16.666666,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -1.1025649
+            ],
+            "input_normalization_maximum": [
+              1013.0,
+              336.0,
+              20.6,
+              23.5,
+              3.0,
+              15.179175,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              27.02723
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "indoor_dry_bulb_temperature_set_point",
+              "occupant_count",
+              "cooling_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        },
+        "heating": {
+          "type": "citylearn.dynamics.LSTMDynamics",
+          "attributes": {
+            "input_size": 13,
+            "hidden_size": 32,
+            "num_layers": 2,
+            "lookback": 12,
+            "filename": "247942.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -28.3,
+              16.666666,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -1.1025649
+            ],
+            "input_normalization_maximum": [
+              1013.0,
+              336.0,
+              20.6,
+              23.5,
+              3.0,
+              15.179175,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              27.02723
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "indoor_dry_bulb_temperature_set_point",
+              "occupant_count",
+              "heating_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        }
+      },
+      "occupant": {
+        "type": "occ_citylearn.LogisticRegressionOccupant",
+        "parameters_filename": "247942_occupant_parameters.csv",
+        "attributes": {
+          "setpoint_increase_model_filename": "247942_setpoint_increase.pkl",
+          "setpoint_decrease_model_filename": "247942_setpoint_decrease.pkl",
+          "delta_output_map": {
+            "0": 0.5,
+            "1": 1.5
+          }
+        }
+      }
+    },
+    "20199": {
+      "type": "occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
+      "include": true,
+      "energy_simulation": "20199.csv",
+      "weather": "weather.csv",
+      "carbon_intensity": null,
+      "pricing": null,
+      "inactive_observations": [],
+      "inactive_actions": [],
+      "heating_device": {
+        "type": "citylearn.energy_model.HeatPump",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.0
+        },
+        "attributes": {
+          "nominal_power": 43.517678902167326,
+          "efficiency": 0.21777773618689994,
+          "target_cooling_temperature": 8.0,
+          "target_heating_temperature": 47.75806976965395
+        }
+      },
+      "dhw_device": {
+        "type": "citylearn.energy_model.ElectricHeater",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.0
+        },
+        "attributes": {
+          "nominal_power": 13.705461101533494,
+          "efficiency": 0.8991638838717534
+        }
+      },
+      "dynamics": {
+        "cooling": {
+          "type": "citylearn.dynamics.LSTMDynamics",
+          "attributes": {
+            "input_size": 13,
+            "hidden_size": 32,
+            "num_layers": 2,
+            "lookback": 12,
+            "filename": "20199.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -28.3,
+              12.777778,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -7.72823
+            ],
+            "input_normalization_maximum": [
+              1013.0,
+              336.0,
+              20.6,
+              19.444445,
+              4.0,
+              33.466215,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              25.981415
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "indoor_dry_bulb_temperature_set_point",
+              "occupant_count",
+              "cooling_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        },
+        "heating": {
+          "type": "citylearn.dynamics.LSTMDynamics",
+          "attributes": {
+            "input_size": 13,
+            "hidden_size": 32,
+            "num_layers": 2,
+            "lookback": 12,
+            "filename": "20199.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -28.3,
+              12.777778,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -7.72823
+            ],
+            "input_normalization_maximum": [
+              1013.0,
+              336.0,
+              20.6,
+              19.444445,
+              4.0,
+              33.466215,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              25.981415
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "indoor_dry_bulb_temperature_set_point",
+              "occupant_count",
+              "heating_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        }
+      },
+      "occupant": {
+        "type": "occ_citylearn.LogisticRegressionOccupant",
+        "parameters_filename": "20199_occupant_parameters.csv",
+        "attributes": {
+          "setpoint_increase_model_filename": "20199_setpoint_increase.pkl",
+          "setpoint_decrease_model_filename": "20199_setpoint_decrease.pkl",
+          "delta_output_map": {
+            "0": 0.5,
+            "1": 1.5
+          }
+        }
+      }
+    },
+    "481052": {
+      "type": "occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
+      "include": true,
+      "energy_simulation": "481052.csv",
+      "weather": "weather.csv",
+      "carbon_intensity": null,
+      "pricing": null,
+      "inactive_observations": [],
+      "inactive_actions": [],
+      "heating_device": {
+        "type": "citylearn.energy_model.HeatPump",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.0
+        },
+        "attributes": {
+          "nominal_power": 24.207555039572778,
+          "efficiency": 0.24382518277334128,
+          "target_cooling_temperature": 8.0,
+          "target_heating_temperature": 46.33014658791768
+        }
+      },
+      "dhw_device": {
+        "type": "citylearn.energy_model.ElectricHeater",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.0
+        },
+        "attributes": {
+          "nominal_power": 9.46927420285548,
+          "efficiency": 0.9427028401796251
+        }
+      },
+      "dynamics": {
+        "cooling": {
+          "type": "citylearn.dynamics.LSTMDynamics",
+          "attributes": {
+            "input_size": 13,
+            "hidden_size": 32,
+            "num_layers": 2,
+            "lookback": 12,
+            "filename": "481052.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -28.3,
+              14.444445,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -8.367541
+            ],
+            "input_normalization_maximum": [
+              1013.0,
+              336.0,
+              20.6,
+              20.0,
+              1.0,
+              25.627326,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              28.658833
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "indoor_dry_bulb_temperature_set_point",
+              "occupant_count",
+              "cooling_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        },
+        "heating": {
+          "type": "citylearn.dynamics.LSTMDynamics",
+          "attributes": {
+            "input_size": 13,
+            "hidden_size": 32,
+            "num_layers": 2,
+            "lookback": 12,
+            "filename": "481052.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -28.3,
+              14.444445,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -8.367541
+            ],
+            "input_normalization_maximum": [
+              1013.0,
+              336.0,
+              20.6,
+              20.0,
+              1.0,
+              25.627326,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              28.658833
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "indoor_dry_bulb_temperature_set_point",
+              "occupant_count",
+              "heating_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        }
+      },
+      "occupant": {
+        "type": "occ_citylearn.LogisticRegressionOccupant",
+        "parameters_filename": "481052_occupant_parameters.csv",
+        "attributes": {
+          "setpoint_increase_model_filename": "481052_setpoint_increase.pkl",
+          "setpoint_decrease_model_filename": "481052_setpoint_decrease.pkl",
+          "delta_output_map": {
+            "0": 0.5,
+            "1": 1.5
+          }
+        }
+      }
+    },
+    "498771": {
+      "type": "occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
+      "include": true,
+      "energy_simulation": "498771.csv",
+      "weather": "weather.csv",
+      "carbon_intensity": null,
+      "pricing": null,
+      "inactive_observations": [],
+      "inactive_actions": [],
+      "heating_device": {
+        "type": "citylearn.energy_model.HeatPump",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.0
+        },
+        "attributes": {
+          "nominal_power": 16.493132862091375,
+          "efficiency": 0.23611141402237731,
+          "target_cooling_temperature": 8.0,
+          "target_heating_temperature": 47.701633411890924
+        }
+      },
+      "dhw_device": {
+        "type": "citylearn.energy_model.ElectricHeater",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.0
+        },
+        "attributes": {
+          "nominal_power": 17.906603620802493,
+          "efficiency": 0.9289346227465127
+        }
+      },
+      "dynamics": {
+        "cooling": {
+          "type": "citylearn.dynamics.LSTMDynamics",
+          "attributes": {
+            "input_size": 13,
+            "hidden_size": 32,
+            "num_layers": 2,
+            "lookback": 12,
+            "filename": "508889.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -28.3,
+              15.555555,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -17.019691
+            ],
+            "input_normalization_maximum": [
+              1013.0,
+              336.0,
+              20.6,
+              21.5,
+              2.0,
+              51.129258,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              27.373554
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "indoor_dry_bulb_temperature_set_point",
+              "occupant_count",
+              "cooling_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        },
+        "heating": {
+          "type": "citylearn.dynamics.LSTMDynamics",
+          "attributes": {
+            "input_size": 13,
+            "hidden_size": 32,
+            "num_layers": 2,
+            "lookback": 12,
+            "filename": "508889.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -28.3,
+              15.555555,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -17.019691
+            ],
+            "input_normalization_maximum": [
+              1013.0,
+              336.0,
+              20.6,
+              21.5,
+              2.0,
+              51.129258,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              27.373554
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "indoor_dry_bulb_temperature_set_point",
+              "occupant_count",
+              "heating_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        }
+      },
+      "occupant": {
+        "type": "occ_citylearn.LogisticRegressionOccupant",
+        "parameters_filename": "498771_occupant_parameters.csv",
+        "attributes": {
+          "setpoint_increase_model_filename": "498771_setpoint_increase.pkl",
+          "setpoint_decrease_model_filename": "498771_setpoint_decrease.pkl",
+          "delta_output_map": {
+            "0": 0.5,
+            "1": 1.5
+          }
+        }
+      }
+    },
+    "199613": {
+      "type": "occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
+      "include": true,
+      "energy_simulation": "199613.csv",
+      "weather": "weather.csv",
+      "carbon_intensity": null,
+      "pricing": null,
+      "inactive_observations": [],
+      "inactive_actions": [],
+      "heating_device": {
+        "type": "citylearn.energy_model.HeatPump",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.0
+        },
+        "attributes": {
+          "nominal_power": 21.55935261545311,
+          "efficiency": 0.22921263756041282,
+          "target_cooling_temperature": 8.0,
+          "target_heating_temperature": 47.29758880693479
+        }
+      },
+      "dhw_device": {
+        "type": "citylearn.energy_model.ElectricHeater",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.0
+        },
+        "attributes": {
+          "nominal_power": 19.402852876927884,
+          "efficiency": 0.8784475136364926
+        }
+      },
+      "dynamics": {
+        "cooling": {
+          "type": "citylearn.dynamics.LSTMDynamics",
+          "attributes": {
+            "input_size": 13,
+            "hidden_size": 32,
+            "num_layers": 2,
+            "lookback": 12,
+            "filename": "199613.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -28.3,
+              16.666666,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -13.8389
+            ],
+            "input_normalization_maximum": [
+              1013.0,
+              336.0,
+              20.6,
+              21.11111,
+              2.0,
+              25.926504,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              27.71342
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "indoor_dry_bulb_temperature_set_point",
+              "occupant_count",
+              "cooling_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        },
+        "heating": {
+          "type": "citylearn.dynamics.LSTMDynamics",
+          "attributes": {
+            "input_size": 13,
+            "hidden_size": 32,
+            "num_layers": 2,
+            "lookback": 12,
+            "filename": "199613.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -28.3,
+              16.666666,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -13.8389
+            ],
+            "input_normalization_maximum": [
+              1013.0,
+              336.0,
+              20.6,
+              21.11111,
+              2.0,
+              25.926504,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              27.71342
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "indoor_dry_bulb_temperature_set_point",
+              "occupant_count",
+              "heating_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        }
+      },
+      "occupant": {
+        "type": "occ_citylearn.LogisticRegressionOccupant",
+        "parameters_filename": "199613_occupant_parameters.csv",
+        "attributes": {
+          "setpoint_increase_model_filename": "199613_setpoint_increase.pkl",
+          "setpoint_decrease_model_filename": "199613_setpoint_decrease.pkl",
+          "delta_output_map": {
+            "0": 0.5,
+            "1": 1.5
+          }
+        }
+      }
+    },
+    "75252": {
+      "type": "occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
+      "include": true,
+      "energy_simulation": "75252.csv",
+      "weather": "weather.csv",
+      "carbon_intensity": null,
+      "pricing": null,
+      "inactive_observations": [],
+      "inactive_actions": [],
+      "heating_device": {
+        "type": "citylearn.energy_model.HeatPump",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.0
+        },
+        "attributes": {
+          "nominal_power": 37.24868711943644,
+          "efficiency": 0.2250333352950347,
+          "target_cooling_temperature": 8.0,
+          "target_heating_temperature": 46.81511647833986
+        }
+      },
+      "dhw_device": {
+        "type": "citylearn.energy_model.ElectricHeater",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.0
+        },
+        "attributes": {
+          "nominal_power": 17.342045672736962,
+          "efficiency": 0.8906739426488512
+        }
+      },
+      "dynamics": {
+        "cooling": {
+          "type": "citylearn.dynamics.LSTMDynamics",
+          "attributes": {
+            "input_size": 13,
+            "hidden_size": 32,
+            "num_layers": 2,
+            "lookback": 12,
+            "filename": "75252.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -28.3,
+              18.333334,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -9.843297
+            ],
+            "input_normalization_maximum": [
+              1013.0,
+              336.0,
+              20.6,
+              22.61111,
+              4.0,
+              42.957188,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              32.186188
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "indoor_dry_bulb_temperature_set_point",
+              "occupant_count",
+              "cooling_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        },
+        "heating": {
+          "type": "citylearn.dynamics.LSTMDynamics",
+          "attributes": {
+            "input_size": 13,
+            "hidden_size": 32,
+            "num_layers": 2,
+            "lookback": 12,
+            "filename": "75252.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -28.3,
+              18.333334,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -9.843297
+            ],
+            "input_normalization_maximum": [
+              1013.0,
+              336.0,
+              20.6,
+              22.61111,
+              4.0,
+              42.957188,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              32.186188
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "indoor_dry_bulb_temperature_set_point",
+              "occupant_count",
+              "heating_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        }
+      },
+      "occupant": {
+        "type": "occ_citylearn.LogisticRegressionOccupant",
+        "parameters_filename": "75252_occupant_parameters.csv",
+        "attributes": {
+          "setpoint_increase_model_filename": "75252_setpoint_increase.pkl",
+          "setpoint_decrease_model_filename": "75252_setpoint_decrease.pkl",
+          "delta_output_map": {
+            "0": 0.5,
+            "1": 1.5
+          }
+        }
+      }
+    },
+    "546814": {
+      "type": "occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
+      "include": true,
+      "energy_simulation": "546814.csv",
+      "weather": "weather.csv",
+      "carbon_intensity": null,
+      "pricing": null,
+      "inactive_observations": [],
+      "inactive_actions": [],
+      "heating_device": {
+        "type": "citylearn.energy_model.HeatPump",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.0
+        },
+        "attributes": {
+          "nominal_power": 20.18455890587748,
+          "efficiency": 0.28851438423576753,
+          "target_cooling_temperature": 8.0,
+          "target_heating_temperature": 46.3923352232937
+        }
+      },
+      "dhw_device": {
+        "type": "citylearn.energy_model.ElectricHeater",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.0
+        },
+        "attributes": {
+          "nominal_power": 18.401188636852606,
+          "efficiency": 0.8913038655468742
+        }
+      },
+      "dynamics": {
+        "cooling": {
+          "type": "citylearn.dynamics.LSTMDynamics",
+          "attributes": {
+            "input_size": 13,
+            "hidden_size": 32,
+            "num_layers": 2,
+            "lookback": 12,
+            "filename": "546814.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -28.3,
+              10.0,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -15.203773
+            ],
+            "input_normalization_maximum": [
+              1013.0,
+              336.0,
+              20.6,
+              21.666666,
+              2.0,
+              20.181703,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              30.419989
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "indoor_dry_bulb_temperature_set_point",
+              "occupant_count",
+              "cooling_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        },
+        "heating": {
+          "type": "citylearn.dynamics.LSTMDynamics",
+          "attributes": {
+            "input_size": 13,
+            "hidden_size": 32,
+            "num_layers": 2,
+            "lookback": 12,
+            "filename": "546814.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -28.3,
+              10.0,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -15.203773
+            ],
+            "input_normalization_maximum": [
+              1013.0,
+              336.0,
+              20.6,
+              21.666666,
+              2.0,
+              20.181703,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              30.419989
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "indoor_dry_bulb_temperature_set_point",
+              "occupant_count",
+              "heating_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        }
+      },
+      "occupant": {
+        "type": "occ_citylearn.LogisticRegressionOccupant",
+        "parameters_filename": "546814_occupant_parameters.csv",
+        "attributes": {
+          "setpoint_increase_model_filename": "546814_setpoint_increase.pkl",
+          "setpoint_decrease_model_filename": "546814_setpoint_decrease.pkl",
+          "delta_output_map": {
+            "0": 0.5,
+            "1": 1.5
+          }
+        }
+      }
+    },
+    "4421": {
+      "type": "occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
+      "include": true,
+      "energy_simulation": "4421.csv",
+      "weather": "weather.csv",
+      "carbon_intensity": null,
+      "pricing": null,
+      "inactive_observations": [],
+      "inactive_actions": [],
+      "heating_device": {
+        "type": "citylearn.energy_model.HeatPump",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.0
+        },
+        "attributes": {
+          "nominal_power": 26.521631432496687,
+          "efficiency": 0.2511715359686253,
+          "target_cooling_temperature": 8.0,
+          "target_heating_temperature": 46.17239222760356
+        }
+      },
+      "dhw_device": {
+        "type": "citylearn.energy_model.ElectricHeater",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.0
+        },
+        "attributes": {
+          "nominal_power": 5.90175520677574,
+          "efficiency": 0.8631515686791723
+        }
+      },
+      "dynamics": {
+        "cooling": {
+          "type": "citylearn.dynamics.LSTMDynamics",
+          "attributes": {
+            "input_size": 13,
+            "hidden_size": 32,
+            "num_layers": 2,
+            "lookback": 12,
+            "filename": "4421.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -28.3,
+              12.777778,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -10.515327
+            ],
+            "input_normalization_maximum": [
+              1013.0,
+              336.0,
+              20.6,
+              22.777779,
+              3.0,
+              30.51878,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              30.6304
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "indoor_dry_bulb_temperature_set_point",
+              "occupant_count",
+              "cooling_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        },
+        "heating": {
+          "type": "citylearn.dynamics.LSTMDynamics",
+          "attributes": {
+            "input_size": 13,
+            "hidden_size": 32,
+            "num_layers": 2,
+            "lookback": 12,
+            "filename": "4421.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -28.3,
+              12.777778,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -10.515327
+            ],
+            "input_normalization_maximum": [
+              1013.0,
+              336.0,
+              20.6,
+              22.777779,
+              3.0,
+              30.51878,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              30.6304
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "indoor_dry_bulb_temperature_set_point",
+              "occupant_count",
+              "heating_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        }
+      },
+      "occupant": {
+        "type": "occ_citylearn.LogisticRegressionOccupant",
+        "parameters_filename": "4421_occupant_parameters.csv",
+        "attributes": {
+          "setpoint_increase_model_filename": "4421_setpoint_increase.pkl",
+          "setpoint_decrease_model_filename": "4421_setpoint_decrease.pkl",
+          "delta_output_map": {
+            "0": 0.5,
+            "1": 1.5
+          }
+        }
+      }
+    },
+    "508889": {
+      "type": "occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
+      "include": true,
+      "energy_simulation": "508889.csv",
+      "weather": "weather.csv",
+      "carbon_intensity": null,
+      "pricing": null,
+      "inactive_observations": [],
+      "inactive_actions": [],
+      "heating_device": {
+        "type": "citylearn.energy_model.HeatPump",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.0
+        },
+        "attributes": {
+          "nominal_power": 42.68176121164938,
+          "efficiency": 0.28176472386077833,
+          "target_cooling_temperature": 8.0,
+          "target_heating_temperature": 45.232674696731245
+        }
+      },
+      "dhw_device": {
+        "type": "citylearn.energy_model.ElectricHeater",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.0
+        },
+        "attributes": {
+          "nominal_power": 17.567489164179285,
+          "efficiency": 0.9246511379049237
+        }
+      },
+      "dynamics": {
+        "cooling": {
+          "type": "citylearn.dynamics.LSTMDynamics",
+          "attributes": {
+            "input_size": 13,
+            "hidden_size": 32,
+            "num_layers": 2,
+            "lookback": 12,
+            "filename": "508889.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -28.3,
+              15.555555,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -17.019691
+            ],
+            "input_normalization_maximum": [
+              1013.0,
+              336.0,
+              20.6,
+              21.5,
+              2.0,
+              51.129258,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              27.373554
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "indoor_dry_bulb_temperature_set_point",
+              "occupant_count",
+              "cooling_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        },
+        "heating": {
+          "type": "citylearn.dynamics.LSTMDynamics",
+          "attributes": {
+            "input_size": 13,
+            "hidden_size": 32,
+            "num_layers": 2,
+            "lookback": 12,
+            "filename": "508889.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -28.3,
+              15.555555,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -17.019691
+            ],
+            "input_normalization_maximum": [
+              1013.0,
+              336.0,
+              20.6,
+              21.5,
+              2.0,
+              51.129258,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              27.373554
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "indoor_dry_bulb_temperature_set_point",
+              "occupant_count",
+              "heating_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        }
+      },
+      "occupant": {
+        "type": "occ_citylearn.LogisticRegressionOccupant",
+        "parameters_filename": "508889_occupant_parameters.csv",
+        "attributes": {
+          "setpoint_increase_model_filename": "508889_setpoint_increase.pkl",
+          "setpoint_decrease_model_filename": "508889_setpoint_decrease.pkl",
+          "delta_output_map": {
+            "0": 0.5,
+            "1": 1.5
+          }
+        }
+      }
+    },
+    "79194": {
+      "type": "occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
+      "include": true,
+      "energy_simulation": "79194.csv",
+      "weather": "weather.csv",
+      "carbon_intensity": null,
+      "pricing": null,
+      "inactive_observations": [],
+      "inactive_actions": [],
+      "heating_device": {
+        "type": "citylearn.energy_model.HeatPump",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.0
+        },
+        "attributes": {
+          "nominal_power": 40.2277582320178,
+          "efficiency": 0.2320220182799011,
+          "target_cooling_temperature": 8.0,
+          "target_heating_temperature": 46.91056840089622
+        }
+      },
+      "dhw_device": {
+        "type": "citylearn.energy_model.ElectricHeater",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.0
+        },
+        "attributes": {
+          "nominal_power": 16.46513005658828,
+          "efficiency": 0.8761334017701217
+        }
+      },
+      "dynamics": {
+        "cooling": {
+          "type": "citylearn.dynamics.LSTMDynamics",
+          "attributes": {
+            "input_size": 13,
+            "hidden_size": 32,
+            "num_layers": 2,
+            "lookback": 12,
+            "filename": "79194.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -28.3,
+              16.166666,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -16.11821
+            ],
+            "input_normalization_maximum": [
+              1013.0,
+              336.0,
+              20.6,
+              23.5,
+              2.0,
+              39.276773,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              36.355854
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "indoor_dry_bulb_temperature_set_point",
+              "occupant_count",
+              "cooling_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        },
+        "heating": {
+          "type": "citylearn.dynamics.LSTMDynamics",
+          "attributes": {
+            "input_size": 13,
+            "hidden_size": 32,
+            "num_layers": 2,
+            "lookback": 12,
+            "filename": "79194.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -28.3,
+              16.166666,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -16.11821
+            ],
+            "input_normalization_maximum": [
+              1013.0,
+              336.0,
+              20.6,
+              23.5,
+              2.0,
+              39.276773,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              36.355854
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "indoor_dry_bulb_temperature_set_point",
+              "occupant_count",
+              "heating_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        }
+      },
+      "occupant": {
+        "type": "occ_citylearn.LogisticRegressionOccupant",
+        "parameters_filename": "79194_occupant_parameters.csv",
+        "attributes": {
+          "setpoint_increase_model_filename": "79194_setpoint_increase.pkl",
+          "setpoint_decrease_model_filename": "79194_setpoint_decrease.pkl",
+          "delta_output_map": {
+            "0": 0.5,
+            "1": 1.5
+          }
+        }
+      }
+    }
+  }
+}
