@@ -736,7 +736,7 @@
           "safety_factor": 1.0
         },
         "attributes": {
-          "nominal_power": 17.906603620802493,
+          "nominal_power": 17.90660449950529,
           "efficiency": 0.9289346227465127
         }
       },
@@ -1052,7 +1052,7 @@
           "safety_factor": 1.0
         },
         "attributes": {
-          "nominal_power": 17.342045672736962,
+          "nominal_power": 17.342045743884018,
           "efficiency": 0.8906739426488512
         }
       },
@@ -1684,7 +1684,7 @@
           "safety_factor": 1.0
         },
         "attributes": {
-          "nominal_power": 16.46513005658828,
+          "nominal_power": 16.48542604300511,
           "efficiency": 0.8761334017701217
         }
       },
