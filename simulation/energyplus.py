@@ -25,14 +25,14 @@ ENERGYPLUS_SIMULATION_OUTPUT_DIRECTORY = os.path.join(DATA_DIRECTORY, 'energyplu
 LSTM_TRAIN_DATA_DIRECTORY = os.path.join(DATA_DIRECTORY, 'lstm_train_data')
 EPW_DIRECTORY = os.path.join(DATA_DIRECTORY, 'EPW_Files')
 CITYLEARN_WEATHER_DATA_DIRECTORY = os.path.join(DATA_DIRECTORY, 'CityLearn_Weather_Files')
-# LSTM_MODEL_DIRECTORY = os.path.join(DATA_DIRECTORY, 'lstm_pth')
-LSTM_MODEL_DIRECTORY = os.path.join('/Users/kingsleyenweye/Library/CloudStorage/GoogleDrive-nweye@utexas.edu/My Drive/citylearn_v2/LSTM model')
+LSTM_MODEL_DIRECTORY = os.path.join(DATA_DIRECTORY, 'lstm_pth')
+# LSTM_MODEL_DIRECTORY = os.path.join('/Users/kingsleyenweye/Library/CloudStorage/GoogleDrive-nweye@utexas.edu/My Drive/citylearn_v2/LSTM model')
 INTERACTION_MODEL_DIRECTORY = os.path.join(ROOT_DIRECTORY, 'citylearn', 'Interaction_Models')
 SCHEMA_DIRECTORY = os.path.join(DATA_DIRECTORY, 'schema')
 
 def build_schema():
-    dynamics_normalization_minimum = pd.read_csv(os.path.join(LSTM_MODEL_DIRECTORY, 'normalization_minimum.csv'), index_col=0)
-    dynamics_normalization_maximum = pd.read_csv(os.path.join(LSTM_MODEL_DIRECTORY, 'normalization_maximum.csv'), index_col=0)
+    dynamics_normalization_minimum = pd.read_csv(os.path.join(LSTM_MODEL_DIRECTORY, 'min.csv'), index_col=0)
+    dynamics_normalization_maximum = pd.read_csv(os.path.join(LSTM_MODEL_DIRECTORY, 'max.csv'), index_col=0)
     settings = get_settings()
     years = settings['years']['train'] + settings['years']['test']
     episode_time_steps = []
@@ -160,7 +160,7 @@ def build_schema():
         # source_filepath = os.path.join(LSTM_MODEL_DIRECTORY, [f for f in os.listdir(LSTM_MODEL_DIRECTORY) if bldg_name in f][0])
 
         dynamics_bldg_name = bldg_name
-        source_filepath = os.path.join(LSTM_MODEL_DIRECTORY, f'VT, Chittenden County_{bldg_name}.pth')
+        source_filepath = os.path.join(LSTM_MODEL_DIRECTORY, f'model_pth_VT, Chittenden County_{bldg_name}.pth')
             
         if not os.path.isfile(source_filepath):
             dynamics_bldg_name = settings['dynamics']['default_lstm_model']

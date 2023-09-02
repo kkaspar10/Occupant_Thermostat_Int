@@ -84,7 +84,7 @@ dynamics:
     type: citylearn.dynamics.LSTMDynamics
     default_lstm_model: 508889
     attributes:
-        hidden_size: 32
+        hidden_size: 16
         num_layers: 2
         lookback: 12
         input_observation_names:
