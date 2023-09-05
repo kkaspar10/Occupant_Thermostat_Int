@@ -12,13 +12,15 @@ import numpy as np
 import pandas as pd
 
 class LogisticRegressionOccupantParameters(TimeSeriesData):
-    def __init__(self, a: Iterable[float], b: Iterable[float], start_time_step: int = None, end_time_step: int = None):
+    def __init__(self, a_increase: Iterable[float], b_increase: Iterable[float], a_decrease: Iterable[float], b_decrease: Iterable[float], start_time_step: int = None, end_time_step: int = None):
         super().__init__(start_time_step=start_time_step, end_time_step=end_time_step)
         
         # setting dynamic parameters
         # (can we give a and b another name that is clearer about what they represent?)
-        self.a = np.array(a, dtype=float)
-        self.b = np.array(b, dtype=float)
+        self.a_increase = np.array(a_increase, dtype=float)
+        self.b_increase = np.array(b_increase, dtype=float)
+        self.a_decrease = np.array(a_decrease, dtype=float)
+        self.b_decrease = np.array(b_decrease, dtype=float)
 
 class Occupant(Environment):
     def __init__(self, **kwargs) -> None:
@@ -61,25 +63,22 @@ class LogisticRegressionOccupant(Occupant):
         self.__setpoint_decrease_model = read_pickle(self.setpoint_decrease_model_filepath)
 
     def predict(self, x: Tuple[float, List[float]]) -> float:
-        # make predictions on Y/N to update setpoint and amount of temperature delta here
-        # THE setpoint update is made for the current time step?
-        # Only return the setpoint delta?
-        # default is to set delta to 0.0 C
         delta = super().predict()
         interaction_input, delta_input = x
-
-        interaction_probability = 1/(1 + np.exp(-(
-            self.parameters.a[self.time_step] 
-            + self.parameters.b[self.time_step]*interaction_input
-        )))
+        interaction_probability = lambda  a, b: 1/(1 + np.exp(-(a[self.time_step] + b[self.time_step]*interaction_input)))
+        increase_interaction_probability = interaction_probability(self.parameters.a_increase, self.parameters.b_increase)
+        decrease_interaction_probability = interaction_probability(self.parameters.a_decrease, self.parameters.b_decrease)
         
-        # if there is interaction, how does one decide between increase or decrease?
-        if np.random.uniform() <= interaction_probability:
-            # how do we choose betweeen increase and decrease?
-            increase_response = self.__setpoint_increase_model.predict(delta_input)
-            decrease_response = self.__setpoint_decrease_model.predict(delta_input)
-            increase_delta = self.delta_output_map[increase_response]
-            decrease_delta = -self.delta_output_map[decrease_response]
+        if increase_interaction_probability > 0.0 and decrease_interaction_probability > 0.0:
+            pass
+
+        elif increase_interaction_probability > 0.0 and np.random.uniform() <= increase_interaction_probability:
+            response = self.__setpoint_increase_model.predict(delta_input)
+            delta = self.delta_output_map[response]
+
+        elif decrease_interaction_probability > 0.0 and np.random.uniform() <= decrease_interaction_probability:
+            response = self.__setpoint_decrease_model.predict(delta_input)
+            delta = self.delta_output_map[response]
 
         else:
             pass

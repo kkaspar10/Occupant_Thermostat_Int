@@ -120,55 +120,73 @@ occupant:
     type: occ_citylearn.LogisticRegressionOccupant
     parameters:
         Tolerant:
-            occupied:
-                a: 28.22
-                b: -1.64
-                hours:
-                    -
-                        - 6
-                        - 8
-                    -
-                        - 17
-                        - 23
-            unoccupied:
-                a: 15.24
-                b: -1.03
-                hours:
-                    -
-                        - 9
-                        - 16
-            sleep:
-                a: 21.16
-                b: -1.43
-                hours:
-                    -
-                        - 0
-                        - 5
+            increase:
+                occupied:
+                    a: 28.22
+                    b: -1.64
+                    hours:
+                        -
+                            - 6
+                            - 8
+                        -
+                            - 17
+                            - 23
+                unoccupied:
+                    a: 15.24
+                    b: -1.03
+                    hours:
+                        -
+                            - 9
+                            - 16
+                sleep:
+                    a: 21.16
+                    b: -1.43
+                    hours:
+                        -
+                            - 0
+                            - 5
+            decrease:
+                all:
+                    a: -23.19
+                    b: 0.97
+                    hours:
+                        -
+                            - 0
+                            - 23
         Average:
-            occupied:
-                a: 29.36
-                b: -1.57
-                hours:
-                    -
-                        - 6
-                        - 8
-                    -
-                        - 17
-                        - 23
-            unoccupied:
-                a: 15.10
-                b: -0.96
-                hours:
-                    -
-                        - 9
-                        - 16
-            sleep:
-                a: 26.31
-                b: -1.56
-                hours:
-                    -
-                        - 0
-                        - 5
+            increase:
+                occupied:
+                    a: 29.36
+                    b: -1.57
+                    hours:
+                        -
+                            - 6
+                            - 8
+                        -
+                            - 17
+                            - 23
+                unoccupied:
+                    a: 15.10
+                    b: -0.96
+                    hours:
+                        -
+                            - 9
+                            - 16
+                sleep:
+                    a: 26.31
+                    b: -1.56
+                    hours:
+                        -
+                            - 0
+                            - 5
+            decrease:
+                all:
+                    a: -30.34
+                    b: 1.13
+                    hours:
+                        -
+                            - 0
+                            - 23
                     
     attributes:
         delta_output_map:

@@ -234,21 +234,20 @@ def get_occupant_parameters(data, occupant_type):
 
     settings = get_settings()
     parameters = settings['occupant']['parameters'][occupant_type]
-    data['a'] = None
-    data['b'] = None
 
-    for _, status_parameters in parameters.items():
-        for h in status_parameters['hours']:
-            data.loc[
-                (data['Hour']>=h[0] + 1) 
-                & (data['Hour']<=h[1] + 1),
-                ('a', 'b')
-            ] = (status_parameters['a'], status_parameters['b'])
+    for interaction, interaction_params in parameters.items():
+        for _, status_parameters in interaction_params.items():
+            for h in status_parameters['hours']:
+                data.loc[
+                    (data['Hour']>=h[0] + 1) 
+                    & (data['Hour']<=h[1] + 1),
+                    (f'a_{interaction}', f'b_{interaction}')
+                ] = (status_parameters['a'], status_parameters['b'])
 
+    columns = ['a_increase', 'b_increase', 'a_decrease', 'b_decrease']
+    assert data[columns].isnull().sum().sum() == 0, 'Null parameters found'
 
-    assert data[['a', 'b']].isnull().sum().sum() == 0, 'Null parameters found'
-
-    data = data[['a', 'b']].copy()
+    data = data[columns].copy()
 
     return data
 
