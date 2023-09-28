@@ -1,10 +1,10 @@
 ## The below functions describe the quantity of the SP Increase or Decrease for two cluster type: Average, Tolerant
 
 ## There are four total models saved as .pkl files in the Interaction_Models folder:
-## Average_Amount_SP_Decrease.pkl = Amount of SP Decrease for an Average Occupant
-## Average_Amount_SP_Increase.pkl = Amount of SP Increase for an Average Occupant
-## Tolerant_Amount_SP_Decrease.pkl = Amount of SP Decrease for a Tolerant Occupant
-## Tolerant_Amount_SP_Increase.pkl = Amount of SP Increase for a Tolerant Occupant
+## Average_Amount_SP_Decrease_v2.pkl = Amount of SP Decrease for an Average Occupant
+## Average_Amount_SP_Increase_v2.pkl = Amount of SP Increase for an Average Occupant
+## Tolerant_Amount_SP_Decrease_v2.pkl = Amount of SP Decrease for a Tolerant Occupant
+## Tolerant_Amount_SP_Increase_v2.pkl = Amount of SP Increase for a Tolerant Occupant
 
 ## Each model is a trained random forest model that has three predictor values and one output value
 
@@ -20,7 +20,8 @@
 ## The below sample code can be used to load and deploy the models:
 
 # Load the model from the pickle file
-filename = 'Average_Amount_SP_Decrease.pkl'
+# Note: use v2 of models, see note in models folder
+filename = 'Average_Amount_SP_Decrease_v2.pkl'
 with open(filename, 'rb') as file:
     average_Amount_SP_Decrease_model = pickle.load(file)
 

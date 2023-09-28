@@ -44,7 +44,7 @@ a_average_sleep = 26.31
 b_average_sleep = -1.56
 
 
-##Probability of a SP Increase equations:
+##Probability of a SP Decrease equations:
 
 a_tolerant_decrease = -23.19
 b_tolerant_decrease = 0.97
