@@ -190,8 +190,8 @@ def build_schema():
 
         # occupant
         occupant_type = 'Tolerant' if setpoint_id == 'Cluster_0_SPs' else 'Average'
-        increase_source_filepath = os.path.join(INTERACTION_MODEL_DIRECTORY, f'{occupant_type}_Amount_SP_Increase.pkl')
-        decrease_source_filepath = os.path.join(INTERACTION_MODEL_DIRECTORY, f'{occupant_type}_Amount_SP_Decrease.pkl')
+        increase_source_filepath = os.path.join(INTERACTION_MODEL_DIRECTORY, f'{occupant_type}_Amount_SP_Increase_v2.pkl')
+        decrease_source_filepath = os.path.join(INTERACTION_MODEL_DIRECTORY, f'{occupant_type}_Amount_SP_Decrease_v2.pkl')
         increase_destination_filename = f'{bldg_id}_setpoint_increase.pkl'
         increase_destination_filepath = os.path.join(SCHEMA_DIRECTORY, increase_destination_filename)
         decrease_destination_filename = f'{bldg_id}_setpoint_decrease.pkl'
