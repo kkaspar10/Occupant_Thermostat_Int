@@ -184,6 +184,10 @@
     "indoor_dry_bulb_temperature_delta": {
       "active": false,
       "shared_in_central_agent": false
+    },
+    "power_outage": {
+      "active": false,
+      "shared_in_central_agent": false
     }
   },
   "actions": {
@@ -207,7 +211,7 @@
     }
   },
   "agent": {
-    "type": "citylearn.agents.sac.SACBasicRBC",
+    "type": "citylearn.agents.sac.SAC",
     "attributes": {
       "hidden_dimension": [
         256,
@@ -249,7 +253,7 @@
           "safety_factor": 1.0
         },
         "attributes": {
-          "nominal_power": 13.155387087792267,
+          "nominal_power": 13.155386924743652,
           "efficiency": 0.21383226617698697,
           "target_cooling_temperature": 8.0,
           "target_heating_temperature": 46.19387500752791
@@ -262,7 +266,7 @@
           "safety_factor": 1.0
         },
         "attributes": {
-          "nominal_power": 7.548050632465659,
+          "nominal_power": 7.548050403594971,
           "efficiency": 0.9025417698676382
         }
       },
@@ -407,7 +411,7 @@
           "safety_factor": 1.0
         },
         "attributes": {
-          "nominal_power": 43.517678902167326,
+          "nominal_power": 43.517677307128906,
           "efficiency": 0.21777773618689994,
           "target_cooling_temperature": 8.0,
           "target_heating_temperature": 47.75806976965395
@@ -420,7 +424,7 @@
           "safety_factor": 1.0
         },
         "attributes": {
-          "nominal_power": 13.705461101533494,
+          "nominal_power": 13.705460548400879,
           "efficiency": 0.8991638838717534
         }
       },
@@ -565,7 +569,7 @@
           "safety_factor": 1.0
         },
         "attributes": {
-          "nominal_power": 24.207555039572778,
+          "nominal_power": 24.20755386352539,
           "efficiency": 0.24382518277334128,
           "target_cooling_temperature": 8.0,
           "target_heating_temperature": 46.33014658791768
@@ -578,7 +582,7 @@
           "safety_factor": 1.0
         },
         "attributes": {
-          "nominal_power": 9.46927420285548,
+          "nominal_power": 9.469274520874023,
           "efficiency": 0.9427028401796251
         }
       },
@@ -723,7 +727,7 @@
           "safety_factor": 1.0
         },
         "attributes": {
-          "nominal_power": 16.493132862091375,
+          "nominal_power": 16.493135452270508,
           "efficiency": 0.23611141402237731,
           "target_cooling_temperature": 8.0,
           "target_heating_temperature": 47.701633411890924
@@ -736,7 +740,7 @@
           "safety_factor": 1.0
         },
         "attributes": {
-          "nominal_power": 17.90660449950529,
+          "nominal_power": 17.906604766845703,
           "efficiency": 0.9289346227465127
         }
       },
@@ -881,7 +885,7 @@
           "safety_factor": 1.0
         },
         "attributes": {
-          "nominal_power": 21.55935261545311,
+          "nominal_power": 21.55935287475586,
           "efficiency": 0.22921263756041282,
           "target_cooling_temperature": 8.0,
           "target_heating_temperature": 47.29758880693479
@@ -894,7 +898,7 @@
           "safety_factor": 1.0
         },
         "attributes": {
-          "nominal_power": 19.402852876927884,
+          "nominal_power": 19.40285301208496,
           "efficiency": 0.8784475136364926
         }
       },
@@ -1039,7 +1043,7 @@
           "safety_factor": 1.0
         },
         "attributes": {
-          "nominal_power": 37.24868711943644,
+          "nominal_power": 37.248687744140625,
           "efficiency": 0.2250333352950347,
           "target_cooling_temperature": 8.0,
           "target_heating_temperature": 46.81511647833986
@@ -1052,7 +1056,7 @@
           "safety_factor": 1.0
         },
         "attributes": {
-          "nominal_power": 17.342045743884018,
+          "nominal_power": 17.342044830322266,
           "efficiency": 0.8906739426488512
         }
       },
@@ -1197,7 +1201,7 @@
           "safety_factor": 1.0
         },
         "attributes": {
-          "nominal_power": 20.18455890587748,
+          "nominal_power": 20.18455696105957,
           "efficiency": 0.28851438423576753,
           "target_cooling_temperature": 8.0,
           "target_heating_temperature": 46.3923352232937
@@ -1210,7 +1214,7 @@
           "safety_factor": 1.0
         },
         "attributes": {
-          "nominal_power": 18.401188636852606,
+          "nominal_power": 18.40118980407715,
           "efficiency": 0.8913038655468742
         }
       },
@@ -1355,7 +1359,7 @@
           "safety_factor": 1.0
         },
         "attributes": {
-          "nominal_power": 26.521631432496687,
+          "nominal_power": 26.521631240844727,
           "efficiency": 0.2511715359686253,
           "target_cooling_temperature": 8.0,
           "target_heating_temperature": 46.17239222760356
@@ -1368,7 +1372,7 @@
           "safety_factor": 1.0
         },
         "attributes": {
-          "nominal_power": 5.90175520677574,
+          "nominal_power": 5.901754856109619,
           "efficiency": 0.8631515686791723
         }
       },
@@ -1513,7 +1517,7 @@
           "safety_factor": 1.0
         },
         "attributes": {
-          "nominal_power": 42.68176121164938,
+          "nominal_power": 42.681758880615234,
           "efficiency": 0.28176472386077833,
           "target_cooling_temperature": 8.0,
           "target_heating_temperature": 45.232674696731245
@@ -1526,7 +1530,7 @@
           "safety_factor": 1.0
         },
         "attributes": {
-          "nominal_power": 17.567489164179285,
+          "nominal_power": 17.567489624023438,
           "efficiency": 0.9246511379049237
         }
       },
@@ -1671,7 +1675,7 @@
           "safety_factor": 1.0
         },
         "attributes": {
-          "nominal_power": 40.2277582320178,
+          "nominal_power": 40.22775650024414,
           "efficiency": 0.2320220182799011,
           "target_cooling_temperature": 8.0,
           "target_heating_temperature": 46.91056840089622
@@ -1684,7 +1688,7 @@
           "safety_factor": 1.0
         },
         "attributes": {
-          "nominal_power": 16.48542604300511,
+          "nominal_power": 16.48542594909668,
           "efficiency": 0.8761334017701217
         }
       },
