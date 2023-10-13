@@ -70,6 +70,7 @@ reward_function:
         band: 2.0
 building_type: occ_citylearn.LogisticRegressionOccupantInteractionBuilding
 heating_device_type: citylearn.energy_model.HeatPump
+heating_device_autosize_safety_factor: 1.3
 heating_device_efficiency:
     minimum: 0.2
     maximum: 0.3
@@ -80,6 +81,7 @@ dhw_device_efficiency:
     minimum: 0.85
     maximum: 0.95
 dhw_device_type: citylearn.energy_model.ElectricHeater
+dhw_device_autosize_safety_factor: 1.1
 dynamics:
     type: citylearn.dynamics.LSTMDynamics
     default_lstm_model: 508889
