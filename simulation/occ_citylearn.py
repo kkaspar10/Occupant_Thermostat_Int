@@ -1,15 +1,15 @@
 import importlib
 import os
 from pathlib import Path
-import pickle
-from typing import Any, Iterable, List, Mapping, Tuple, Union
+from typing import Iterable, List, Mapping, Tuple, Union
 from citylearn.base import Environment, EpisodeTracker
 from citylearn.building import Building, LSTMDynamicsBuilding
 from citylearn.citylearn import CityLearnEnv
 from citylearn.data import TimeSeriesData
-from citylearn.reward_function import RewardFunction
+from citylearn.reward_function import ComfortReward, RewardFunction
 import numpy as np
 import pandas as pd
+from utilities import FileHandler
 
 class LogisticRegressionOccupantParameters(TimeSeriesData):
     def __init__(self, a_increase: Iterable[float], b_increase: Iterable[float], a_decrease: Iterable[float], b_decrease: Iterable[float], start_time_step: int = None, end_time_step: int = None):
@@ -55,19 +55,20 @@ class LogisticRegressionOccupant(Occupant):
     @setpoint_increase_model_filepath.setter
     def setpoint_increase_model_filepath(self, value: Union[Path, str]):
         self.__setpoint_increase_model_filepath = value
-        self.__setpoint_increase_model = read_pickle(self.setpoint_increase_model_filepath)
+        self.__setpoint_increase_model = FileHandler.read_pickle(self.setpoint_increase_model_filepath)
 
     @setpoint_decrease_model_filepath.setter
     def setpoint_decrease_model_filepath(self, value: Union[Path, str]):
         self.__setpoint_decrease_model_filepath = value
-        self.__setpoint_decrease_model = read_pickle(self.setpoint_decrease_model_filepath)
+        self.__setpoint_decrease_model = FileHandler.read_pickle(self.setpoint_decrease_model_filepath)
 
     def predict(self, x: Tuple[float, List[float]]) -> float:
         delta = super().predict()
+        response = None
         interaction_input, delta_input = x
-        interaction_probability = lambda  a, b: 1/(1 + np.exp(-(a[self.time_step] + b[self.time_step]*interaction_input)))
-        increase_interaction_probability = interaction_probability(self.parameters.a_increase, self.parameters.b_increase)
-        decrease_interaction_probability = interaction_probability(self.parameters.a_decrease, self.parameters.b_decrease)
+        interaction_probability = lambda  a, b, x_ : 1/(1 + np.exp(-(a + b*x_)))
+        increase_interaction_probability = interaction_probability(self.parameters.a_increase[self.time_step], self.parameters.b_increase[self.time_step], interaction_input)
+        decrease_interaction_probability = interaction_probability(self.parameters.a_decrease[self.time_step], self.parameters.b_decrease[self.time_step], interaction_input)
         
         if increase_interaction_probability > 0.0 and decrease_interaction_probability > 0.0:
             pass
@@ -86,15 +87,15 @@ class LogisticRegressionOccupant(Occupant):
         return delta
 
 class OccupantInteractionBuilding(LSTMDynamicsBuilding):
-    def __init__(self, *args, occupant: Occupant = None, **kwargs):
+    def __init__(self, *args, occupant: Occupant = None, ignore_occupant: bool = None, **kwargs):
         # occupant is an optional parameter for now.
         # When the CityLearnEnv._load function eventually gets updated in 
         # CityLearn release to support occupant model, will make occupant 
         # parameter compulsory for this building type
+        
         self.occupant = Occupant() if occupant is None else occupant
-        super().__init__(*args, **kwargs)
-
-    
+        self.ignore_occupant = False if ignore_occupant is None else ignore_occupant
+        super().__init__(*args, **kwargs)    
         
     @LSTMDynamicsBuilding.episode_tracker.setter
     def episode_tracker(self, episode_tracker: EpisodeTracker):
@@ -110,7 +111,7 @@ class OccupantInteractionBuilding(LSTMDynamicsBuilding):
         super().next_time_step()
         self.occupant.next_time_step()
 
-        if self.simulate_dynamics:
+        if self.simulate_dynamics and not self.ignore_occupant:
             self.update_setpoints()
         else:
             pass
@@ -128,6 +129,7 @@ class OccupantInteractionBuilding(LSTMDynamicsBuilding):
 class LogisticRegressionOccupantInteractionBuilding(OccupantInteractionBuilding):
     def __init__(self, *args, occupant: LogisticRegressionOccupant = None, **kwargs):
         super().__init__(*args, occupant=occupant, **kwargs)
+        self.occupant: LogisticRegressionOccupant
 
     def update_setpoints(self):
         current_setpoint = self.energy_simulation.indoor_dry_bulb_temperature_set_point[self.time_step]
@@ -136,9 +138,9 @@ class LogisticRegressionOccupantInteractionBuilding(OccupantInteractionBuilding)
         previous_temperature = self.energy_simulation.indoor_dry_bulb_temperature[self.time_step - 1]
         interaction_input = current_temperature
         delta_input = [current_setpoint, previous_setpoint, previous_temperature - previous_setpoint]
-        model_input = (interaction_input, delta_input)       
-        setpoint_delta = self.occupant.predict(model_input)
-        self.energy_simulation.indoor_dry_bulb_temperature[self.time_step] = current_setpoint + setpoint_delta
+        model_input = (interaction_input, delta_input)      
+        setpoint_delta = self.occupant.predict(x=model_input)
+        self.energy_simulation.indoor_dry_bulb_temperature_set_point[self.time_step] = current_setpoint + setpoint_delta
 
     def reset_data_sets(self):
         super().reset_data_sets()
@@ -175,25 +177,7 @@ class OCCCityLearnEnv(CityLearnEnv):
                 _ = attributes.pop(f'setpoint_{k}_model_filename')
 
             b.occupant = occupant_constructor(**attributes)
+            b.reset_data_sets()
             args[buildings_ix][i] = b
 
         return args
-    
-def read_pickle(filepath: str) -> Any:
-    """Return pickle object.
-    
-    Parameters
-    ----------
-    filepath : str
-       pathname of pickle file.
-       
-    Returns
-    -------
-    obj: Any
-        JSON document converted to dictionary.
-    """
-
-    with open(filepath, 'rb') as f:
-        data = pickle.load(f)
-
-    return data
