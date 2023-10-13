@@ -11,6 +11,10 @@
     [
       2160,
       4319
+    ],
+    [
+      4320,
+      6479
     ]
   ],
   "rolling_episode_split": false,
@@ -250,10 +254,10 @@
         "type": "citylearn.energy_model.HeatPump",
         "autosize": false,
         "autosize_attributes": {
-          "safety_factor": 1.0
+          "safety_factor": 1.3
         },
         "attributes": {
-          "nominal_power": 13.155386924743652,
+          "nominal_power": 14.504129219055176,
           "efficiency": 0.21383226617698697,
           "target_cooling_temperature": 8.0,
           "target_heating_temperature": 46.19387500752791
@@ -263,10 +267,10 @@
         "type": "citylearn.energy_model.ElectricHeater",
         "autosize": false,
         "autosize_attributes": {
-          "safety_factor": 1.0
+          "safety_factor": 1.1
         },
         "attributes": {
-          "nominal_power": 7.548050403594971,
+          "nominal_power": 8.278150510787965,
           "efficiency": 0.9025417698676382
         }
       },
@@ -408,10 +412,10 @@
         "type": "citylearn.energy_model.HeatPump",
         "autosize": false,
         "autosize_attributes": {
-          "safety_factor": 1.0
+          "safety_factor": 1.3
         },
         "attributes": {
-          "nominal_power": 43.517677307128906,
+          "nominal_power": 46.88068962097168,
           "efficiency": 0.21777773618689994,
           "target_cooling_temperature": 8.0,
           "target_heating_temperature": 47.75806976965395
@@ -421,10 +425,10 @@
         "type": "citylearn.energy_model.ElectricHeater",
         "autosize": false,
         "autosize_attributes": {
-          "safety_factor": 1.0
+          "safety_factor": 1.1
         },
         "attributes": {
-          "nominal_power": 13.705460548400879,
+          "nominal_power": 15.076006603240968,
           "efficiency": 0.8991638838717534
         }
       },
@@ -566,10 +570,10 @@
         "type": "citylearn.energy_model.HeatPump",
         "autosize": false,
         "autosize_attributes": {
-          "safety_factor": 1.0
+          "safety_factor": 1.3
         },
         "attributes": {
-          "nominal_power": 24.20755386352539,
+          "nominal_power": 27.328559494018556,
           "efficiency": 0.24382518277334128,
           "target_cooling_temperature": 8.0,
           "target_heating_temperature": 46.33014658791768
@@ -579,10 +583,10 @@
         "type": "citylearn.energy_model.ElectricHeater",
         "autosize": false,
         "autosize_attributes": {
-          "safety_factor": 1.0
+          "safety_factor": 1.1
         },
         "attributes": {
-          "nominal_power": 9.469274520874023,
+          "nominal_power": 10.416201972961426,
           "efficiency": 0.9427028401796251
         }
       },
@@ -724,10 +728,10 @@
         "type": "citylearn.energy_model.HeatPump",
         "autosize": false,
         "autosize_attributes": {
-          "safety_factor": 1.0
+          "safety_factor": 1.3
         },
         "attributes": {
-          "nominal_power": 16.493135452270508,
+          "nominal_power": 17.531792640686035,
           "efficiency": 0.23611141402237731,
           "target_cooling_temperature": 8.0,
           "target_heating_temperature": 47.701633411890924
@@ -737,10 +741,10 @@
         "type": "citylearn.energy_model.ElectricHeater",
         "autosize": false,
         "autosize_attributes": {
-          "safety_factor": 1.0
+          "safety_factor": 1.1
         },
         "attributes": {
-          "nominal_power": 17.906604766845703,
+          "nominal_power": 19.697265243530275,
           "efficiency": 0.9289346227465127
         }
       },
@@ -882,10 +886,10 @@
         "type": "citylearn.energy_model.HeatPump",
         "autosize": false,
         "autosize_attributes": {
-          "safety_factor": 1.0
+          "safety_factor": 1.3
         },
         "attributes": {
-          "nominal_power": 21.55935287475586,
+          "nominal_power": 23.227938842773437,
           "efficiency": 0.22921263756041282,
           "target_cooling_temperature": 8.0,
           "target_heating_temperature": 47.29758880693479
@@ -895,10 +899,10 @@
         "type": "citylearn.energy_model.ElectricHeater",
         "autosize": false,
         "autosize_attributes": {
-          "safety_factor": 1.0
+          "safety_factor": 1.1
         },
         "attributes": {
-          "nominal_power": 19.40285301208496,
+          "nominal_power": 21.34313831329346,
           "efficiency": 0.8784475136364926
         }
       },
@@ -1040,10 +1044,10 @@
         "type": "citylearn.energy_model.HeatPump",
         "autosize": false,
         "autosize_attributes": {
-          "safety_factor": 1.0
+          "safety_factor": 1.3
         },
         "attributes": {
-          "nominal_power": 37.248687744140625,
+          "nominal_power": 41.01858196258545,
           "efficiency": 0.2250333352950347,
           "target_cooling_temperature": 8.0,
           "target_heating_temperature": 46.81511647833986
@@ -1053,10 +1057,10 @@
         "type": "citylearn.energy_model.ElectricHeater",
         "autosize": false,
         "autosize_attributes": {
-          "safety_factor": 1.0
+          "safety_factor": 1.1
         },
         "attributes": {
-          "nominal_power": 17.342044830322266,
+          "nominal_power": 19.076249313354495,
           "efficiency": 0.8906739426488512
         }
       },
@@ -1198,10 +1202,10 @@
         "type": "citylearn.energy_model.HeatPump",
         "autosize": false,
         "autosize_attributes": {
-          "safety_factor": 1.0
+          "safety_factor": 1.3
         },
         "attributes": {
-          "nominal_power": 20.18455696105957,
+          "nominal_power": 22.190216064453125,
           "efficiency": 0.28851438423576753,
           "target_cooling_temperature": 8.0,
           "target_heating_temperature": 46.3923352232937
@@ -1211,10 +1215,10 @@
         "type": "citylearn.energy_model.ElectricHeater",
         "autosize": false,
         "autosize_attributes": {
-          "safety_factor": 1.0
+          "safety_factor": 1.1
         },
         "attributes": {
-          "nominal_power": 18.40118980407715,
+          "nominal_power": 20.23965549468994,
           "efficiency": 0.8913038655468742
         }
       },
@@ -1356,10 +1360,10 @@
         "type": "citylearn.energy_model.HeatPump",
         "autosize": false,
         "autosize_attributes": {
-          "safety_factor": 1.0
+          "safety_factor": 1.3
         },
         "attributes": {
-          "nominal_power": 26.521631240844727,
+          "nominal_power": 28.937457275390624,
           "efficiency": 0.2511715359686253,
           "target_cooling_temperature": 8.0,
           "target_heating_temperature": 46.17239222760356
@@ -1369,10 +1373,10 @@
         "type": "citylearn.energy_model.ElectricHeater",
         "autosize": false,
         "autosize_attributes": {
-          "safety_factor": 1.0
+          "safety_factor": 1.1
         },
         "attributes": {
-          "nominal_power": 5.901754856109619,
+          "nominal_power": 6.491929292678834,
           "efficiency": 0.8631515686791723
         }
       },
@@ -1514,10 +1518,10 @@
         "type": "citylearn.energy_model.HeatPump",
         "autosize": false,
         "autosize_attributes": {
-          "safety_factor": 1.0
+          "safety_factor": 1.3
         },
         "attributes": {
-          "nominal_power": 42.681758880615234,
+          "nominal_power": 46.77199096679688,
           "efficiency": 0.28176472386077833,
           "target_cooling_temperature": 8.0,
           "target_heating_temperature": 45.232674696731245
@@ -1527,10 +1531,10 @@
         "type": "citylearn.energy_model.ElectricHeater",
         "autosize": false,
         "autosize_attributes": {
-          "safety_factor": 1.0
+          "safety_factor": 1.1
         },
         "attributes": {
-          "nominal_power": 17.567489624023438,
+          "nominal_power": 19.324238586425782,
           "efficiency": 0.9246511379049237
         }
       },
@@ -1672,10 +1676,10 @@
         "type": "citylearn.energy_model.HeatPump",
         "autosize": false,
         "autosize_attributes": {
-          "safety_factor": 1.0
+          "safety_factor": 1.3
         },
         "attributes": {
-          "nominal_power": 40.22775650024414,
+          "nominal_power": 43.85159797668457,
           "efficiency": 0.2320220182799011,
           "target_cooling_temperature": 8.0,
           "target_heating_temperature": 46.91056840089622
@@ -1685,10 +1689,10 @@
         "type": "citylearn.energy_model.ElectricHeater",
         "autosize": false,
         "autosize_attributes": {
-          "safety_factor": 1.0
+          "safety_factor": 1.1
         },
         "attributes": {
-          "nominal_power": 16.48542594909668,
+          "nominal_power": 18.13396854400635,
           "efficiency": 0.8761334017701217
         }
       },
