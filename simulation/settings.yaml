@@ -56,19 +56,22 @@ active_actions:
 active_observations:
 - day_type
 - hour
+# - heating_device_cop
+# - heating_electricity_consumption
 - outdoor_dry_bulb_temperature
 - outdoor_dry_bulb_temperature_predicted_6h
-- outdoor_dry_bulb_temperature_predicted_12h
-- outdoor_dry_bulb_temperature_predicted_24h
+# - outdoor_dry_bulb_temperature_predicted_12h
+# - outdoor_dry_bulb_temperature_predicted_24h
 - indoor_dry_bulb_temperature
-- net_electricity_consumption
-- occupant_count
+# - net_electricity_consumption
+# - occupant_count
 - indoor_dry_bulb_temperature_set_point
+- indoor_dry_bulb_temperature_delta
 reward_function:
     type: citylearn.reward_function.ComfortReward
     attributes:
         band: 2.0
-building_type: occ_citylearn.LogisticRegressionOccupantInteractionBuilding
+building_type: src.occ_citylearn.LogisticRegressionOccupantInteractionBuilding
 heating_device_type: citylearn.energy_model.HeatPump
 heating_device_autosize_safety_factor: 1.3
 heating_device_efficiency:
@@ -119,7 +122,7 @@ dynamics:
             - day_type_cos
             - indoor_dry_bulb_temperature
 occupant:
-    type: occ_citylearn.LogisticRegressionOccupant
+    type: src.occ_citylearn.LogisticRegressionOccupant
     parameters:
         Tolerant:
             increase:
