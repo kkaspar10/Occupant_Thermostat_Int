@@ -1,3 +1,3 @@
-python simulation/energyplus.py select_buildings
-python simulation/energyplus.py simulate
-python simulation/energyplus.py build_schema
+python -m src.energyplus select_buildings
+python -m src.energyplus simulate
+python -m src.energyplus build_schema
