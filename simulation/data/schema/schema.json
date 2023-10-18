@@ -46,11 +46,11 @@
       "shared_in_central_agent": true
     },
     "outdoor_dry_bulb_temperature_predicted_12h": {
-      "active": true,
+      "active": false,
       "shared_in_central_agent": true
     },
     "outdoor_dry_bulb_temperature_predicted_24h": {
-      "active": true,
+      "active": false,
       "shared_in_central_agent": true
     },
     "outdoor_relative_humidity": {
@@ -142,7 +142,7 @@
       "shared_in_central_agent": false
     },
     "net_electricity_consumption": {
-      "active": true,
+      "active": false,
       "shared_in_central_agent": false
     },
     "electricity_pricing": {
@@ -178,7 +178,7 @@
       "shared_in_central_agent": false
     },
     "occupant_count": {
-      "active": true,
+      "active": false,
       "shared_in_central_agent": false
     },
     "indoor_dry_bulb_temperature_set_point": {
@@ -186,7 +186,7 @@
       "shared_in_central_agent": false
     },
     "indoor_dry_bulb_temperature_delta": {
-      "active": false,
+      "active": true,
       "shared_in_central_agent": false
     },
     "power_outage": {
@@ -242,7 +242,7 @@
   },
   "buildings": {
     "247942": {
-      "type": "occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
+      "type": "src.occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
       "include": true,
       "energy_simulation": "247942.csv",
       "weather": "weather.csv",
@@ -387,7 +387,7 @@
         }
       },
       "occupant": {
-        "type": "occ_citylearn.LogisticRegressionOccupant",
+        "type": "src.occ_citylearn.LogisticRegressionOccupant",
         "parameters_filename": "247942_occupant_parameters.csv",
         "attributes": {
           "setpoint_increase_model_filename": "247942_setpoint_increase.pkl",
@@ -400,7 +400,7 @@
       }
     },
     "20199": {
-      "type": "occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
+      "type": "src.occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
       "include": true,
       "energy_simulation": "20199.csv",
       "weather": "weather.csv",
@@ -545,7 +545,7 @@
         }
       },
       "occupant": {
-        "type": "occ_citylearn.LogisticRegressionOccupant",
+        "type": "src.occ_citylearn.LogisticRegressionOccupant",
         "parameters_filename": "20199_occupant_parameters.csv",
         "attributes": {
           "setpoint_increase_model_filename": "20199_setpoint_increase.pkl",
@@ -558,7 +558,7 @@
       }
     },
     "481052": {
-      "type": "occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
+      "type": "src.occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
       "include": true,
       "energy_simulation": "481052.csv",
       "weather": "weather.csv",
@@ -703,7 +703,7 @@
         }
       },
       "occupant": {
-        "type": "occ_citylearn.LogisticRegressionOccupant",
+        "type": "src.occ_citylearn.LogisticRegressionOccupant",
         "parameters_filename": "481052_occupant_parameters.csv",
         "attributes": {
           "setpoint_increase_model_filename": "481052_setpoint_increase.pkl",
@@ -716,7 +716,7 @@
       }
     },
     "498771": {
-      "type": "occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
+      "type": "src.occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
       "include": true,
       "energy_simulation": "498771.csv",
       "weather": "weather.csv",
@@ -861,7 +861,7 @@
         }
       },
       "occupant": {
-        "type": "occ_citylearn.LogisticRegressionOccupant",
+        "type": "src.occ_citylearn.LogisticRegressionOccupant",
         "parameters_filename": "498771_occupant_parameters.csv",
         "attributes": {
           "setpoint_increase_model_filename": "498771_setpoint_increase.pkl",
@@ -874,7 +874,7 @@
       }
     },
     "199613": {
-      "type": "occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
+      "type": "src.occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
       "include": true,
       "energy_simulation": "199613.csv",
       "weather": "weather.csv",
@@ -1019,7 +1019,7 @@
         }
       },
       "occupant": {
-        "type": "occ_citylearn.LogisticRegressionOccupant",
+        "type": "src.occ_citylearn.LogisticRegressionOccupant",
         "parameters_filename": "199613_occupant_parameters.csv",
         "attributes": {
           "setpoint_increase_model_filename": "199613_setpoint_increase.pkl",
@@ -1032,7 +1032,7 @@
       }
     },
     "75252": {
-      "type": "occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
+      "type": "src.occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
       "include": true,
       "energy_simulation": "75252.csv",
       "weather": "weather.csv",
@@ -1177,7 +1177,7 @@
         }
       },
       "occupant": {
-        "type": "occ_citylearn.LogisticRegressionOccupant",
+        "type": "src.occ_citylearn.LogisticRegressionOccupant",
         "parameters_filename": "75252_occupant_parameters.csv",
         "attributes": {
           "setpoint_increase_model_filename": "75252_setpoint_increase.pkl",
@@ -1190,7 +1190,7 @@
       }
     },
     "546814": {
-      "type": "occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
+      "type": "src.occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
       "include": true,
       "energy_simulation": "546814.csv",
       "weather": "weather.csv",
@@ -1335,7 +1335,7 @@
         }
       },
       "occupant": {
-        "type": "occ_citylearn.LogisticRegressionOccupant",
+        "type": "src.occ_citylearn.LogisticRegressionOccupant",
         "parameters_filename": "546814_occupant_parameters.csv",
         "attributes": {
           "setpoint_increase_model_filename": "546814_setpoint_increase.pkl",
@@ -1348,7 +1348,7 @@
       }
     },
     "4421": {
-      "type": "occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
+      "type": "src.occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
       "include": true,
       "energy_simulation": "4421.csv",
       "weather": "weather.csv",
@@ -1493,7 +1493,7 @@
         }
       },
       "occupant": {
-        "type": "occ_citylearn.LogisticRegressionOccupant",
+        "type": "src.occ_citylearn.LogisticRegressionOccupant",
         "parameters_filename": "4421_occupant_parameters.csv",
         "attributes": {
           "setpoint_increase_model_filename": "4421_setpoint_increase.pkl",
@@ -1506,7 +1506,7 @@
       }
     },
     "508889": {
-      "type": "occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
+      "type": "src.occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
       "include": true,
       "energy_simulation": "508889.csv",
       "weather": "weather.csv",
@@ -1651,7 +1651,7 @@
         }
       },
       "occupant": {
-        "type": "occ_citylearn.LogisticRegressionOccupant",
+        "type": "src.occ_citylearn.LogisticRegressionOccupant",
         "parameters_filename": "508889_occupant_parameters.csv",
         "attributes": {
           "setpoint_increase_model_filename": "508889_setpoint_increase.pkl",
@@ -1664,7 +1664,7 @@
       }
     },
     "79194": {
-      "type": "occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
+      "type": "src.occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
       "include": true,
       "energy_simulation": "79194.csv",
       "weather": "weather.csv",
@@ -1809,7 +1809,7 @@
         }
       },
       "occupant": {
-        "type": "occ_citylearn.LogisticRegressionOccupant",
+        "type": "src.occ_citylearn.LogisticRegressionOccupant",
         "parameters_filename": "79194_occupant_parameters.csv",
         "attributes": {
           "setpoint_increase_model_filename": "79194_setpoint_increase.pkl",
