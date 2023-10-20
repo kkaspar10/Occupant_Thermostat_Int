@@ -1,4 +1,4 @@
-CityLearn==2.1b11
+CityLearn==2.1b12
 git+https://github.com/intelligent-environments-lab/DOE_XStock.git@v0.0.2
 pyyaml
 stable-baselines3==1.7.0
