@@ -140,7 +140,11 @@ class LogisticRegressionOccupantInteractionBuilding(OccupantInteractionBuilding)
         delta_input = [current_setpoint, previous_setpoint, previous_temperature - previous_setpoint]
         model_input = (interaction_input, delta_input)      
         setpoint_delta = self.occupant.predict(x=model_input)
-        self.energy_simulation.indoor_dry_bulb_temperature_set_point[self.time_step:] = current_setpoint + setpoint_delta
+
+        if abs(setpoint_delta) > 0.0:
+            self.energy_simulation.indoor_dry_bulb_temperature_set_point[self.time_step:] = current_setpoint + setpoint_delta
+        else:
+            pass
 
     def reset_data_sets(self):
         super().reset_data_sets()
