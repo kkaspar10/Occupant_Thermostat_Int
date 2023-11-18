@@ -174,7 +174,15 @@ class CityLearnSimulation:
                 'energy_to_non_shiftable_load': b.energy_to_non_shiftable_load,
                 'energy_from_dhw_device': b.energy_from_dhw_device,
                 'energy_from_heating_device': b.energy_from_heating_device,
+                'occupant_a_increase': b.occupant.parameters.a_increase,
+                'occupant_b_increase': b.occupant.parameters.b_increase,
+                'occupant_a_decrease': b.occupant.parameters.a_decrease,
+                'occupant_b_decrease': b.occupant.parameters.b_decrease,
+                'occupant_increase_setpoint_probability': b.occupant.probabilities['increase_setpoint'],
+                'occupant_decrease_setpoint_probability': b.occupant.probabilities['decrease_setpoint'],
+                'occupant_random_probability': b.occupant.probabilities['random'],
             })
+
             data['time_step'] = data.index
             data_list.append(data)
 

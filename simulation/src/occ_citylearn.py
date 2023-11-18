@@ -39,10 +39,15 @@ class LogisticRegressionOccupant(Occupant):
         super().__init__(**kwargs)
         self.__setpoint_increase_model = None
         self.__setpoint_decrease_model = None
+        self.__probabilities = None
         self.setpoint_increase_model_filepath = setpoint_increase_model_filepath
         self.setpoint_decrease_model_filepath = setpoint_decrease_model_filepath
         self.delta_output_map = delta_output_map
         self.parameters = parameters
+
+    @property
+    def probabilities(self) -> Mapping[str, float]:
+        return self.__probabilities
 
     @property
     def setpoint_increase_model_filepath(self) -> Union[Path, str]:
@@ -67,17 +72,21 @@ class LogisticRegressionOccupant(Occupant):
         response = None
         interaction_input, delta_input = x
         interaction_probability = lambda  a, b, x_ : 1/(1 + np.exp(-(a + b*x_)))
-        increase_interaction_probability = interaction_probability(self.parameters.a_increase[self.time_step], self.parameters.b_increase[self.time_step], interaction_input)
-        decrease_interaction_probability = interaction_probability(self.parameters.a_decrease[self.time_step], self.parameters.b_decrease[self.time_step], interaction_input)
+        increase_setpoint_probability = interaction_probability(self.parameters.a_increase[self.time_step], self.parameters.b_increase[self.time_step], interaction_input)
+        decrease_setpoint_probability = interaction_probability(self.parameters.a_decrease[self.time_step], self.parameters.b_decrease[self.time_step], interaction_input)
+        random_probability = np.random.uniform()
+        self.__probabilities['increase_setpoint'][self.time_step] = increase_setpoint_probability
+        self.__probabilities['decrease_setpoint'][self.time_step] = decrease_setpoint_probability
+        self.__probabilities['random'][self.time_step] = random_probability
         
-        if increase_interaction_probability > 0.0 and decrease_interaction_probability > 0.0:
+        if increase_setpoint_probability > 0.0 and decrease_setpoint_probability > 0.0:
             pass
 
-        elif increase_interaction_probability > 0.0 and np.random.uniform() <= increase_interaction_probability:
+        elif increase_setpoint_probability > 0.0 and random_probability <= increase_setpoint_probability:
             response = self.__setpoint_increase_model.predict(delta_input)
             delta = self.delta_output_map[response]
 
-        elif decrease_interaction_probability > 0.0 and np.random.uniform() <= decrease_interaction_probability:
+        elif decrease_setpoint_probability > 0.0 and random_probability <= decrease_setpoint_probability:
             response = self.__setpoint_decrease_model.predict(delta_input)
             delta = self.delta_output_map[response]
 
@@ -85,6 +94,15 @@ class LogisticRegressionOccupant(Occupant):
             pass
 
         return delta
+    
+    def reset(self):
+        super().reset()
+        self.__probabilities = {
+            'increase_setpoint': np.zeros(self.episode_tracker.episode_time_steps, dtype='float32'),
+            'decrease_setpoint': np.zeros(self.episode_tracker.episode_time_steps, dtype='float32'),
+            'random': np.zeros(self.episode_tracker.episode_time_steps, dtype='float32'),
+        }
+
 
 class OccupantInteractionBuilding(LSTMDynamicsBuilding):
     def __init__(self, *args, occupant: Occupant = None, ignore_occupant: bool = None, **kwargs):
