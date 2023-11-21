@@ -103,7 +103,6 @@ class LogisticRegressionOccupant(Occupant):
             'random': np.zeros(self.episode_tracker.episode_time_steps, dtype='float32'),
         }
 
-
 class OccupantInteractionBuilding(LSTMDynamicsBuilding):
     def __init__(self, *args, occupant: Occupant = None, ignore_occupant: bool = None, **kwargs):
         # occupant is an optional parameter for now.
@@ -124,15 +123,18 @@ class OccupantInteractionBuilding(LSTMDynamicsBuilding):
         """Update building indoor temperature dry-bulb temperature, humidity, etc setpoint using occupant interaction model."""
 
         raise NotImplementedError
-
-    def next_time_step(self):
-        super().next_time_step()
-        self.occupant.next_time_step()
+    
+    def apply_actions(self, **kwargs):
+        super().apply_actions(**kwargs)
 
         if self.simulate_dynamics and not self.ignore_occupant:
             self.update_setpoints()
         else:
             pass
+
+    def next_time_step(self):
+        super().next_time_step()
+        self.occupant.next_time_step()
 
     def reset(self):
         super().reset()
