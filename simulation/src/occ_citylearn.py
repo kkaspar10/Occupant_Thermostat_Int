@@ -97,7 +97,7 @@ class LogisticRegressionOccupant(Occupant):
 
         elif decrease_setpoint_probability >= random_probability:
             response = self.__setpoint_decrease_model.predict(delta_input)
-            delta = self.delta_output_map[response[0]]
+            delta = -self.delta_output_map[response[0]]
 
         else:
             pass
@@ -169,11 +169,7 @@ class LogisticRegressionOccupantInteractionBuilding(OccupantInteractionBuilding)
         delta_input = [[current_setpoint, previous_setpoint, previous_temperature - previous_setpoint]]
         model_input = (interaction_input, delta_input)      
         setpoint_delta = self.occupant.predict(x=model_input)
-
-        if abs(setpoint_delta) > 0.0:
-            self.energy_simulation.indoor_dry_bulb_temperature_set_point[self.time_step:] = current_setpoint + setpoint_delta
-        else:
-            pass
+        self.energy_simulation.indoor_dry_bulb_temperature_set_point[self.time_step:] = current_setpoint + setpoint_delta
 
     def reset_data_sets(self):
         super().reset_data_sets()
