@@ -57,6 +57,10 @@ class LogisticRegressionOccupant(Occupant):
     def setpoint_decrease_model_filepath(self) -> Union[Path, str]:
         return self.__setpoint_decrease_model_filepath
     
+    @property
+    def delta_output_map(self) -> Mapping[int, float]:
+        return self.__delta_output_map
+    
     @setpoint_increase_model_filepath.setter
     def setpoint_increase_model_filepath(self, value: Union[Path, str]):
         self.__setpoint_increase_model_filepath = value
@@ -67,7 +71,11 @@ class LogisticRegressionOccupant(Occupant):
         self.__setpoint_decrease_model_filepath = value
         self.__setpoint_decrease_model = FileHandler.read_pickle(self.setpoint_decrease_model_filepath)
 
-    def predict(self, x: Tuple[float, List[float]]) -> float:
+    @delta_output_map.setter
+    def delta_output_map(self, value: Mapping[Union[str, int], float]):
+        self.__delta_output_map = {int(k): v for k, v in value.items()}
+
+    def predict(self, x: Tuple[float, List[List[float]]]) -> float:
         delta = super().predict()
         response = None
         interaction_input, delta_input = x
@@ -85,11 +93,11 @@ class LogisticRegressionOccupant(Occupant):
 
         elif increase_setpoint_probability >= random_probability:
             response = self.__setpoint_increase_model.predict(delta_input)
-            delta = self.delta_output_map[response]
+            delta = self.delta_output_map[response[0]]
 
         elif decrease_setpoint_probability >= random_probability:
             response = self.__setpoint_decrease_model.predict(delta_input)
-            delta = self.delta_output_map[response]
+            delta = self.delta_output_map[response[0]]
 
         else:
             pass
@@ -158,7 +166,7 @@ class LogisticRegressionOccupantInteractionBuilding(OccupantInteractionBuilding)
         current_temperature = self.energy_simulation.indoor_dry_bulb_temperature[self.time_step]
         previous_temperature = self.energy_simulation.indoor_dry_bulb_temperature[self.time_step - 1]
         interaction_input = current_temperature
-        delta_input = [current_setpoint, previous_setpoint, previous_temperature - previous_setpoint]
+        delta_input = [[current_setpoint, previous_setpoint, previous_temperature - previous_setpoint]]
         model_input = (interaction_input, delta_input)      
         setpoint_delta = self.occupant.predict(x=model_input)
 
