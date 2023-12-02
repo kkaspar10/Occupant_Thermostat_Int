@@ -121,7 +121,7 @@ class OccupantInteractionBuilding(LSTMDynamicsBuilding):
         
         self.occupant = Occupant() if occupant is None else occupant
         self.ignore_occupant = False if ignore_occupant is None else ignore_occupant
-        super().__init__(*args, **kwargs)    
+        super().__init__(*args, **kwargs)
         
     @LSTMDynamicsBuilding.episode_tracker.setter
     def episode_tracker(self, episode_tracker: EpisodeTracker):
@@ -156,9 +156,19 @@ class OccupantInteractionBuilding(LSTMDynamicsBuilding):
         self.energy_simulation.indoor_dry_bulb_temperature_set_point[start_ix:end_ix] = self.energy_simulation.indoor_dry_bulb_temperature_set_point_without_control.copy()[start_ix:end_ix]
 
 class LogisticRegressionOccupantInteractionBuilding(OccupantInteractionBuilding):
-    def __init__(self, *args, occupant: LogisticRegressionOccupant = None, **kwargs):
+    def __init__(self, *args, occupant: LogisticRegressionOccupant = None, set_point_hold_time_steps: int = None, **kwargs):
         super().__init__(*args, occupant=occupant, **kwargs)
         self.occupant: LogisticRegressionOccupant
+        self.__set_point_hold_time_step_counter = None
+        self.set_point_hold_time_steps = set_point_hold_time_steps
+        
+    @property
+    def set_point_hold_time_steps(self) -> int:
+        return int(self.__set_point_hold_time_steps)
+    
+    @set_point_hold_time_steps.setter
+    def set_point_hold_time_steps(self, value: int):
+        self.__set_point_hold_time_steps = 4 if value is None else value
 
     def update_setpoints(self):
         current_setpoint = self.energy_simulation.indoor_dry_bulb_temperature_set_point[self.time_step]
@@ -167,9 +177,26 @@ class LogisticRegressionOccupantInteractionBuilding(OccupantInteractionBuilding)
         previous_temperature = self.energy_simulation.indoor_dry_bulb_temperature[self.time_step - 1]
         interaction_input = current_temperature
         delta_input = [[current_setpoint, previous_setpoint, previous_temperature - previous_setpoint]]
-        model_input = (interaction_input, delta_input)      
+        model_input = (interaction_input, delta_input)   
         setpoint_delta = self.occupant.predict(x=model_input)
-        self.energy_simulation.indoor_dry_bulb_temperature_set_point[self.time_step:] = current_setpoint + setpoint_delta
+
+        if abs(setpoint_delta) > 0.0:
+            self.energy_simulation.indoor_dry_bulb_temperature_set_point[self.time_step:] = current_setpoint + setpoint_delta
+            self.__set_point_hold_time_step_counter = self.set_point_hold_time_steps
+
+        elif self.__set_point_hold_time_step_counter is None:
+            pass
+
+        else:
+            self.__set_point_hold_time_step_counter -= 1
+        
+        # revert back to default setpoint schedule if no occupant interaction in defined window
+        if self.__set_point_hold_time_step_counter is not None and self.__set_point_hold_time_step_counter == 0:
+            self.energy_simulation.indoor_dry_bulb_temperature_set_point[self.time_step + 1:] = self.energy_simulation.indoor_dry_bulb_temperature_set_point_without_control[self.time_step + 1:]
+            self.__set_point_hold_time_step_counter = None
+
+        else:
+            pass
 
     def reset_data_sets(self):
         super().reset_data_sets()
@@ -177,6 +204,10 @@ class LogisticRegressionOccupantInteractionBuilding(OccupantInteractionBuilding)
         end_time_step = self.episode_tracker.episode_end_time_step
         self.occupant.parameters.start_time_step = start_time_step
         self.occupant.parameters.end_time_step = end_time_step
+
+    def reset(self):
+        super().reset()
+        self.__set_point_hold_time_step_counter = None
 
 class OCCCityLearnEnv(CityLearnEnv):
     def __init__(self, *args, **kwargs):
