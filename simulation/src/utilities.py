@@ -22,6 +22,7 @@ class FileHandler:
     EPW_DIRECTORY = os.path.join(DATA_DIRECTORY, 'EPW_Files')
     CITYLEARN_WEATHER_DATA_DIRECTORY = os.path.join(DATA_DIRECTORY, 'CityLearn_Weather_Files')
     LSTM_MODEL_DIRECTORY = os.path.join(DATA_DIRECTORY, 'lstm_pth')
+    LSTM_MODEL_CONFIG_FILEPATH = os.path.join(LSTM_MODEL_DIRECTORY, 'best_config.json')
     SCHEMA_DIRECTORY = os.path.join(DATA_DIRECTORY, 'schema')
 
     @staticmethod
