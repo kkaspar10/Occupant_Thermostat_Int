@@ -1,10 +1,12 @@
 import argparse
 import concurrent.futures
 from datetime import datetime
+import getpass
 import inspect
 from multiprocessing import cpu_count
 import os
 from pathlib import Path
+import socket
 import subprocess
 import sys
 from typing import Any, List, Mapping, Tuple, Union
@@ -80,6 +82,8 @@ class CityLearnSimulation:
         evaluation_summary = CityLearnSimulation.get_evaluation_summary(env)
         agent_name, rbc_name, central_agent, reward_function_name = CityLearnSimulation.get_simulation_id(env, agent)
         evaluation_summary = {
+            'hostname': socket.gethostname(),
+            'username': getpass.getuser(),
             'level_of_detail': level_of_detail,
             'library': library,
             'agent': agent_name,
