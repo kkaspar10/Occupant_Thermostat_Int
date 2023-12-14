@@ -17,6 +17,7 @@ from src.utilities import FileHandler
 def build_schema():
     dynamics_normalization_minimum = pd.read_csv(os.path.join(FileHandler.LSTM_MODEL_DIRECTORY, 'min.csv'), index_col=0)
     dynamics_normalization_maximum = pd.read_csv(os.path.join(FileHandler.LSTM_MODEL_DIRECTORY, 'max.csv'), index_col=0)
+    lstm_config = read_json(FileHandler.LSTM_MODEL_CONFIG_FILEPATH)
     settings = FileHandler.get_settings()
     years = settings['years']['train'] + settings['years']['test']
     episode_time_steps = []
@@ -143,14 +144,6 @@ def build_schema():
         # temperature dynamics
         dynamics_bldg_name = bldg_name
         source_filepath = os.path.join(FileHandler.LSTM_MODEL_DIRECTORY, f'model_pth_VT, Chittenden County_{bldg_name}.pth')
-        # source_filepath = os.path.join(FileHandler.LSTM_MODEL_DIRECTORY, f'VT, Chittenden County_{bldg_name}.pth')
-            
-        if not os.path.isfile(source_filepath):
-            dynamics_bldg_name = settings['dynamics']['default_lstm_model']
-            source_filepath = os.path.join(FileHandler.LSTM_MODEL_DIRECTORY, f'VT, Chittenden County_{dynamics_bldg_name}.pth')
-            
-        else:
-            pass
 
         destination_filepath = os.path.join(FileHandler.SCHEMA_DIRECTORY, f'{dynamics_bldg_name}.pth')
         shutil.copy(source_filepath, destination_filepath)
@@ -161,8 +154,8 @@ def build_schema():
                 'type': settings['dynamics']['type'],
                 'attributes': {
                     'input_size': dynamics_normalization_minimum.shape[1],
-                    'hidden_size': settings['dynamics']['attributes']['hidden_size'],
-                    'num_layers': settings['dynamics']['attributes']['num_layers'],
+                    'hidden_size': lstm_config[bldg_name]['n_hidden'],
+                    'num_layers': lstm_config[bldg_name]['n_layers'],
                     'lookback': settings['dynamics']['attributes']['lookback'],
                     'filename': f'{dynamics_bldg_name}.pth',
                     'input_normalization_minimum': dynamics_normalization_minimum.loc[int(dynamics_bldg_name)].values.tolist(),
