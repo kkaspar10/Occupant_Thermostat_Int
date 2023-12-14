@@ -67,6 +67,10 @@ active_observations:
 # - occupant_count
 - indoor_dry_bulb_temperature_set_point
 - indoor_dry_bulb_temperature_delta
+- net_electricity_consumption
+- electricity_pricing_predicted_6h
+- electricity_pricing_predicted_12h
+- electricity_pricing_predicted_24h
 reward_function:
     type: citylearn.reward_function.ComfortReward
     attributes:
@@ -97,7 +101,6 @@ dynamics:
             - direct_solar_irradiance
             - diffuse_solar_irradiance
             - outdoor_dry_bulb_temperature
-            - indoor_dry_bulb_temperature_set_point
             - occupant_count
             - cooling_demand
             - month_sin
@@ -111,7 +114,6 @@ dynamics:
             - direct_solar_irradiance
             - diffuse_solar_irradiance
             - outdoor_dry_bulb_temperature
-            - indoor_dry_bulb_temperature_set_point
             - occupant_count
             - heating_demand
             - month_sin
