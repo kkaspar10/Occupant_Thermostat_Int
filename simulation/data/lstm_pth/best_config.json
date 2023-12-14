@@ -1,0 +1,62 @@
+{
+  "199613": {
+    "n_hidden": 64,
+    "n_layers": 2,
+    "dropout": 0.0,
+    "learning_rate": 0.003910882
+  },
+  "20199": {
+    "n_hidden": 32,
+    "n_layers": 2,
+    "dropout": 0.3,
+    "learning_rate": 0.006788326
+  },
+  "247942": {
+    "n_hidden": 40,
+    "n_layers": 3,
+    "dropout": 0.5,
+    "learning_rate": 0.009353991
+  },
+  "4421": {
+    "n_hidden": 8,
+    "n_layers": 1,
+    "dropout": 0.1,
+    "learning_rate": 0.004936191
+  },
+  "481052": {
+    "n_hidden": 64,
+    "n_layers": 2,
+    "dropout": 0.1,
+    "learning_rate": 0.007826405
+  },
+  "498771": {
+    "n_hidden": 16,
+    "n_layers": 3,
+    "dropout": 0.5,
+    "learning_rate": 0.006835681
+  },
+  "508889": {
+    "n_hidden": 56,
+    "n_layers": 3,
+    "dropout": 0.4,
+    "learning_rate": 0.00632655
+  },
+  "546814": {
+    "n_hidden": 56,
+    "n_layers": 2,
+    "dropout": 0.4,
+    "learning_rate": 0.00717106
+  },
+  "75252": {
+    "n_hidden": 32,
+    "n_layers": 3,
+    "dropout": 0.5,
+    "learning_rate": 0.009211993
+  },
+  "79194": {
+    "n_hidden": 64,
+    "n_layers": 1,
+    "dropout": 0.1,
+    "learning_rate": 0.008657918
+  }
+}
