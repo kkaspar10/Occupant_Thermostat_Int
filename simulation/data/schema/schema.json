@@ -146,7 +146,7 @@
       "shared_in_central_agent": false
     },
     "electricity_pricing": {
-      "active": false,
+      "active": true,
       "shared_in_central_agent": true
     },
     "electricity_pricing_predicted_6h": {

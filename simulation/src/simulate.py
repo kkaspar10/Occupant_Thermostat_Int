@@ -185,6 +185,7 @@ class CityLearnSimulation:
                 'occupant_increase_setpoint_probability': b.occupant.probabilities['increase_setpoint'],
                 'occupant_decrease_setpoint_probability': b.occupant.probabilities['decrease_setpoint'],
                 'occupant_random_probability': b.occupant.probabilities['random'],
+                'net_electricity_consumption_cost': b.net_electricity_consumption_cost,
             })
 
             data['time_step'] = data.index
