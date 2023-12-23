@@ -12,6 +12,13 @@ from lstm_model.training import training, train_log, log_metrics
 from lstm_model.preprocessing import *
 from lstm_model.media_log import *
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+csv_results_path = os.getenv('OPTUNA_CSV_RESULTS_PATH')
+
 config = AttributeDict(config)
 
 
@@ -62,7 +69,7 @@ def define_model(trial, config, key, dict_building):
         lstm_columns = ['direct_solar_radiation',
                         'diffuse_solar_radiation',
                         'outdoor_air_temperature',
-                        'setpoint',
+                        # 'setpoint',
                         'occupant_count',
                         'cooling_load',
                         # 'ideal_cooling_load_proportion', 'ideal_heating_load_proportion', # there are a lot of nans
@@ -72,7 +79,7 @@ def define_model(trial, config, key, dict_building):
         lstm_columns = ['direct_solar_radiation',
                         'diffuse_solar_radiation',
                         'outdoor_air_temperature',
-                        'setpoint',
+                        # 'setpoint',
                         'occupant_count',
                         'heating_load',
                         # 'ideal_cooling_load_proportion', 'ideal_heating_load_proportion', # there are a lot of nans
@@ -131,8 +138,8 @@ def define_model(trial, config, key, dict_building):
     test_y = max_min_norm(test_y, maxT, minT)
 
     # create a dataframe where columns are the lstm_columns and rows are the max_df array
-    max_df = pd.DataFrame(max_df.reshape(1, 13), index=df.resstock_building_id.unique(), columns=lstm_columns)
-    min_df = pd.DataFrame(min_df.reshape(1, 13), index=df.resstock_building_id.unique(), columns=lstm_columns)
+    max_df = pd.DataFrame(max_df.reshape(1, max_df.size), index=df.resstock_building_id.unique(), columns=lstm_columns)
+    min_df = pd.DataFrame(min_df.reshape(1, min_df.size), index=df.resstock_building_id.unique(), columns=lstm_columns)
 
     # STEP 4: DATALOADER - define train and test dataset as a dataloader
     # df_dataset, df_loader = dataset_dataloader(inputs, labels, config.batch_size, shuffle=False)
@@ -223,7 +230,6 @@ def objective(trial, config, key, dict_building):
     # 7. SAVING
     name = f'LSTM_optuna_bld_{bld_key}_trial_{n_trial}.pth'
     basedir = 'simulation\\lstm_model\\optuna_model\\'
-    csv_dir = 'C:\\Users\\GiacomoBuscemi\\OneDrive - Politecnico di Torino\\BAEDA\\Ricerca ASO\\Adaptive and predictive control strategies in buildings\\Projects\\2023_11_07_OCC_LSTM'
 
     checkpoint = {
         'model_state_dict': lstm.state_dict(),
@@ -253,7 +259,7 @@ def objective(trial, config, key, dict_building):
                                    'MAPE Test', 'RMSE Test',
                                    'MAPE CL', 'RMSE CL', 'R2 CL'])
 
-    runsLogName = csv_dir + f'\\optuna_lstm_results_bld_{bld_key}.csv'
+    runsLogName = csv_results_path + f'\\optuna_lstm_results_bld_{bld_key}.csv'
 
     if not os.path.exists(runsLogName):
         hyperP.to_csv(path_or_buf=runsLogName,
@@ -318,8 +324,7 @@ if __name__ == "__main__":
             best_trial['Building Key'] = building_key
 
             # save csv in dynamic mode
-            csv_dir = 'C:\\Users\\GiacomoBuscemi\\OneDrive - Politecnico di Torino\\BAEDA\\Ricerca ASO\\Adaptive and predictive control strategies in buildings\\Projects\\2023_11_07_OCC_LSTM'
-            best_trial.to_csv(os.path.join(csv_dir, 'optuna_lstm_results_global.csv'), index=False, mode='a', header=False)
+            best_trial.to_csv(os.path.join(csv_results_path, 'optuna_lstm_results_global.csv'), index=False, mode='a', header=False)
 
 
 

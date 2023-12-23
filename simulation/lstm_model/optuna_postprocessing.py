@@ -2,13 +2,16 @@ import  pandas as pd
 import os
 import json
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
+csv_results_path = os.getenv('OPTUNA_CSV_RESULTS_PATH')
+
 if __name__ == "__main__":
 
-    # merge all the csv file into one
-    csv_dir = 'C:\\Users\\GiacomoBuscemi\\OneDrive - Politecnico di Torino\\BAEDA\\Ricerca ASO\\Adaptive and predictive control strategies in buildings\\Projects\\2023_11_07_OCC_LSTM'
-
     # read the csv file in summary folder
-    df = pd.read_csv(os.path.join(csv_dir, 'summary', 'optuna_best_trial.csv'),delimiter=';', decimal=',')
+    df = pd.read_csv(os.path.join(csv_results_path, 'summary', 'optuna_best_trial.csv'),delimiter=';', decimal=',')
 
     # transform the df dataframe into a json file
     # using the Building Key column as the primary key,
@@ -21,14 +24,9 @@ if __name__ == "__main__":
     print(optuna_json)
 
     # save the json file
-    with open((
-            'C:\\Users\\GiacomoBuscemi\\PycharmProjects\\Occupant_Thermostat_Int\\simulation\\data\\lstm_pth\\' + 'best_config.json'),
-            'w') as fp:
+    with open(('simulation\\data\\lstm_pth\\' + 'best_config.json'),
+              'w') as fp:
         json.dump(optuna_json, fp)
-
-
-
-
 
 
     # #read all file from csv_dir and merge them into one

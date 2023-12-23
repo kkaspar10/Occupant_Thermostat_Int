@@ -1,10 +1,15 @@
 import pandas as pd
 import wandb
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 api = wandb.Api()
 
 # Project is specified by <entity/project-name>
-runs = api.runs("gim07/OCC_10VT_buildings_V2")
+runs = api.runs(os.getenv('WANDB_RUN'))
 
 summary_list, config_list, name_list = [], [], []
 for run in runs:
