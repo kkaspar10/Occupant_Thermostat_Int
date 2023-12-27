@@ -192,6 +192,10 @@
     "power_outage": {
       "active": false,
       "shared_in_central_agent": false
+    },
+    "occupant_interaction_indoor_dry_bulb_temperature_set_point_delta": {
+      "active": true,
+      "shared_in_central_agent": false
     }
   },
   "actions": {

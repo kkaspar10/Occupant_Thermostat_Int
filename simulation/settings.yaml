@@ -66,6 +66,7 @@ active_observations:
 # - net_electricity_consumption
 # - occupant_count
 - indoor_dry_bulb_temperature_set_point
+- occupant_interaction_indoor_dry_bulb_temperature_set_point_delta # name of observation is up for debate
 - indoor_dry_bulb_temperature_delta
 - net_electricity_consumption
 - electricity_pricing_predicted_6h
