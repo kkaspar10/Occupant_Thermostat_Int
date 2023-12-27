@@ -23,7 +23,7 @@ import simplejson as json
 from stable_baselines3 import A2C, DDPG, PPO, SAC, TD3
 from src.occ_citylearn import OCCCityLearnEnv
 from src.occ_agent import FullPowerHeatPumpRBC, ZeroPowerHeatPumpRBC
-from src.occ_reward import AverageComfortReward, MinimumComfortReward
+from src.occ_reward import AverageComfortReward, CostPenalty, DiscomfortPenalty, DiscomfortPenaltyAndCostPenalty, MinimumComfortReward
 from src.utilities import FileHandler
 
 def run_work_order(work_order_filepath, max_workers=None, start_index=None, end_index=None, virtual_environment_path=None, windows_system=None):
@@ -185,6 +185,7 @@ class CityLearnSimulation:
                 'occupant_increase_setpoint_probability': b.occupant.probabilities['increase_setpoint'],
                 'occupant_decrease_setpoint_probability': b.occupant.probabilities['decrease_setpoint'],
                 'occupant_random_probability': b.occupant.probabilities['random'],
+                'occupant_interaction_indoor_dry_bulb_temperature_set_point_delta': b.energy_simulation.occupant_interaction_indoor_dry_bulb_temperature_set_point_delta,
                 'net_electricity_consumption_cost': b.net_electricity_consumption_cost,
             })
 
@@ -350,6 +351,9 @@ class CityLearnSimulation:
             'RewardFunction': RewardFunction,
             'SolarPenaltyReward': SolarPenaltyReward,
             'SolarPenaltyAndComfortReward': SolarPenaltyAndComfortReward,
+            'DiscomfortPenalty': DiscomfortPenalty,
+            'CostPenalty': CostPenalty,
+            'DiscomfortPenaltyAndCostPenalty': DiscomfortPenaltyAndCostPenalty,
         }
 
         return reward_functions[reward_function]
