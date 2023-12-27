@@ -5,11 +5,20 @@ from typing import Iterable, List, Mapping, Tuple, Union
 from citylearn.base import Environment, EpisodeTracker
 from citylearn.building import Building, LSTMDynamicsBuilding
 from citylearn.citylearn import CityLearnEnv
-from citylearn.data import TimeSeriesData
+from citylearn.data import EnergySimulation, TimeSeriesData
 from citylearn.reward_function import RewardFunction
 import numpy as np
 import pandas as pd
 from src.utilities import FileHandler
+
+class OccupantInteractionBuildingEnergySimulation(EnergySimulation):
+    # hacky way for now to make the occ interaction delta available in the citylearn.building.Building.observations function.
+    # this way, it is part of the citylearn.data.EnergySimulation time series data that is included in the observations by default
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.occupant_interaction_indoor_dry_bulb_temperature_set_point_delta = np.zeros(len(self.solar_generation), dtype='float32')
+        self.occupant_interaction_indoor_dry_bulb_temperature_set_point_delta_without_control = np.zeros(len(self.solar_generation), dtype='float32')
 
 class LogisticRegressionOccupantParameters(TimeSeriesData):
     def __init__(self, a_increase: Iterable[float], b_increase: Iterable[float], a_decrease: Iterable[float], b_decrease: Iterable[float], start_time_step: int = None, end_time_step: int = None):
@@ -159,6 +168,7 @@ class LogisticRegressionOccupantInteractionBuilding(OccupantInteractionBuilding)
     def __init__(self, *args, occupant: LogisticRegressionOccupant = None, set_point_hold_time_steps: int = None, **kwargs):
         super().__init__(*args, occupant=occupant, **kwargs)
         self.occupant: LogisticRegressionOccupant
+        self.energy_simulation: OccupantInteractionBuildingEnergySimulation
         self.__set_point_hold_time_step_counter = None
         self.set_point_hold_time_steps = set_point_hold_time_steps
         
@@ -179,6 +189,7 @@ class LogisticRegressionOccupantInteractionBuilding(OccupantInteractionBuilding)
         delta_input = [[current_setpoint, previous_setpoint, previous_temperature - previous_setpoint]]
         model_input = (interaction_input, delta_input)   
         setpoint_delta = self.occupant.predict(x=model_input)
+        self.energy_simulation.occupant_interaction_indoor_dry_bulb_temperature_set_point_delta[self.time_step] = setpoint_delta
 
         if abs(setpoint_delta) > 0.0:
             self.energy_simulation.indoor_dry_bulb_temperature_set_point[self.time_step:] = current_setpoint + setpoint_delta
@@ -198,12 +209,47 @@ class LogisticRegressionOccupantInteractionBuilding(OccupantInteractionBuilding)
         else:
             pass
 
+    def estimate_observation_space_limits(self, include_all: bool = None, periodic_normalization: bool = None) -> Tuple[Mapping[str, float], Mapping[str, float]]:
+        # include the occ setpoint delta in the observation space limits so that it shows up when setting the observation space
+        limit = {k: 0.0 for k, v in self.action_metadata.items() if v or include_all}
+        low_limit, high_limit = limit, limit
+        observation_name = 'occupant_interaction_indoor_dry_bulb_temperature_set_point_delta'
+        observation_limit = 2.0 # Kathryn: confirm that this is the +- range of setpoint change delta
+
+        try:
+            low_limit, high_limit = super().estimate_observation_space_limits(include_all, periodic_normalization)
+
+            if observation_name in low_limit.keys():
+                low_limit[observation_name] = -observation_limit
+                high_limit[observation_name] = observation_limit
+                print(f'successfully set observation limits.')
+            
+            else:
+                pass
+
+        except KeyError as e:
+            if e.args[0] == observation_name:
+                print(f'unable to set observations limits because no data source for {observation_name}; will try again later.')
+
+            else:
+                raise e
+            
+        finally:
+            return low_limit, high_limit
+
     def reset_data_sets(self):
         super().reset_data_sets()
         start_time_step = self.episode_tracker.episode_start_time_step
         end_time_step = self.episode_tracker.episode_end_time_step
         self.occupant.parameters.start_time_step = start_time_step
         self.occupant.parameters.end_time_step = end_time_step
+
+    def reset_dynamic_variables(self):
+        super().reset_dynamic_variables()
+        start_ix = 0
+        end_ix = self.episode_tracker.episode_time_steps
+        self.energy_simulation.occupant_interaction_indoor_dry_bulb_temperature_set_point_delta[start_ix:end_ix] =\
+            self.energy_simulation.occupant_interaction_indoor_dry_bulb_temperature_set_point_delta_without_control.copy()[start_ix:end_ix]
 
     def reset(self):
         super().reset()
@@ -220,6 +266,7 @@ class OCCCityLearnEnv(CityLearnEnv):
         episode_tracker = args[-1]
 
         for i, b in enumerate(args[buildings_ix]):
+            # set occupant
             b: LogisticRegressionOccupantInteractionBuilding
             building_occupant = self.schema['buildings'][b.name]['occupant']
             occupant_type = building_occupant['type']
@@ -237,7 +284,18 @@ class OCCCityLearnEnv(CityLearnEnv):
                 _ = attributes.pop(f'setpoint_{k}_model_filename')
 
             b.occupant = occupant_constructor(**attributes)
-            b.reset_data_sets()
             args[buildings_ix][i] = b
+
+            # update citylearn.building.Building.energy_simulation so that the
+            # occupant_interaction_indoor_dry_bulb_temperature_set_point_delta observation is available to set observation limits and space
+            energy_simulation = pd.read_csv(os.path.join(root_directory, self.schema['buildings'][b.name]['energy_simulation']))
+            b.energy_simulation = OccupantInteractionBuildingEnergySimulation(
+                *energy_simulation.values.T, 
+                start_time_step=b.energy_simulation.start_time_step,
+                end_time_step=b.energy_simulation.end_time_step,
+            )
+            b.observation_space = b.estimate_observation_space(include_all=False, normalize=False)
+
+            b.reset_data_sets()
 
         return args
