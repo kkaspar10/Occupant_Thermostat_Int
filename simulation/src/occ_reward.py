@@ -1,6 +1,6 @@
-from typing import List, Mapping, Union
-from citylearn.reward_function import ComfortReward
-
+from typing import List, Any, Mapping, Tuple, Union
+from citylearn.reward_function import ComfortReward, RewardFunction
+import numpy as np
 
 class DiscomfortPenalty(RewardFunction):
     """Penalty for occupant thermal discomfort.
@@ -10,14 +10,14 @@ class DiscomfortPenalty(RewardFunction):
 
     Parameters
     ----------
-    env: citylearn.citylearn.CityLearnEnv
-        CityLearn environment.
+    env_metadata: Mapping[str, Any]:
+        General static information about the environment.
     override_exponent: float, default = 2.0
         Penalty exponent
     """
     
-    def __init__(self, env: CityLearnEnv, override_exponent: float = None):
-        super().__init__(env)
+    def __init__(self, env_metadata: Mapping[str, Any], override_exponent: float = None):
+        super().__init__(env_metadata)
         self.override_exponent = override_exponent
     
     @property
@@ -29,18 +29,16 @@ class DiscomfortPenalty(RewardFunction):
         self.__override_exponent = 2.0 if override_exponent is None else override_exponent
 
 
-    def calculate(self) -> List[float]:
+    def calculate(self, observations: List[Mapping[str, Union[int, float]]]) -> List[float]:
         reward_list = []
 
-        for b in self.env.buildings:
-            delta_setpoint = abs(delta) #I want delta_setpoint to be the absolute value of the delta from occ_citylearn line 105
-            
-            if delta_setpoint > 0.0:
-                reward = -(delta_setpoint**override_exponent) else 0.0 #If delta_setpoint == 0, no reward/penalty
+        for o in observations:
+            delta_setpoint = abs(o['occupant_interaction_indoor_dry_bulb_temperature_set_point_delta'])
+            reward = -(delta_setpoint**self.override_exponent) if delta_setpoint > 0.0 else 0.0
 
             reward_list.append(reward)
 
-        if self.env.central_agent:
+        if self.central_agent:
             reward = [sum(reward_list)]
 
         else:
@@ -55,14 +53,14 @@ class CostPenalty(RewardFunction):
 
     Parameters
     ----------
-    env: citylearn.citylearn.CityLearnEnv
-        CityLearn environment.
+    env_metadata: Mapping[str, Any]:
+        General static information about the environment.
     coefficient_cost: float, default = 1.0
         Coefficient to multiply energy cost
     """
 
-    def __init__(self, env: CityLearnEnv):
-        super().__init__(env)
+    def __init__(self, env_metadata: Mapping[str, Any], coefficient_cost: float = None):
+        super().__init__(env_metadata)
         self.coefficient_cost = coefficient_cost
 
     @property
@@ -74,13 +72,10 @@ class CostPenalty(RewardFunction):
         self.__coefficient_cost = 1.0 if coefficient_cost is None else coefficient_cost
 
 
-    def calculate(self) -> List[float]:
-        building_electricity_consumption_cost = np.array([b.net_electricity_consumption_cost[b.time_step]*-1 for b in self.env.buildings]) #Check: is this the right cost parameter?
-        reward = coefficient_cost*building_electricity_consumption_cost 
+    def calculate(self, observations: List[Mapping[str, Union[int, float]]]) -> List[float]:
+        reward_list = [o['net_electricity_consumption']*o['electricity_pricing']*self.coefficient_cost*-1.0 for o in observations]
 
-        reward_list.append(reward)
-
-        if self.env.central_agent:
+        if self.central_agent:
             reward = [sum(reward_list)]
 
         else:
@@ -93,20 +88,20 @@ class DiscomfortPenaltyAndCostPenalty(RewardFunction):
     
     Parameters
     ----------
-    env: citylearn.citylearn.CityLearnEnv
-        CityLearn environment.
+    env_metadata: Mapping[str, Any]:
+        General static information about the environment.
     override_exponent: float, default = 2.0
         Penalty exponent
     coefficient_cost: float, default = 1.0
         Coefficient to multiply energy cost
     """
     
-    def __init__(self, env: CityLearnEnv, override_exponent: float = None, coefficient_cost: float = None, coefficients: Tuple = None):
-        super().__init__(env)
+    def __init__(self, env_metadata: Mapping[str, Any], override_exponent: float = None, coefficient_cost: float = None, coefficients: Tuple = None):
         self.__functions: List[RewardFunction] = [
-            DiscomfortPenalty(env, override_exponent = override_exponent),
-            CostPenalty(env, coefficient_cost = coefficient_cost)
+            DiscomfortPenalty(env_metadata, override_exponent=override_exponent),
+            CostPenalty(env_metadata, coefficient_cost=coefficient_cost)
         ]
+        super().__init__(env_metadata)
         self.coefficients = coefficients
 
     @property
@@ -119,8 +114,15 @@ class DiscomfortPenaltyAndCostPenalty(RewardFunction):
         assert len(coefficients) == len(self.__functions), f'{type(self).__name__} needs {len(self.__functions)} coefficients.' 
         self.__coefficients = coefficients
 
-    def calculate(self) -> List[float]:
-        reward = np.array([f.calculate() for f in self.__functions], dtype='float32')
+    @RewardFunction.env_metadata.setter
+    def env_metadata(self, env_metadata: Mapping[str, Any]):
+        RewardFunction.env_metadata.fset(self, env_metadata)
+        
+        for f in self.__functions:
+            f.env_metadata = self.env_metadata
+
+    def calculate(self, observations: List[Mapping[str, Union[int, float]]]) -> List[float]:
+        reward = np.array([f.calculate(observations) for f in self.__functions], dtype='float32')
         reward = reward*np.reshape(self.coefficients, (len(self.coefficients), 1))
         reward = reward.sum(axis=0).tolist()
 
