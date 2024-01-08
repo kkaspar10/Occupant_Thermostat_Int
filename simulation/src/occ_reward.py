@@ -2,6 +2,32 @@ from typing import List, Any, Mapping, Tuple, Union
 from citylearn.reward_function import ComfortReward, RewardFunction
 import numpy as np
 
+class DiscomfortAndSetpointReward(RewardFunction):
+    def __init__(self, env_metadata: Mapping[str, Any], exponents: Tuple[float, float] = None):
+        super().__init__(env_metadata)
+        self.exponents = exponents
+
+    @property
+    def exponents(self) -> Tuple[float, float]:
+        return self.__exponents
+    
+    @exponents.setter
+    def exponents(self, value: Tuple[float, float]):
+        self.__exponents = (2.0, 2.0) if value is None else value
+
+    def calculate(self, observations: List[Mapping[str, Union[int, float]]]) -> List[float]:
+        a = [abs(o['occupant_interaction_indoor_dry_bulb_temperature_set_point_delta']) for o in observations]
+        b = [abs(o['indoor_dry_bulb_temperature'] - o['indoor_dry_bulb_temperature_set_point']) for o in observations]
+        reward_list = [-(a_**self.exponents[0] + b_**self.exponents[1]) for a_, b_ in zip(a, b)]
+
+        if self.central_agent:
+            reward = [sum(reward_list)]
+
+        else:
+            reward = reward_list
+
+        return reward
+
 class DiscomfortPenalty(RewardFunction):
     """Penalty for occupant thermal discomfort.
 
@@ -30,13 +56,7 @@ class DiscomfortPenalty(RewardFunction):
 
 
     def calculate(self, observations: List[Mapping[str, Union[int, float]]]) -> List[float]:
-        reward_list = []
-
-        for o in observations:
-            delta_setpoint = abs(o['occupant_interaction_indoor_dry_bulb_temperature_set_point_delta'])
-            reward = -(delta_setpoint**self.override_exponent) if delta_setpoint > 0.0 else 0.0
-
-            reward_list.append(reward)
+        reward_list = [-(abs(o['occupant_interaction_indoor_dry_bulb_temperature_set_point_delta'])**self.override_exponent) for o in observations]
 
         if self.central_agent:
             reward = [sum(reward_list)]
@@ -100,6 +120,39 @@ class DiscomfortPenaltyAndCostPenalty(RewardFunction):
         self.__functions: List[RewardFunction] = [
             DiscomfortPenalty(env_metadata, override_exponent=override_exponent),
             CostPenalty(env_metadata, coefficient_cost=coefficient_cost)
+        ]
+        super().__init__(env_metadata)
+        self.coefficients = coefficients
+
+    @property
+    def coefficients(self) -> Tuple:
+        return self.__coefficients
+    
+    @coefficients.setter
+    def coefficients(self, coefficients: Tuple):
+        coefficients = [1.0]*len(self.__functions) if coefficients is None else coefficients
+        assert len(coefficients) == len(self.__functions), f'{type(self).__name__} needs {len(self.__functions)} coefficients.' 
+        self.__coefficients = coefficients
+
+    @RewardFunction.env_metadata.setter
+    def env_metadata(self, env_metadata: Mapping[str, Any]):
+        RewardFunction.env_metadata.fset(self, env_metadata)
+        
+        for f in self.__functions:
+            f.env_metadata = self.env_metadata
+
+    def calculate(self, observations: List[Mapping[str, Union[int, float]]]) -> List[float]:
+        reward = np.array([f.calculate(observations) for f in self.__functions], dtype='float32')
+        reward = reward*np.reshape(self.coefficients, (len(self.coefficients), 1))
+        reward = reward.sum(axis=0).tolist()
+
+        return reward
+    
+class DiscomfortPenaltyAndConsumptionPenalty(RewardFunction):
+    def __init__(self, env_metadata: Mapping[str, Any], override_exponent: float = None, coefficients: Tuple = None):
+        self.__functions: List[RewardFunction] = [
+            DiscomfortPenalty(env_metadata, override_exponent=override_exponent),
+            RewardFunction(env_metadata)
         ]
         super().__init__(env_metadata)
         self.coefficients = coefficients
