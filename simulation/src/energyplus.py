@@ -106,6 +106,7 @@ def build_schema():
             'pricing': None,
             'inactive_observations': [],
             'inactive_actions': [],
+            'set_point_hold_time_steps': settings['set_point_hold_time_steps'],
         }
 
         # heat pump for heating
