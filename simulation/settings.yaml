@@ -64,7 +64,7 @@ active_observations:
 # - outdoor_dry_bulb_temperature_predicted_24h
 - indoor_dry_bulb_temperature
 # - net_electricity_consumption
-# - occupant_count
+- occupant_count
 - indoor_dry_bulb_temperature_set_point
 - occupant_interaction_indoor_dry_bulb_temperature_set_point_delta # name of observation is up for debate
 - indoor_dry_bulb_temperature_delta
@@ -90,6 +90,7 @@ dhw_device_efficiency:
     maximum: 0.95
 dhw_device_type: citylearn.energy_model.ElectricHeater
 dhw_device_autosize_safety_factor: 1.1
+set_point_hold_time_steps: 4
 dynamics:
     type: citylearn.dynamics.LSTMDynamics
     default_lstm_model: 508889
