@@ -21,15 +21,16 @@ class OccupantInteractionBuildingEnergySimulation(EnergySimulation):
         self.occupant_interaction_indoor_dry_bulb_temperature_set_point_delta_without_control = np.zeros(len(self.solar_generation), dtype='float32')
 
 class LogisticRegressionOccupantParameters(TimeSeriesData):
-    def __init__(self, a_increase: Iterable[float], b_increase: Iterable[float], a_decrease: Iterable[float], b_decrease: Iterable[float], start_time_step: int = None, end_time_step: int = None):
+    def __init__(self, a_increase: Iterable[float], b_increase: Iterable[float], a_decrease: Iterable[float], b_decrease: Iterable[float], presence: Iterable[float] = None, start_time_step: int = None, end_time_step: int = None):
         super().__init__(start_time_step=start_time_step, end_time_step=end_time_step)
         
         # setting dynamic parameters
         # (can we give a and b another name that is clearer about what they represent?)
-        self.a_increase = np.array(a_increase, dtype=float)
-        self.b_increase = np.array(b_increase, dtype=float)
-        self.a_decrease = np.array(a_decrease, dtype=float)
-        self.b_decrease = np.array(b_decrease, dtype=float)
+        self.a_increase = np.array(a_increase, dtype='float32')
+        self.b_increase = np.array(b_increase, dtype='float32')
+        self.a_decrease = np.array(a_decrease, dtype='float32')
+        self.b_decrease = np.array(b_decrease, dtype='float32')
+        self.presence = np.zeros(len(self.a_increase), dtype='float32') if presence is None else np.array(presence, dtype='float32')
 
 class Occupant(Environment):
     def __init__(self, **kwargs) -> None:
@@ -91,13 +92,16 @@ class LogisticRegressionOccupant(Occupant):
         interaction_probability = lambda  a, b, x_ : 1/(1 + np.exp(-(a + b*x_)))
         increase_setpoint_probability = interaction_probability(self.parameters.a_increase[self.time_step], self.parameters.b_increase[self.time_step], interaction_input)
         decrease_setpoint_probability = interaction_probability(self.parameters.a_decrease[self.time_step], self.parameters.b_decrease[self.time_step], interaction_input)
-        random_probability = np.random.uniform()
+        random_seed = max(self.random_seed, 1)*self.time_step
+        nprs = np.random.RandomState(random_seed)
+        random_probability = nprs.uniform()
         self.__probabilities['increase_setpoint'][self.time_step] = increase_setpoint_probability
         self.__probabilities['decrease_setpoint'][self.time_step] = decrease_setpoint_probability
         self.__probabilities['random'][self.time_step] = random_probability
         
-        if (increase_setpoint_probability < random_probability and decrease_setpoint_probability < random_probability) \
-            or (increase_setpoint_probability >= random_probability and decrease_setpoint_probability >= random_probability):
+        if self.parameters.presence[self.time_step] == 0 \
+            or (increase_setpoint_probability < random_probability and decrease_setpoint_probability < random_probability) \
+                or (increase_setpoint_probability >= random_probability and decrease_setpoint_probability >= random_probability):
             pass
 
         elif increase_setpoint_probability >= random_probability:
@@ -137,6 +141,11 @@ class OccupantInteractionBuilding(LSTMDynamicsBuilding):
         LSTMDynamicsBuilding.episode_tracker.fset(self, episode_tracker)
         self.occupant.episode_tracker = episode_tracker
 
+    @LSTMDynamicsBuilding.random_seed.setter
+    def random_seed(self, seed: int):
+        LSTMDynamicsBuilding.random_seed.fset(self, seed)
+        self.occupant.random_seed = self.random_seed
+
     def update_setpoints(self):
         """Update building indoor temperature dry-bulb temperature, humidity, etc setpoint using occupant interaction model."""
 
@@ -145,7 +154,7 @@ class OccupantInteractionBuilding(LSTMDynamicsBuilding):
     def apply_actions(self, **kwargs):
         super().apply_actions(**kwargs)
 
-        if self.simulate_dynamics and not self.ignore_occupant:
+        if self.simulate_dynamics:
             self.update_setpoints()
         else:
             pass
@@ -171,14 +180,16 @@ class LogisticRegressionOccupantInteractionBuilding(OccupantInteractionBuilding)
         self.energy_simulation: OccupantInteractionBuildingEnergySimulation
         self.__set_point_hold_time_step_counter = None
         self.set_point_hold_time_steps = set_point_hold_time_steps
+        self.occupant_interaction_indoor_dry_bulb_temperature_set_point_delta_summary = []
         
     @property
     def set_point_hold_time_steps(self) -> int:
-        return int(self.__set_point_hold_time_steps)
+        return self.__set_point_hold_time_steps
     
     @set_point_hold_time_steps.setter
     def set_point_hold_time_steps(self, value: int):
-        self.__set_point_hold_time_steps = 4 if value is None else value
+        assert value is None or value >= 0, 'set_point_hold_time_steps must be >= 0'
+        self.__set_point_hold_time_steps = np.inf if value is None else int(value)
 
     def update_setpoints(self):
         current_setpoint = self.energy_simulation.indoor_dry_bulb_temperature_set_point[self.time_step]
@@ -191,7 +202,7 @@ class LogisticRegressionOccupantInteractionBuilding(OccupantInteractionBuilding)
         setpoint_delta = self.occupant.predict(x=model_input)
         self.energy_simulation.occupant_interaction_indoor_dry_bulb_temperature_set_point_delta[self.time_step] = setpoint_delta
 
-        if abs(setpoint_delta) > 0.0:
+        if abs(setpoint_delta) > 0.0 and not self.ignore_occupant:
             self.energy_simulation.indoor_dry_bulb_temperature_set_point[self.time_step:] = current_setpoint + setpoint_delta
             self.__set_point_hold_time_step_counter = self.set_point_hold_time_steps
 
@@ -214,7 +225,7 @@ class LogisticRegressionOccupantInteractionBuilding(OccupantInteractionBuilding)
         limit = {k: 0.0 for k, v in self.action_metadata.items() if v or include_all}
         low_limit, high_limit = limit, limit
         observation_name = 'occupant_interaction_indoor_dry_bulb_temperature_set_point_delta'
-        observation_limit = 2.0 # Kathryn: confirm that this is the +- range of setpoint change delta
+        observation_limit = 1.5
 
         try:
             low_limit, high_limit = super().estimate_observation_space_limits(include_all, periodic_normalization)
@@ -248,6 +259,8 @@ class LogisticRegressionOccupantInteractionBuilding(OccupantInteractionBuilding)
         super().reset_dynamic_variables()
         start_ix = 0
         end_ix = self.episode_tracker.episode_time_steps
+        delta_summary = np.unique(self.energy_simulation.occupant_interaction_indoor_dry_bulb_temperature_set_point_delta[start_ix:end_ix], return_counts=True)
+        self.occupant_interaction_indoor_dry_bulb_temperature_set_point_delta_summary.append([delta_summary[0].tolist(), delta_summary[1].tolist()])
         self.energy_simulation.occupant_interaction_indoor_dry_bulb_temperature_set_point_delta[start_ix:end_ix] =\
             self.energy_simulation.occupant_interaction_indoor_dry_bulb_temperature_set_point_delta_without_control.copy()[start_ix:end_ix]
 
@@ -258,6 +271,14 @@ class LogisticRegressionOccupantInteractionBuilding(OccupantInteractionBuilding)
 class OCCCityLearnEnv(CityLearnEnv):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        # delete after CityLearn>2.1b12 release
+        for b in self.buildings:
+            # temporary fix for setting random seed in buildings and occupants
+            b.random_seed = self.random_seed
+
+            # fix set_point_hold_time_steps
+            b.set_point_hold_time_steps = self.schema['buildings'][b.name]['set_point_hold_time_steps']
 
     def _load(self, **kwargs) -> Tuple[Union[Path, str], List[Building], Union[int, List[Tuple[int, int]]], bool, bool, float, RewardFunction, bool, List[str], EpisodeTracker]:
         args = super()._load(**kwargs)
@@ -276,14 +297,19 @@ class OCCCityLearnEnv(CityLearnEnv):
             attributes: dict = building_occupant.get('attributes', {})
             parameters_filepath = os.path.join(root_directory, building_occupant['parameters_filename'])
             parameters = pd.read_csv(parameters_filepath)
-            attributes['parameters'] = LogisticRegressionOccupantParameters(*parameters.values.T)
+            presence = b.energy_simulation.__getattr__(
+                'occupant_count', 
+                start_time_step=b.episode_tracker.simulation_start_time_step, 
+                end_time_step=b.episode_tracker.simulation_end_time_step
+            ).copy()
+            attributes['parameters'] = LogisticRegressionOccupantParameters(*parameters.values.T, presence=presence)
             attributes['episode_tracker'] = episode_tracker
 
             for k in ['increase', 'decrease']:
                 attributes[f'setpoint_{k}_model_filepath'] = os.path.join(root_directory, attributes[f'setpoint_{k}_model_filename'])
                 _ = attributes.pop(f'setpoint_{k}_model_filename')
 
-            b.occupant = occupant_constructor(**attributes)
+            b.occupant = occupant_constructor(random_seed=b.random_seed, **attributes)
             args[buildings_ix][i] = b
 
             # update citylearn.building.Building.energy_simulation so that the
