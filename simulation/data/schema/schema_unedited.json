@@ -254,6 +254,7 @@
       "pricing": null,
       "inactive_observations": [],
       "inactive_actions": [],
+      "set_point_hold_time_steps": 4,
       "heating_device": {
         "type": "citylearn.energy_model.HeatPump",
         "autosize": false,
@@ -412,6 +413,7 @@
       "pricing": null,
       "inactive_observations": [],
       "inactive_actions": [],
+      "set_point_hold_time_steps": 4,
       "heating_device": {
         "type": "citylearn.energy_model.HeatPump",
         "autosize": false,
@@ -570,6 +572,7 @@
       "pricing": null,
       "inactive_observations": [],
       "inactive_actions": [],
+      "set_point_hold_time_steps": 4,
       "heating_device": {
         "type": "citylearn.energy_model.HeatPump",
         "autosize": false,
@@ -728,6 +731,7 @@
       "pricing": null,
       "inactive_observations": [],
       "inactive_actions": [],
+      "set_point_hold_time_steps": 4,
       "heating_device": {
         "type": "citylearn.energy_model.HeatPump",
         "autosize": false,
@@ -886,6 +890,7 @@
       "pricing": null,
       "inactive_observations": [],
       "inactive_actions": [],
+      "set_point_hold_time_steps": 4,
       "heating_device": {
         "type": "citylearn.energy_model.HeatPump",
         "autosize": false,
@@ -1044,6 +1049,7 @@
       "pricing": null,
       "inactive_observations": [],
       "inactive_actions": [],
+      "set_point_hold_time_steps": 4,
       "heating_device": {
         "type": "citylearn.energy_model.HeatPump",
         "autosize": false,
@@ -1202,6 +1208,7 @@
       "pricing": null,
       "inactive_observations": [],
       "inactive_actions": [],
+      "set_point_hold_time_steps": 4,
       "heating_device": {
         "type": "citylearn.energy_model.HeatPump",
         "autosize": false,
@@ -1360,6 +1367,7 @@
       "pricing": null,
       "inactive_observations": [],
       "inactive_actions": [],
+      "set_point_hold_time_steps": 4,
       "heating_device": {
         "type": "citylearn.energy_model.HeatPump",
         "autosize": false,
@@ -1518,6 +1526,7 @@
       "pricing": null,
       "inactive_observations": [],
       "inactive_actions": [],
+      "set_point_hold_time_steps": 4,
       "heating_device": {
         "type": "citylearn.energy_model.HeatPump",
         "autosize": false,
@@ -1676,6 +1685,7 @@
       "pricing": null,
       "inactive_observations": [],
       "inactive_actions": [],
+      "set_point_hold_time_steps": 4,
       "heating_device": {
         "type": "citylearn.energy_model.HeatPump",
         "autosize": false,
