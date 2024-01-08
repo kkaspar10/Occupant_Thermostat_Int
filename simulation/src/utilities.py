@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 import pickle
 import shutil
-from typing import Any, Union
+from typing import Any, List, Union
 from citylearn.utilities import read_json
 import pandas as pd
 import simplejson as json
@@ -14,6 +14,7 @@ class FileHandler:
     SIMULATION_ROOT_DIRECTORY = os.path.join(ROOT_DIRECTORY, 'simulation')
     SETTINGS_FILEPATH = os.path.join(SIMULATION_ROOT_DIRECTORY, 'settings.yaml')
     DATA_DIRECTORY = os.path.join(SIMULATION_ROOT_DIRECTORY, 'data')
+    FIGURES_DIRECTORY = os.path.join(SIMULATION_ROOT_DIRECTORY, 'figures')
     DEFAULT_OUTPUT_DIRECTORY = os.path.join(DATA_DIRECTORY, 'citylearn_simulation')
     OSM_DIRECTORY = os.path.join(DATA_DIRECTORY, 'osm')
     SCHEDULES_DIRECTORY = os.path.join(DATA_DIRECTORY, 'schedules')
@@ -136,9 +137,12 @@ class DataHandler:
                 raise Exception(f'Unknown key: {key}')
             
             data['id'] = k
+            data['lod'] = data['id'].str.split('-', expand=True)[0].str.split('_', expand=True)[1].astype(int)
+            data['year'] = data['id'].str.split('-', expand=True)[8].astype(int)
             data['library'] = v['library']
             data['agent'] = v['agent']
             data['rbc_name'] = v['rbc_name']
+            data['random_seed'] = v['random_seed']
             data['central_agent'] = v['central_agent']
             data['reward_function_name'] = v['reward_function_name']
             data['reward_function_kwargs'] = json.dumps(v['reward_function_kwargs'])
@@ -155,12 +159,15 @@ class DataHandler:
         return data
 
     @staticmethod
-    def get_evaluation_summary(simulation_id_key: str, output_directory: Union[Path, str] = None):
+    def get_evaluation_summary(simulation_id_key: Union[str, List[str]], output_directory: Union[Path, str] = None):
         output_directory = FileHandler.DEFAULT_OUTPUT_DIRECTORY if output_directory is None else output_directory
         data = {}
 
         for f in os.listdir(output_directory):
-            if f.endswith('json') and simulation_id_key in f:
+            if f.endswith('json') and (
+                (isinstance(simulation_id_key, str) and simulation_id_key in f) 
+                    or (isinstance(simulation_id_key, list) and len([k for k in simulation_id_key if k in f]) == len(simulation_id_key))
+                        ):
                 data[f.split('.')[0]] = read_json(os.path.join(output_directory, f))
             else:
                 pass
