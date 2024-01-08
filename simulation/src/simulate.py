@@ -23,7 +23,7 @@ import simplejson as json
 from stable_baselines3 import A2C, DDPG, PPO, SAC, TD3
 from src.occ_citylearn import OCCCityLearnEnv
 from src.occ_agent import FullPowerHeatPumpRBC, ZeroPowerHeatPumpRBC
-from src.occ_reward import AverageComfortReward, CostPenalty, DiscomfortPenalty, DiscomfortPenaltyAndCostPenalty, MinimumComfortReward
+from src.occ_reward import AverageComfortReward, CostPenalty, DiscomfortPenalty, DiscomfortAndSetpointReward, DiscomfortPenaltyAndConsumptionPenalty, DiscomfortPenaltyAndCostPenalty, MinimumComfortReward
 from src.utilities import FileHandler
 
 def run_work_order(work_order_filepath, max_workers=None, start_index=None, end_index=None, virtual_environment_path=None, windows_system=None):
@@ -67,12 +67,12 @@ def run_work_order(work_order_filepath, max_workers=None, start_index=None, end_
 class CityLearnSimulation:
     @staticmethod
     def simulate(
-        level_of_detail: int, library: str, agent: str, simulation_id_suffix: str = None, central_agent: bool = None, buildings: List[int] = None, random_seed: int = None, reward_function: str = None, reward_function_kwargs: Mapping[str, Any] = None, rbc: str = None, 
+        level_of_detail: int, library: str, agent: str, schema_filename: str = None, simulation_id_suffix: str = None, central_agent: bool = None, buildings: List[int] = None, inactive_observations: List[str] = None, random_seed: int = None, reward_function: str = None, reward_function_kwargs: Mapping[str, Any] = None, rbc: str = None, 
         episodes: int = None, output_directory: Union[str, Path] = None, train_episode_time_steps: List[List[int]] = None, evaluation_episode_time_steps: List[int] = None,
     ):  
         train_start_timestamp = datetime.utcnow()
         env, agent = CityLearnSimulation.learn(
-            level_of_detail, library, agent, central_agent=central_agent, buildings=buildings, random_seed=random_seed, reward_function=reward_function, 
+            level_of_detail, library, agent, schema_filename=schema_filename, central_agent=central_agent, buildings=buildings, inactive_observations=inactive_observations, random_seed=random_seed, reward_function=reward_function, 
             reward_function_kwargs=reward_function_kwargs, rbc=rbc, episodes=episodes, episode_time_steps=train_episode_time_steps
         )
         train_end_timestamp = datetime.utcnow()
@@ -89,6 +89,7 @@ class CityLearnSimulation:
             'agent': agent_name,
             'rbc_name': rbc_name,
             'central_agent': central_agent,
+            'random_seed': random_seed,
             'reward_function_name': reward_function_name,
             'reward_function_kwargs': reward_function_kwargs,
             'episode_time_steps': [env.episode_tracker.episode_start_time_step, env.episode_tracker.episode_end_time_step],
@@ -145,6 +146,8 @@ class CityLearnSimulation:
         evaluation = env.evaluate(comfort_band=comfort_band).pivot(index='name', columns='cost_function', values='value')
         data = {
             'rewards': env.episode_rewards,
+            'occupant_interaction_indoor_dry_bulb_temperature_set_point_delta_summary': {
+                b.name: b.occupant_interaction_indoor_dry_bulb_temperature_set_point_delta_summary for b in env.buildings},
             'evaluation': evaluation.to_dict('index'),
             'time_series': CityLearnSimulation.get_time_series(env).to_dict('list'),
         }
@@ -223,11 +226,11 @@ class CityLearnSimulation:
 
     @staticmethod
     def learn(
-        level_of_detail: int, library: str, agent: str, central_agent: bool = None, buildings: List[int] = None, random_seed: int = None, 
-        reward_function: str = None, reward_function_kwargs: Mapping[str, Any] = None, rbc: str = None, episodes: int = None, episode_time_steps: List[List[int]] = None
+        level_of_detail: int, library: str, agent: str, schema_filename: str = None, central_agent: bool = None, buildings: List[int] = None, random_seed: int = None, 
+        inactive_observations: List[str] = None, reward_function: str = None, reward_function_kwargs: Mapping[str, Any] = None, rbc: str = None, episodes: int = None, episode_time_steps: List[List[int]] = None
     ) -> Tuple[OCCCityLearnEnv, Any]:
         env, agent = CityLearnSimulation.get_agent(
-            level_of_detail, library, agent, central_agent=central_agent, buildings=buildings, random_seed=random_seed, 
+            level_of_detail, library, agent, schema_filename=schema_filename, central_agent=central_agent, buildings=buildings, random_seed=random_seed, inactive_observations=inactive_observations,
             reward_function=reward_function, reward_function_kwargs=reward_function_kwargs, rbc=rbc, episode_time_steps=episode_time_steps
         )
         kwargs = {}
@@ -248,10 +251,11 @@ class CityLearnSimulation:
 
     @staticmethod
     def get_agent(
-        level_of_detail: int, library: str, agent: str, central_agent: bool = None, buildings: List[int] = None, random_seed: int = None, 
+        level_of_detail: int, library: str, agent: str, schema_filename: str = None, central_agent: bool = None, buildings: List[int] = None, random_seed: int = None, inactive_observations: List[str] = None,
         reward_function: str = None, reward_function_kwargs: Mapping[str, Any] = None, rbc: str = None, episode_time_steps: List[List[int]] = None
     ) -> Tuple[OCCCityLearnEnv, Any]:
-        schema = read_json(os.path.join(FileHandler.SCHEMA_DIRECTORY, 'schema.json'))
+        schema_filename = 'schema.json' if schema_filename is None else schema_filename
+        schema = read_json(os.path.join(FileHandler.SCHEMA_DIRECTORY, schema_filename))
         schema['root_directory'] = FileHandler.SCHEMA_DIRECTORY
 
         if episode_time_steps is not None:
@@ -266,6 +270,15 @@ class CityLearnSimulation:
         
         else:
             pass
+
+        # set inactive observations and action
+        if inactive_observations is not None:
+            for k in schema['observations']:
+                if k in inactive_observations:
+                    schema['observations'][k]['active'] = False
+                
+                else:
+                    pass
         
         reward_function = reward_function if reward_function is None else CityLearnSimulation.get_reward_function(reward_function)
         env_kwargs = {
@@ -354,6 +367,8 @@ class CityLearnSimulation:
             'DiscomfortPenalty': DiscomfortPenalty,
             'CostPenalty': CostPenalty,
             'DiscomfortPenaltyAndCostPenalty': DiscomfortPenaltyAndCostPenalty,
+            'DiscomfortPenaltyAndConsumptionPenalty': DiscomfortPenaltyAndConsumptionPenalty,
+            'DiscomfortAndSetpointReward': DiscomfortAndSetpointReward,
         }
 
         return reward_functions[reward_function]
@@ -379,6 +394,7 @@ def main():
     subparser_simulate_citylearn = general_subparsers.add_parser('simulate-citylearn')
     subparser_simulate_citylearn.add_argument('library', type=str)
     subparser_simulate_citylearn.add_argument('agent', type=str)
+    subparser_simulate_citylearn.add_argument('-a', '--schema_filename', dest='schema_filename', type=str)
     subparser_simulate_citylearn.add_argument('-x', '--simulation_id_suffix', dest='simulation_id_suffix', type=str)
     subparser_simulate_citylearn.add_argument('-w', '--reward_function', dest='reward_function', type=str, default=None)
     subparser_simulate_citylearn.add_argument('-k', '--reward_function_kwargs', dest='reward_function_kwargs', type=json.loads, default=None)
@@ -389,6 +405,7 @@ def main():
     subparser_simulate_citylearn.add_argument('-s', '--random_seed', dest='random_seed', type=int, default=0)
     subparser_simulate_citylearn.add_argument('-c', '--central_agent', dest='central_agent', action='store_true')
     subparser_simulate_citylearn.add_argument('-b', '--buildings', dest='buildings', type=int, nargs='+')
+    subparser_simulate_citylearn.add_argument('-io', '--inactive_observations', dest='inactive_observations', type=str, nargs='+')
     subparser_simulate_citylearn.set_defaults(func=CityLearnSimulation.simulate)
 
     args = parser.parse_args()
