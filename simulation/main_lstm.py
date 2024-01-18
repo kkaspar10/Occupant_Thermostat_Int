@@ -295,12 +295,20 @@ if __name__ == '__main__':
         output_size = train_y.shape[-1]
 
         # define the lstm model with the hyperparameters from lstm_config
-        lstm = LSTM_model_optuna(n_features=input_size,
+        # lstm = LSTM_model_optuna(n_features=input_size,
+        #                         n_output=output_size,
+        #                         seq_len=config.lb,
+        #                         num_layers=lstm_config[str(key)]['n_layers'],
+        #                         num_hidden=lstm_config[str(key)]['n_hidden'],
+        #                         drop_prob=lstm_config[str(key)]['dropout']).to(config.device)
+        #
+        lstm = LSTM_attention(n_features=input_size,
                                 n_output=output_size,
                                 seq_len=config.lb,
                                 num_layers=lstm_config[str(key)]['n_layers'],
                                 num_hidden=lstm_config[str(key)]['n_hidden'],
                                 drop_prob=lstm_config[str(key)]['dropout']).to(config.device)
+
 
          # lstm = LSTM_model_wandb(n_features=input_size,
         #                         n_output=output_size,
