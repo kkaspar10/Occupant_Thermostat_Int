@@ -13,7 +13,7 @@ config = dict(
     # prj_name='CityLearn2.0',
     prj_name='OCC_10VT_buildings_V2',
     entity='gim07',
-    run_id='RUN_NO_SP_BI-LSTM',
+    run_id='RUN_NO_SP_REG',
 
     epochs=100,
     batch_size=int(24 * 7),  # CHECK DF TIMESTAMP
