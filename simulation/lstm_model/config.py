@@ -5,7 +5,7 @@ config = dict(
     device=torch.device("cuda" if torch.cuda.is_available() else "cpu"),
     # aggregate_df=True, # CHECK PROJECT NAME
     # train_model=True,
-    save_local=True,
+    save_local=False,
     load_model=False,
     # For wandb
     wandb_on=True,
@@ -13,7 +13,7 @@ config = dict(
     # prj_name='CityLearn2.0',
     prj_name='OCC_10VT_buildings_V2',
     entity='gim07',
-    run_id='RUN_NO_SP',
+    run_id='RUN_NO_SP_BI-LSTM',
 
     epochs=100,
     batch_size=int(24 * 7),  # CHECK DF TIMESTAMP
