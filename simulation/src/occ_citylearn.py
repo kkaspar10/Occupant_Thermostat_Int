@@ -99,8 +99,7 @@ class LogisticRegressionOccupant(Occupant):
         self.__probabilities['decrease_setpoint'][self.time_step] = decrease_setpoint_probability
         self.__probabilities['random'][self.time_step] = random_probability
         
-        if self.parameters.presence[self.time_step] == 0 \
-            or (increase_setpoint_probability < random_probability and decrease_setpoint_probability < random_probability) \
+        if (increase_setpoint_probability < random_probability and decrease_setpoint_probability < random_probability) \
                 or (increase_setpoint_probability >= random_probability and decrease_setpoint_probability >= random_probability):
             pass
 
