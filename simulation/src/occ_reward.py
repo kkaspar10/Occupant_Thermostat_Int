@@ -13,7 +13,7 @@ class DiscomfortAndSetpointReward(RewardFunction):
     
     @exponents.setter
     def exponents(self, value: Tuple[float, float]):
-        self.__exponents = (2.0, 2.0) if value is None else value
+        self.__exponents = (1.0, 1.0) if value is None else value
 
     def calculate(self, observations: List[Mapping[str, Union[int, float]]]) -> List[float]:
         a = [abs(o['occupant_interaction_indoor_dry_bulb_temperature_set_point_delta']) for o in observations]
