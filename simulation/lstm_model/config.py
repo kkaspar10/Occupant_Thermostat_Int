@@ -15,7 +15,7 @@ config = dict(
     entity='gim07',
     run_id='RUN_NO_SP_REG',
 
-    epochs=100,
+    epochs=70,
     batch_size=int(24 * 7),  # CHECK DF TIMESTAMP
     lb=12,  # CHECK DF TIMESTAMP
     output_pred=1,

@@ -38,30 +38,8 @@ def define_model(trial, config, key, dict_building):
 
     df = dict_building[bld_key]
 
-    # How many simulation_reference unique values there are in the df
-    print(df.simulation_reference.unique())
-    # Return me the number of rows for each simulation_reference and for each year
-    print(df.groupby(['simulation_reference', 'year']).size())
+    print(f'This run will be executed on {config.device} device! \n')
 
-    # NA check in df
-    # print(df.isnull().sum())
-
-    if config.wandb_on:
-        print('This run will be uploaded to WandB servers! \n')
-        run_name = str(df.resstock_county_id.unique()[0]) + '_' + str(df.resstock_building_id.unique()[0])
-        print(run_name)
-
-        # # tell wandb to get started
-        wandb.init(project=config.prj_name,
-                   entity=config.entity,
-                   config=config,
-                   name=run_name,  # If prj_name is CityLearn2.0 use hyperparameters.run_id
-                   reinit=True)  # Allow to load multiple running
-        # access all HPs through wandb.config, so logging matches execution!
-        config = wandb.config
-    else:
-        print('This run will be not uploaded to WandB servers! \n'
-              'CHECK if torch.save is turn on if you want save your model. \n')
 
     # ------------------------------------------------------- DATA PREPARATION ------------------------------------------------------------ #
     # df.columns
@@ -158,21 +136,59 @@ def define_model(trial, config, key, dict_building):
     num_hidden = trial.suggest_int('n_units', 8, 64, step=8)
     num_layers = trial.suggest_int('n_layers', 1, 3, step=1)
     dropout_prob = trial.suggest_float('drop_prob', 0.0, 0.5, step=0.1)
-    learning_rate = trial.suggest_float('lr', 1e-6, 1e-2)
+    learning_rate = trial.suggest_float('lr', 1e-6, 1e-2, log=True)
+    weight_decay = trial.suggest_float('weight_decay', 1e-6, 1e-1, log=True)
+
     # optimizer = trial.suggest_categorical('optimizer', ["Adam", "RMSprop", "L-BFGS"])
 
     # define the model
-    lstm = LSTM_model_optuna(n_features=input_size,
-                             n_output=output_size,
-                             drop_prob=dropout_prob,
-                             seq_len=config.lb,
-                             num_hidden=num_hidden,
-                             num_layers=num_layers).to(config.device)
+    # lstm = LSTM_model_optuna(n_features=input_size,
+    #                          n_output=output_size,
+    #                          drop_prob=dropout_prob,
+    #                          seq_len=config.lb,
+    #                          num_hidden=num_hidden,
+    #                          num_layers=num_layers).to(config.device)
+
+    lstm = LSTM(n_features=input_size,
+                n_output=output_size,
+                drop_prob=dropout_prob,
+                seq_len=config.lb,
+                num_hidden=num_hidden,
+                num_layers=num_layers,
+                weight_decay=weight_decay).to(config.device)
 
     # 2. DEFINE THE LOSS FUNCTION AND THE OPTIMIZER
     # Make the loss and optimizer
     criterion = torch.nn.MSELoss()  # mean-squared error for regression
     optimizer = getattr(torch.optim, config.optimizer_name)(lstm.parameters(), lr=learning_rate)
+
+    if config.wandb_on:
+        print('This run will be uploaded to WandB servers! \n')
+        run_name = str(df.resstock_county_id.unique()[0]) + '_' + str(df.resstock_building_id.unique()[0])
+        print(run_name)
+
+        # # tell wandb to get started
+        wandb.init(project=config.prj_name,
+                   entity=config.entity,
+                   config=dict(epochs=100,
+                               batch_size=int(24 * 7),
+                               lb=12,
+                               output_pred=1,
+                               learning_rate=learning_rate,
+                               optimizer_name='Adam',
+                               num_layer=num_layers,
+                               hidden_size=num_hidden,
+                               dropout=dropout_prob,
+                               weight_decay=weight_decay,
+                               run_id=config.run_id,
+                               ),
+                   name=run_name,  # If prj_name is CityLearn2.0 use hyperparameters.run_id
+                   reinit=True)  # Allow to load multiple running
+        # access all HPs through wandb.config, so logging matches execution!
+        # config = wandb.config
+    else:
+        print('This run will be not uploaded to WandB servers! \n'
+              'CHECK if torch.save is turn on if you want save your model. \n')
 
     return lstm, train_loader, validation_loader, test_loader, criterion, optimizer, maxT, minT, test_x, test_y, bld_key
 
@@ -182,6 +198,8 @@ def objective(trial, config, key, dict_building):
     # 1. DEFINE THE MODEL
     lstm, train_loader, validation_loader, test_loader, criterion, optimizer, maxT, minT, test_x, test_y, bld_key = define_model(
         trial, config, key, dict_building)
+
+    print(lstm)
 
     n_trial = trial.number + 1
 
@@ -218,6 +236,9 @@ def objective(trial, config, key, dict_building):
     MAPE_test = mean_absolute_percentage_error(ylab_test, ypred_test)
     RMSE_test = mean_squared_error(ylab_test, ypred_test, squared=False)
 
+    if config.wandb_on:
+        test_log(test_loss=LOSS_TEST, MAPE=MAPE_test, RMSE=RMSE_test)
+
     # 4. CLOSED LOOP
     Tpred, Treal = closed_loop(model=lstm, optimizer=optimizer, model_path=model_path,
                                test_x=test_x, test_y=test_y, config=config, maxT=maxT, minT=minT)
@@ -226,6 +247,8 @@ def objective(trial, config, key, dict_building):
     RMSE_sim = mean_squared_error(Treal, Tpred) ** 0.5
     R2_sim = r2_score(Treal, Tpred)
 
+    if config.wandb_on:
+        CL_log(MAPE=MAPE_sim, RMSE=RMSE_sim, R2=R2_sim)
 
     # 7. SAVING
     name = f'LSTM_optuna_bld_{bld_key}_trial_{n_trial}.pth'
@@ -245,14 +268,14 @@ def objective(trial, config, key, dict_building):
     # 8. HYPERPARAMETERS DATAFRAME
     # MAKING DF OH HYPERPARAMETERS
     hyperP = pd.DataFrame([[bld_key, n_trial, lstm.n_layers, lstm.n_hidden, config.batch_size,
-                            optimizer.defaults['lr'], config.epochs, lstm.dropout.p,
+                            optimizer.defaults['lr'], config.epochs, lstm.dropout.p, lstm.weight_decay,
                             LOSS_VAL, LOSS_TEST,
                             MAPE_train, RMSE_train,
                             MAPE_val, RMSE_val,
                             MAPE_test, RMSE_test,
                             MAPE_sim, RMSE_sim, R2_sim]],
                           columns=['Building Key', 'Trial', 'Num_layers', 'Num_hidden', 'Batch size',
-                                   'Learning rate', 'Epochs', 'Dropout',
+                                   'Learning rate', 'Epochs', 'Dropout', 'Weight_decay',
                                    'Validation Loss', 'Test Loss',
                                    'MAPE Train', 'RMSE Train',
                                    'MAPE Val', 'RMSE Val',
@@ -297,7 +320,7 @@ if __name__ == "__main__":
     # Create a study object and optimize the objective function.
     for building_key in dict_building.keys():
         study = optuna.create_study(directions=["minimize", "minimize"])
-        study.optimize(lambda trial: objective(trial, config, building_key, dict_building), n_trials=20, timeout=None)
+        study.optimize(lambda trial: objective(trial, config, building_key, dict_building), n_trials=50, timeout=None)
 
         # optuna.visualization.plot_pareto_front(study, target_names=["RMSE_train", "RMSE_val"])
 

@@ -1,35 +1,53 @@
 import pandas as pd
-import wandb
-
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
 
-api = wandb.Api()
+csv_path = os.getenv("OPTUNA_CSV_RESULTS_PATH")
 
-# Project is specified by <entity/project-name>
-runs = api.runs(os.getenv('WANDB_RUN'))
+# for all files .csv in the folder csv_path, extract a row where there is the min of column "RMSE CL" and a row where there is the min "RMSE Val"
+# save them in a new dataframe in iterative way and save it in a new csv file
+df_list = []
+for file in os.listdir(csv_path):
+    if file.endswith(".csv") and "bld" in file:
+        df_temp = pd.read_csv(csv_path + "/" + file)
+        # From this dataframe, extract the rows were Weight_decay is not nan
+        df_temp = df_temp.loc[df_temp['Weight_decay'].notna()]
+        df_temp_cl_min = df_temp.loc[df_temp['RMSE CL'] == df_temp['RMSE CL'].min()]
+        df_temp_val_min = df_temp.loc[df_temp['RMSE Val'] == df_temp['RMSE Val'].min()]
+        df_list.extend([df_temp_cl_min, df_temp_val_min])
 
-summary_list, config_list, name_list = [], [], []
-for run in runs:
-    # .summary contains the output keys/values for metrics like accuracy.
-    #  We call ._json_dict to omit large files
-    summary_list.append(run.summary._json_dict)
+df = pd.concat(df_list, ignore_index=True)
 
-    # .config contains the hyperparameters.
-    #  We remove special values that start with _.
-    config_list.append(
-        {k: v for k,v in run.config.items()
-          if not k.startswith('_')})
+# Find rows where 'RMSE CL' is minimized
+df_cl = df.loc[df.groupby('Building Key')['RMSE CL'].idxmin()]
+df_cl = df_cl[['Building Key', 'Num_hidden', 'Num_layers', 'Dropout', 'Learning rate', 'Weight_decay']]
 
-    # .name is the human-readable name of the run.
-    name_list.append(run.name)
+# Rename columns to match the JSON format
+df_cl.rename(columns={'Num_hidden': 'n_hidden', 'Num_layers': 'n_layers', 'Dropout': 'dropout', 'Learning rate': 'learning_rate', 'Weight_decay': 'Weight_decay'}, inplace=True)
+df_cl.set_index('Building Key', inplace=True)
 
-runs_df = pd.DataFrame({
-    "summary": summary_list,
-    "config": config_list,
-    "name": name_list
-    })
+# Find rows where 'RMSE Val' is minimized
+df_val = df.loc[df.groupby('Building Key')['RMSE Val'].idxmin()]
+df_val = df_val[['Building Key', 'Num_hidden', 'Num_layers', 'Dropout', 'Learning rate', 'Weight_decay']]
 
-# runs_df.to_csv("simulation/data/lstm_pth/lstm_metrics.csv")
+# Rename columns to match the JSON format
+df_val.rename(columns={'Num_hidden': 'n_hidden', 'Num_layers': 'n_layers', 'Dropout': 'dropout', 'Learning rate': 'learning_rate', 'Weight_decay': 'Weight_decay'}, inplace=True)
+df_val.set_index('Building Key', inplace=True)
+
+# Create dictionaries directly from DataFrames
+best_cl = df_cl.to_dict(orient='index')
+best_val = df_val.to_dict(orient='index')
+
+# Save dictionaries in JSON format
+import json
+with open(csv_path + '/best_cl.json', 'w') as fp:
+    json.dump(best_cl, fp)
+
+with open(csv_path + '/best_val.json', 'w') as fp:
+    json.dump(best_val, fp)
+
+
+
+

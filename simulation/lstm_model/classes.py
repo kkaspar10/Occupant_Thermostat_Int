@@ -99,7 +99,7 @@ class LSTM_model_optuna(nn.Module):
 import torch.nn.functional as F
 
 class LSTM(nn.Module):
-    def __init__(self, n_features, n_output, drop_prob, seq_len, num_hidden, num_layers, weight_decay=0.01):
+    def __init__(self, n_features, n_output, drop_prob, seq_len, num_hidden, num_layers, weight_decay):
         super(LSTM, self).__init__()
 
         self.n_features = n_features  # number of inputs variable
@@ -107,6 +107,7 @@ class LSTM(nn.Module):
         self.seq_len = seq_len  # lookback value
         self.n_hidden = num_hidden  # number of hidden states
         self.n_layers = num_layers  # number of LSTM layers (stacked)
+        self.weight_decay = weight_decay
 
         self.l_lstm = nn.LSTM(input_size=self.n_features,
                               hidden_size=self.n_hidden,
@@ -120,7 +121,7 @@ class LSTM(nn.Module):
         self.l_linear = nn.Linear(self.n_hidden, n_output)
 
         # Add L2 regularization to the linear layer
-        self.l_linear.weight_decay = weight_decay
+        self.l_linear.weight_decay = self.weight_decay
 
     def init_hidden(self, batch_size, device):
         # even with batch_first = True this remains the same as docs

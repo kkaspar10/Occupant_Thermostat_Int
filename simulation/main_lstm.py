@@ -13,6 +13,9 @@ import pickle
 import os
 import json
 
+import seaborn as sns
+
+
 from torch.utils.data import TensorDataset, DataLoader
 
 
@@ -43,9 +46,6 @@ def mean_absolute_percentage_error(y_true, y_pred):
     absolute_error = np.abs((y_true - y_pred) / y_true)
     mape = np.mean(absolute_error) * 100
     return mape
-
-import seaborn as sns
-
 
 def plot_average_indoor_temperature_colored(df):
     # Plot the average indoor temperature colored by the simulation_reference
@@ -113,7 +113,7 @@ if __name__ == '__main__':
             pickle.dump(dict_building, handle)
 
     # Open json file with hyperparameters configuration of the lstm
-    with open('simulation\\data\\lstm_pth\\' + 'best_config.json') as json_file:
+    with open('simulation\\data\\lstm_pth\\' + 'best_reg_config.json') as json_file:
         lstm_config = json.load(json_file)
 
     # Multiple deployment
@@ -149,6 +149,7 @@ if __name__ == '__main__':
                            'hidden_size': lstm_config[str(key)]['n_hidden'],
                            'learning_rate': lstm_config[str(key)]['learning_rate'],
                            'dropout': lstm_config[str(key)]['dropout'],
+                           'weight_decay': lstm_config[str(key)]['Weight_decay'],
                            'optimizer': config.optimizer_name,
                            'epochs': config.epochs,
                            'run_id': config.run_id
@@ -302,12 +303,13 @@ if __name__ == '__main__':
         #                         num_hidden=lstm_config[str(key)]['n_hidden'],
         #                         drop_prob=lstm_config[str(key)]['dropout']).to(config.device)
         #
-        lstm = LSTM_attention(n_features=input_size,
-                                n_output=output_size,
-                                seq_len=config.lb,
-                                num_layers=lstm_config[str(key)]['n_layers'],
-                                num_hidden=lstm_config[str(key)]['n_hidden'],
-                                drop_prob=lstm_config[str(key)]['dropout']).to(config.device)
+        lstm = LSTM(n_features=input_size,
+                    n_output=output_size,
+                    seq_len=config.lb,
+                    num_layers=lstm_config[str(key)]['n_layers'],
+                    num_hidden=lstm_config[str(key)]['n_hidden'],
+                    drop_prob=lstm_config[str(key)]['dropout'],
+                    weight_decay=lstm_config[str(key)]['Weight_decay']).to(config.device)
 
 
          # lstm = LSTM_model_wandb(n_features=input_size,
