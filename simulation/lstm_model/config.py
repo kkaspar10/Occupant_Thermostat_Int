@@ -5,7 +5,7 @@ config = dict(
     device=torch.device("cuda" if torch.cuda.is_available() else "cpu"),
     # aggregate_df=True, # CHECK PROJECT NAME
     # train_model=True,
-    save_local=False,
+    save_local=True,
     load_model=False,
     # For wandb
     wandb_on=True,
