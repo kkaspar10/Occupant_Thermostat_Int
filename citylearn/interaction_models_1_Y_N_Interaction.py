@@ -23,31 +23,31 @@ def calculate_prob(a, b, T_indoor_C_rounded):
 ##Probability of a SP Increase equations:
 
 ##Occupant Type 1: Tolerant (Generally prefers lower indoor temperatures in winter)
-a_tolerant_home = 28.22
-b_tolerant_home = -1.64
+a_tolerant_home = 12.1
+b_tolerant_home = -0.82
 
-a_tolerant_away = 15.24
-b_tolerant_away = -1.03
+a_tolerant_away = 15.2
+b_tolerant_away = -1.02
 
-a_tolerant_sleep = 21.16
+a_tolerant_sleep = 21.1
 b_tolerant_sleep = -1.43
 
 ##Occupant Type 2: Average (Generally exhibits temperature preferences in line with those typical for the region)
 
-a_average_home = 29.36
-b_average_home = -1.57
+a_average_home = 17.8
+b_average_home = -1.03
 
-a_average_away = 15.10
+a_average_away = 15.1
 b_average_away = -0.96
 
-a_average_sleep = 26.31
+a_average_sleep = 26.3
 b_average_sleep = -1.56
 
 
 ##Probability of a SP Decrease equations:
 
-a_tolerant_decrease = -23.19
+a_tolerant_decrease = -23.2
 b_tolerant_decrease = 0.97
 
-a_average_decrease = -30.34
-b_average_decrease = 1.13
+a_average_decrease = -28.2
+b_average_decrease = 1.03
