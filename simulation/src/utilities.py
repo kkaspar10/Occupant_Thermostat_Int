@@ -142,7 +142,7 @@ class DataHandler:
             data['library'] = v['library']
             data['agent'] = v['agent']
             data['rbc_name'] = v['rbc_name']
-            data['random_seed'] = v['random_seed']
+            data['random_seed'] = v.get('random_seed', None)
             data['central_agent'] = v['central_agent']
             data['reward_function_name'] = v['reward_function_name']
             data['reward_function_kwargs'] = json.dumps(v['reward_function_kwargs'])
