@@ -465,6 +465,19 @@ if __name__ == '__main__':
             plot_test_CL.show()
             scatter_CL.show()
 
+        # Create a dataframe with the results
+        results = pd.DataFrame({'MAPE_test': MAPE_test, 'RMSE_test': RMSE_test, 'R2_test': R2_test,
+                                'MAPE_sim': MAPE_sim, 'RMSE_sim': RMSE_sim, 'R2_sim': R2_sim}, index=[key])
+
+        # Save the results in a csv file
+        results.to_csv('simulation\\data\\results.csv', mode='a', header=False)
+
+        # Create a dataframe with real and predicted values
+        df_predictions = pd.DataFrame({'Treal': Treal, 'Tpred': Tpred})
+
+        # Save the dataframe in a csv file
+        df_predictions.to_csv(f'simulation\\data\\df_predictions{key}.csv', mode='a', header=False)
+
 
 
 
