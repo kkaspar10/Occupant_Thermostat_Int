@@ -23,12 +23,12 @@ def build_schema():
     episode_time_steps = []
     data_list = []
 
-    if os.path.isdir(FileHandler.SCHEMA_DIRECTORY):
-        shutil.rmtree(FileHandler.SCHEMA_DIRECTORY)
-    else:
-        pass
+    # if os.path.isdir(FileHandler.SCHEMA_DIRECTORY):
+    #     shutil.rmtree(FileHandler.SCHEMA_DIRECTORY)
+    # else:
+    #     pass
 
-    os.makedirs(FileHandler.SCHEMA_DIRECTORY)
+    # os.makedirs(FileHandler.SCHEMA_DIRECTORY)
     
     # set weather data
     for i, y in enumerate(years):
@@ -289,12 +289,16 @@ def simulate():
                 schedules=schedules,
                 setpoints=setpoints,
                 seed=settings['seed'],
-                iterations=settings['partial_load_iterations'],
+                iterations=settings['partial_load']['iterations'],
                 max_workers=settings['max_workers'],
                 simulation_id=simulation_id,
                 output_directory=output_directory,
             )
-            _, partial_loads_data = ltd.run()
+            _, partial_loads_data = ltd.run(
+                partial_load_multiplier_minimum_value=settings['partial_load']['multiplier_minimum'],
+                partial_load_multiplier_maximum_value=settings['partial_load']['multiplier_maximum'],
+                partial_load_multiplier_probability=settings['partial_load']['multiplier_probability'],
+            )
             
             # collect lstm train data for current year
             if year in settings['years']['train']:
@@ -389,7 +393,12 @@ def set_simulation_input():
 
     settings = FileHandler.get_settings()
 
-    for d in [FileHandler.OSM_DIRECTORY, FileHandler.SCHEDULES_DIRECTORY, FileHandler.LSTM_TRAIN_DATA_DIRECTORY, FileHandler.SCHEMA_DIRECTORY]:
+    for d in [
+        FileHandler.OSM_DIRECTORY, 
+        FileHandler.SCHEDULES_DIRECTORY, 
+        FileHandler.LSTM_TRAIN_DATA_DIRECTORY, 
+        # FileHandler.SCHEMA_DIRECTORY
+    ]:
         if os.path.isdir(d):
             shutil.rmtree(d)
         else:
