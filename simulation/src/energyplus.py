@@ -254,7 +254,10 @@ def simulate():
     settings = FileHandler.get_settings()
     setpoint_data = pd.read_csv(os.path.join(FileHandler.DATA_DIRECTORY, 'SP_Averages_by_Cluster.csv'))
 
-    for d in [FileHandler.LSTM_TRAIN_DATA_DIRECTORY, FileHandler.SCHEMA_DIRECTORY]:
+    for d in [
+        FileHandler.LSTM_TRAIN_DATA_DIRECTORY, 
+        # FileHandler.SCHEMA_DIRECTORY
+    ]:
         if os.path.isdir(d):
             shutil.rmtree(d)
         else:
