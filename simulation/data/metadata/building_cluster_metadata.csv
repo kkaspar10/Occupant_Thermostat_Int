@@ -1,0 +1,11 @@
+Cluster,bldg_id,setpoint_id,Geometry,ID,Orientation,Year-built,Occupants,Infiltration,Ceiling,Slab,Wall,EUI (kWh/m2),WWR
+1,199613,Tolerant,{\includegraphics[height=0.45in]{figures/building_geometry/199613}},1,West,2000s,2,6 ACH50,R-30,None,"Wood Stud, R-19",122.0,0.11
+1,247942,Tolerant,{\includegraphics[height=0.45in]{figures/building_geometry/247942}},2,Northeast,2000s,3,4 ACH50,R-30,None,"Wood Stud, R-11",59.0,0.05
+1,508889,Average,{\includegraphics[height=0.45in]{figures/building_geometry/508889}},3,Southwest,1980s,2,15 ACH50,R-30,None,"Wood Stud, R-19",359.0,0.07
+2,20199,Tolerant,{\includegraphics[height=0.45in]{figures/building_geometry/20199}},4,South,1970s,4,15 ACH50,R-30,None,"Wood Stud, R-7",226.0,0.06
+2,75252,Average,{\includegraphics[height=0.45in]{figures/building_geometry/75252}},5,South,1970s,4,10 ACH50,R-49,None,"Wood Stud, R-7",284.0,0.06
+2,79194,Average,{\includegraphics[height=0.45in]{figures/building_geometry/79194}},6,South,1970s,2,15 ACH50,R-13,None,"Wood Stud, R-7",278.0,0.24
+3,481052,Tolerant,{\includegraphics[height=0.45in]{figures/building_geometry/481052}},7,Northeast,1960s,1,8 ACH50,R-13,None,"Wood Stud, Uninsulated",283.0,0.04
+3,546814,Average,{\includegraphics[height=0.45in]{figures/building_geometry/546814}},8,Northwest,1950s,2,30 ACH50,R-19,None,"Wood Stud, Uninsulated",607.0,0.08
+4,4421,Average,{\includegraphics[height=0.45in]{figures/building_geometry/4421}},9,South,1990s,3,10 ACH50,R-30,"2ft R10 Under, Horizontal","Wood Stud, R-19",221.0,0.05
+4,498771,Tolerant,{\includegraphics[height=0.45in]{figures/building_geometry/498771}},10,East,2000s,1,8 ACH50,R-30,"2ft R10 Under, Horizontal","Wood Stud, R-11",291.0,0.04
