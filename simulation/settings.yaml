@@ -17,11 +17,25 @@ years:
     - 2021
     test:
     - 2022
-partial_load_iterations: 4
+partial_load:
+    iterations: 4
+    multiplier_minimum: 0.8
+    multiplier_maximum: 1.2
+    multiplier_probability: 0.6
 max_workers: 5
 building_selection:
-    count: 10
+    count: 20
     setpoint_ids:
+    - Cluster_0_SPs
+    - Cluster_0_SPs
+    - Cluster_0_SPs
+    - Cluster_0_SPs
+    - Cluster_0_SPs
+    - Cluster_1_SPs
+    - Cluster_1_SPs
+    - Cluster_1_SPs
+    - Cluster_1_SPs
+    - Cluster_1_SPs
     - Cluster_0_SPs
     - Cluster_0_SPs
     - Cluster_0_SPs
@@ -43,6 +57,16 @@ building_selection:
     - 4421
     - 508889
     - 79194
+    - 430942
+    - 450491
+    - 391597
+    - 245723
+    - 525859
+    - 376570
+    - 373117
+    - 411001
+    - 387179
+    - 425540
 energyplus_run_period:
     begin_month: 1
     begin_day_of_month: 1
@@ -56,17 +80,11 @@ active_actions:
 active_observations:
 - day_type
 - hour
-# - heating_device_cop
-# - heating_electricity_consumption
 - outdoor_dry_bulb_temperature
 - outdoor_dry_bulb_temperature_predicted_6h
-# - outdoor_dry_bulb_temperature_predicted_12h
-# - outdoor_dry_bulb_temperature_predicted_24h
 - indoor_dry_bulb_temperature
-# - net_electricity_consumption
-# - occupant_count
 - indoor_dry_bulb_temperature_set_point
-- occupant_interaction_indoor_dry_bulb_temperature_set_point_delta # name of observation is up for debate
+- occupant_interaction_indoor_dry_bulb_temperature_set_point_delta
 - indoor_dry_bulb_temperature_delta
 - net_electricity_consumption
 - electricity_pricing_predicted_6h
@@ -134,69 +152,58 @@ occupant:
                     a: 28.22
                     b: -1.64
                     hours:
-                        -
-                            - 6
-                            - 8
-                        -
-                            - 17
-                            - 23
+                    -   - 6
+                        - 8
+                    -   - 17
+                        - 23
                 unoccupied:
                     a: 15.24
                     b: -1.03
                     hours:
-                        -
-                            - 9
-                            - 16
+                    -   - 9
+                        - 16
                 sleep:
                     a: 21.16
                     b: -1.43
                     hours:
-                        -
-                            - 0
-                            - 5
+                    -   - 0
+                        - 5
             decrease:
                 all:
                     a: -23.19
                     b: 0.97
                     hours:
-                        -
-                            - 0
-                            - 23
+                    -   - 0
+                        - 23
         Average:
             increase:
                 occupied:
                     a: 29.36
                     b: -1.57
                     hours:
-                        -
-                            - 6
-                            - 8
-                        -
-                            - 17
-                            - 23
+                    -   - 6
+                        - 8
+                    -   - 17
+                        - 23
                 unoccupied:
-                    a: 15.10
+                    a: 15.1
                     b: -0.96
                     hours:
-                        -
-                            - 9
-                            - 16
+                    -   - 9
+                        - 16
                 sleep:
                     a: 26.31
                     b: -1.56
                     hours:
-                        -
-                            - 0
-                            - 5
+                    -   - 0
+                        - 5
             decrease:
                 all:
                     a: -30.34
                     b: 1.13
                     hours:
-                        -
-                            - 0
-                            - 23
-                    
+                    -   - 0
+                        - 23
     attributes:
         delta_output_map:
             0: 0.5
