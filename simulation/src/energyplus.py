@@ -103,7 +103,7 @@ def build_schema():
             'energy_simulation': f'{bldg_name}.csv',
             'weather': 'weather.csv',
             'carbon_intensity': None,
-            'pricing': None,
+            'pricing': 'pricing.csv',
             'inactive_observations': [],
             'inactive_actions': [],
             'set_point_hold_time_steps': settings['set_point_hold_time_steps'],
