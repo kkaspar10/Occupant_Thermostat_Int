@@ -184,3 +184,4 @@ test_notebooks/
 
 # occupant-thermostat-int
 simulation/data/energyplus_simulation
+simulation/data/energyplus_simulation_archive
