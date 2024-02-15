@@ -72,7 +72,7 @@ def define_model(trial, config, key, dict_building):
     # simulation reference 2, 3 and 4 of 2021 for validation and simulation reference 5 and 6 of 2021 for testing
     train_indices = ((df['year'] == 2020) & (df['simulation_reference'].isin(['2', '3', '4', '5', '6', '7'])))
     val_indices = ((df['year'] == 2021) & (df['simulation_reference'].isin(['2', '3', '4', '5'])))
-    test_indices = ((df['year'] == 2021) & (df['simulation_reference'].isin(['6', '7'])))
+    test_indices = ((df['year'] == 2021) & (df['simulation_reference'].isin(['2', '6', '7'])))
 
     train_df = df[train_indices]
 
@@ -300,7 +300,7 @@ if __name__ == "__main__":
     # import configuration file
     config = AttributeDict(config)
 
-    dict_of_df_path = "simulation\\lstm_model\\dict_building_v2.pickle"
+    dict_of_df_path = "simulation\\lstm_model\\dict_building_v3.pickle"
 
     # if dict_of_df_path exists
     if os.path.exists(dict_of_df_path):
@@ -341,8 +341,8 @@ if __name__ == "__main__":
             print("    {}: {}".format(key, value))
 
             # create a dataframe with the best trial for each building_key
-            best_trial = pd.DataFrame([[trial[0].params['n_units'], trial[0].params['n_layers'], trial[0].params['drop_prob'], trial[0].params['lr']]],
-                                      columns=['Num_hidden', 'Num_layers', 'Dropout', 'Learning rate'])
+            best_trial = pd.DataFrame([[trial[0].params['n_units'], trial[0].params['n_layers'], trial[0].params['drop_prob'], trial[0].params['lr'], trial[0].params['weight_decay']]],
+                                      columns=['Num_hidden', 'Num_layers', 'Dropout', 'Learning rate', 'Weight decay'])
             # add building_key column
             best_trial['Building Key'] = building_key
 

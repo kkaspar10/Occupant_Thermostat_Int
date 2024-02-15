@@ -95,7 +95,7 @@ def plot_average_indoor_temperature(df, train_x, val_x, test_x):
 
 if __name__ == '__main__':
     # ---------------------------------- IMPORT DATA ---------------------------------------------------------------#
-    dict_of_df_path = "simulation\\lstm_model\\dict_building_v2.pickle"
+    dict_of_df_path = "simulation\\lstm_model\\dict_building_v3.pickle"
 
     # if dict_of_df_path exists
     if os.path.exists(dict_of_df_path):
@@ -118,10 +118,10 @@ if __name__ == '__main__':
 
     # Multiple deployment
     # ------------------------------- ENTER IN MODEL PIPELINE -----------------------------------------------------#
-    for key in dict_building:
+    # for key in dict_building:
         config = AttributeDict(config)
 
-        # key = 508889
+        key = 75252
 
         df = dict_building[key]
 
@@ -197,7 +197,7 @@ if __name__ == '__main__':
         # simulation reference 2, 3 and 4 of 2021 for validation and simulation reference 5 and 6 of 2021 for testing
         train_indices = ((df['year'] == 2020) & (df['simulation_reference'].isin(['2', '3', '4', '5', '6', '7'])))
         val_indices = ((df['year'] == 2021) & (df['simulation_reference'].isin(['2', '3', '4', '5'])))
-        test_indices = ((df['year'] == 2021) & (df['simulation_reference'].isin(['6', '7'])))
+        test_indices = ((df['year'] == 2021) & (df['simulation_reference'].isin(['2', '6', '7'])))
 
         train_df = df[train_indices]
 
@@ -446,7 +446,7 @@ if __name__ == '__main__':
         #                         title='Temperatue prediction ALL DATASET - %d T lag for next %d T' % (
         #                             config.lb, config.output_pred))
 
-        error_dist = error_distribution(ypred=ypred_test, yreal=ylab_test)
+        error_dist = error_distribution(ypred=Tpred, yreal=Treal)
 
         plot_test_CL = plot_graph(Tpred, Treal, config=config,
                                   title='Simulation Closed Loop LSTM in Test')
