@@ -281,11 +281,12 @@
       },
       "dynamics": {
         "cooling": {
-          "type": "citylearn.dynamics.LSTMDynamics",
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
           "attributes": {
             "input_size": 12,
-            "hidden_size": 40,
-            "num_layers": 3,
+            "hidden_size": 24,
+            "num_layers": 2,
+            "dropout": 0.3,
             "lookback": 12,
             "filename": "247942.pth",
             "input_normalization_minimum": [
@@ -333,11 +334,12 @@
           }
         },
         "heating": {
-          "type": "citylearn.dynamics.LSTMDynamics",
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
           "attributes": {
             "input_size": 12,
-            "hidden_size": 40,
-            "num_layers": 3,
+            "hidden_size": 24,
+            "num_layers": 2,
+            "dropout": 0.3,
             "lookback": 12,
             "filename": "247942.pth",
             "input_normalization_minimum": [
@@ -434,11 +436,12 @@
       },
       "dynamics": {
         "cooling": {
-          "type": "citylearn.dynamics.LSTMDynamics",
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
           "attributes": {
             "input_size": 12,
             "hidden_size": 32,
-            "num_layers": 2,
+            "num_layers": 1,
+            "dropout": 0.0,
             "lookback": 12,
             "filename": "20199.pth",
             "input_normalization_minimum": [
@@ -486,11 +489,12 @@
           }
         },
         "heating": {
-          "type": "citylearn.dynamics.LSTMDynamics",
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
           "attributes": {
             "input_size": 12,
             "hidden_size": 32,
-            "num_layers": 2,
+            "num_layers": 1,
+            "dropout": 0.0,
             "lookback": 12,
             "filename": "20199.pth",
             "input_normalization_minimum": [
@@ -587,11 +591,12 @@
       },
       "dynamics": {
         "cooling": {
-          "type": "citylearn.dynamics.LSTMDynamics",
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
           "attributes": {
             "input_size": 12,
-            "hidden_size": 64,
-            "num_layers": 2,
+            "hidden_size": 32,
+            "num_layers": 3,
+            "dropout": 0.4,
             "lookback": 12,
             "filename": "481052.pth",
             "input_normalization_minimum": [
@@ -639,11 +644,12 @@
           }
         },
         "heating": {
-          "type": "citylearn.dynamics.LSTMDynamics",
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
           "attributes": {
             "input_size": 12,
-            "hidden_size": 64,
-            "num_layers": 2,
+            "hidden_size": 32,
+            "num_layers": 3,
+            "dropout": 0.4,
             "lookback": 12,
             "filename": "481052.pth",
             "input_normalization_minimum": [
@@ -740,11 +746,12 @@
       },
       "dynamics": {
         "cooling": {
-          "type": "citylearn.dynamics.LSTMDynamics",
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
           "attributes": {
             "input_size": 12,
-            "hidden_size": 16,
+            "hidden_size": 56,
             "num_layers": 3,
+            "dropout": 0.4,
             "lookback": 12,
             "filename": "498771.pth",
             "input_normalization_minimum": [
@@ -792,11 +799,12 @@
           }
         },
         "heating": {
-          "type": "citylearn.dynamics.LSTMDynamics",
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
           "attributes": {
             "input_size": 12,
-            "hidden_size": 16,
+            "hidden_size": 56,
             "num_layers": 3,
+            "dropout": 0.4,
             "lookback": 12,
             "filename": "498771.pth",
             "input_normalization_minimum": [
@@ -893,11 +901,12 @@
       },
       "dynamics": {
         "cooling": {
-          "type": "citylearn.dynamics.LSTMDynamics",
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
           "attributes": {
             "input_size": 12,
             "hidden_size": 64,
-            "num_layers": 2,
+            "num_layers": 3,
+            "dropout": 0.4,
             "lookback": 12,
             "filename": "199613.pth",
             "input_normalization_minimum": [
@@ -945,11 +954,12 @@
           }
         },
         "heating": {
-          "type": "citylearn.dynamics.LSTMDynamics",
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
           "attributes": {
             "input_size": 12,
             "hidden_size": 64,
-            "num_layers": 2,
+            "num_layers": 3,
+            "dropout": 0.4,
             "lookback": 12,
             "filename": "199613.pth",
             "input_normalization_minimum": [
@@ -1046,11 +1056,12 @@
       },
       "dynamics": {
         "cooling": {
-          "type": "citylearn.dynamics.LSTMDynamics",
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
           "attributes": {
             "input_size": 12,
-            "hidden_size": 32,
+            "hidden_size": 16,
             "num_layers": 3,
+            "dropout": 0.0,
             "lookback": 12,
             "filename": "75252.pth",
             "input_normalization_minimum": [
@@ -1098,11 +1109,12 @@
           }
         },
         "heating": {
-          "type": "citylearn.dynamics.LSTMDynamics",
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
           "attributes": {
             "input_size": 12,
-            "hidden_size": 32,
+            "hidden_size": 16,
             "num_layers": 3,
+            "dropout": 0.0,
             "lookback": 12,
             "filename": "75252.pth",
             "input_normalization_minimum": [
@@ -1199,11 +1211,12 @@
       },
       "dynamics": {
         "cooling": {
-          "type": "citylearn.dynamics.LSTMDynamics",
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
           "attributes": {
             "input_size": 12,
-            "hidden_size": 56,
+            "hidden_size": 16,
             "num_layers": 2,
+            "dropout": 0.1,
             "lookback": 12,
             "filename": "546814.pth",
             "input_normalization_minimum": [
@@ -1251,11 +1264,12 @@
           }
         },
         "heating": {
-          "type": "citylearn.dynamics.LSTMDynamics",
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
           "attributes": {
             "input_size": 12,
-            "hidden_size": 56,
+            "hidden_size": 16,
             "num_layers": 2,
+            "dropout": 0.1,
             "lookback": 12,
             "filename": "546814.pth",
             "input_normalization_minimum": [
@@ -1352,11 +1366,12 @@
       },
       "dynamics": {
         "cooling": {
-          "type": "citylearn.dynamics.LSTMDynamics",
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
           "attributes": {
             "input_size": 12,
-            "hidden_size": 8,
-            "num_layers": 1,
+            "hidden_size": 48,
+            "num_layers": 2,
+            "dropout": 0.0,
             "lookback": 12,
             "filename": "4421.pth",
             "input_normalization_minimum": [
@@ -1404,11 +1419,12 @@
           }
         },
         "heating": {
-          "type": "citylearn.dynamics.LSTMDynamics",
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
           "attributes": {
             "input_size": 12,
-            "hidden_size": 8,
-            "num_layers": 1,
+            "hidden_size": 48,
+            "num_layers": 2,
+            "dropout": 0.0,
             "lookback": 12,
             "filename": "4421.pth",
             "input_normalization_minimum": [
@@ -1505,11 +1521,12 @@
       },
       "dynamics": {
         "cooling": {
-          "type": "citylearn.dynamics.LSTMDynamics",
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
           "attributes": {
             "input_size": 12,
-            "hidden_size": 56,
-            "num_layers": 3,
+            "hidden_size": 16,
+            "num_layers": 2,
+            "dropout": 0.1,
             "lookback": 12,
             "filename": "508889.pth",
             "input_normalization_minimum": [
@@ -1557,11 +1574,12 @@
           }
         },
         "heating": {
-          "type": "citylearn.dynamics.LSTMDynamics",
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
           "attributes": {
             "input_size": 12,
-            "hidden_size": 56,
-            "num_layers": 3,
+            "hidden_size": 16,
+            "num_layers": 2,
+            "dropout": 0.1,
             "lookback": 12,
             "filename": "508889.pth",
             "input_normalization_minimum": [
@@ -1658,11 +1676,12 @@
       },
       "dynamics": {
         "cooling": {
-          "type": "citylearn.dynamics.LSTMDynamics",
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
           "attributes": {
             "input_size": 12,
-            "hidden_size": 64,
-            "num_layers": 1,
+            "hidden_size": 40,
+            "num_layers": 2,
+            "dropout": 0.1,
             "lookback": 12,
             "filename": "79194.pth",
             "input_normalization_minimum": [
@@ -1710,11 +1729,12 @@
           }
         },
         "heating": {
-          "type": "citylearn.dynamics.LSTMDynamics",
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
           "attributes": {
             "input_size": 12,
-            "hidden_size": 64,
-            "num_layers": 1,
+            "hidden_size": 40,
+            "num_layers": 2,
+            "dropout": 0.1,
             "lookback": 12,
             "filename": "79194.pth",
             "input_normalization_minimum": [
@@ -1768,6 +1788,1556 @@
         "attributes": {
           "setpoint_increase_model_filename": "79194_setpoint_increase.pkl",
           "setpoint_decrease_model_filename": "79194_setpoint_decrease.pkl",
+          "delta_output_map": {
+            "0": 0.5,
+            "1": 1.5
+          }
+        }
+      }
+    },
+    "430942": {
+      "type": "src.occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
+      "include": true,
+      "energy_simulation": "430942.csv",
+      "weather": "weather.csv",
+      "carbon_intensity": null,
+      "pricing": "pricing.csv",
+      "inactive_observations": [],
+      "inactive_actions": [],
+      "set_point_hold_time_steps": 4,
+      "heating_device": {
+        "type": "citylearn.energy_model.HeatPump",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.3
+        },
+        "attributes": {
+          "nominal_power": 29.687271690368654,
+          "efficiency": 0.20126177394874092,
+          "target_cooling_temperature": 8.0,
+          "target_heating_temperature": 45.022902234171994
+        }
+      },
+      "dhw_device": {
+        "type": "citylearn.energy_model.ElectricHeater",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.1
+        },
+        "attributes": {
+          "nominal_power": 7.601079034805299,
+          "efficiency": 0.8511879579773185
+        }
+      },
+      "dynamics": {
+        "cooling": {
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
+          "attributes": {
+            "input_size": 12,
+            "hidden_size": 56,
+            "num_layers": 3,
+            "dropout": 0.3,
+            "lookback": 12,
+            "filename": "430942.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -32.53,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -16.072042
+            ],
+            "input_normalization_maximum": [
+              1063.59,
+              409.12,
+              19.16,
+              1.0,
+              21.044563,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              23.565735
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "occupant_count",
+              "cooling_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        },
+        "heating": {
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
+          "attributes": {
+            "input_size": 12,
+            "hidden_size": 56,
+            "num_layers": 3,
+            "dropout": 0.3,
+            "lookback": 12,
+            "filename": "430942.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -32.53,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -16.072042
+            ],
+            "input_normalization_maximum": [
+              1063.59,
+              409.12,
+              19.16,
+              1.0,
+              21.044563,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              23.565735
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "occupant_count",
+              "heating_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        }
+      },
+      "occupant": {
+        "type": "src.occ_citylearn.LogisticRegressionOccupant",
+        "parameters_filename": "430942_occupant_parameters.csv",
+        "attributes": {
+          "setpoint_increase_model_filename": "430942_setpoint_increase.pkl",
+          "setpoint_decrease_model_filename": "430942_setpoint_decrease.pkl",
+          "delta_output_map": {
+            "0": 0.5,
+            "1": 1.5
+          }
+        }
+      }
+    },
+    "450491": {
+      "type": "src.occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
+      "include": true,
+      "energy_simulation": "450491.csv",
+      "weather": "weather.csv",
+      "carbon_intensity": null,
+      "pricing": "pricing.csv",
+      "inactive_observations": [],
+      "inactive_actions": [],
+      "set_point_hold_time_steps": 4,
+      "heating_device": {
+        "type": "citylearn.energy_model.HeatPump",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.3
+        },
+        "attributes": {
+          "nominal_power": 40.406142234802246,
+          "efficiency": 0.2630972640844905,
+          "target_cooling_temperature": 8.0,
+          "target_heating_temperature": 46.314209914957466
+        }
+      },
+      "dhw_device": {
+        "type": "citylearn.energy_model.ElectricHeater",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.1
+        },
+        "attributes": {
+          "nominal_power": 9.732241439819337,
+          "efficiency": 0.8682337146529515
+        }
+      },
+      "dynamics": {
+        "cooling": {
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
+          "attributes": {
+            "input_size": 12,
+            "hidden_size": 24,
+            "num_layers": 3,
+            "dropout": 0.0,
+            "lookback": 12,
+            "filename": "450491.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -32.53,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -17.163555
+            ],
+            "input_normalization_maximum": [
+              1063.59,
+              409.12,
+              19.16,
+              3.0,
+              37.672546,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              22.576069
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "occupant_count",
+              "cooling_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        },
+        "heating": {
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
+          "attributes": {
+            "input_size": 12,
+            "hidden_size": 24,
+            "num_layers": 3,
+            "dropout": 0.0,
+            "lookback": 12,
+            "filename": "450491.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -32.53,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -17.163555
+            ],
+            "input_normalization_maximum": [
+              1063.59,
+              409.12,
+              19.16,
+              3.0,
+              37.672546,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              22.576069
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "occupant_count",
+              "heating_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        }
+      },
+      "occupant": {
+        "type": "src.occ_citylearn.LogisticRegressionOccupant",
+        "parameters_filename": "450491_occupant_parameters.csv",
+        "attributes": {
+          "setpoint_increase_model_filename": "450491_setpoint_increase.pkl",
+          "setpoint_decrease_model_filename": "450491_setpoint_decrease.pkl",
+          "delta_output_map": {
+            "0": 0.5,
+            "1": 1.5
+          }
+        }
+      }
+    },
+    "391597": {
+      "type": "src.occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
+      "include": true,
+      "energy_simulation": "391597.csv",
+      "weather": "weather.csv",
+      "carbon_intensity": null,
+      "pricing": "pricing.csv",
+      "inactive_observations": [],
+      "inactive_actions": [],
+      "set_point_hold_time_steps": 4,
+      "heating_device": {
+        "type": "citylearn.energy_model.HeatPump",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.3
+        },
+        "attributes": {
+          "nominal_power": 30.376845359802246,
+          "efficiency": 0.2440694556538768,
+          "target_cooling_temperature": 8.0,
+          "target_heating_temperature": 46.90451261936419
+        }
+      },
+      "dhw_device": {
+        "type": "citylearn.energy_model.ElectricHeater",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.1
+        },
+        "attributes": {
+          "nominal_power": 15.974102783203126,
+          "efficiency": 0.8650541362152193
+        }
+      },
+      "dynamics": {
+        "cooling": {
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
+          "attributes": {
+            "input_size": 12,
+            "hidden_size": 40,
+            "num_layers": 3,
+            "dropout": 0.2,
+            "lookback": 12,
+            "filename": "391597.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -32.53,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -15.766392
+            ],
+            "input_normalization_maximum": [
+              1063.59,
+              409.12,
+              19.16,
+              1.0,
+              26.126406,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              22.210056
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "occupant_count",
+              "cooling_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        },
+        "heating": {
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
+          "attributes": {
+            "input_size": 12,
+            "hidden_size": 40,
+            "num_layers": 3,
+            "dropout": 0.2,
+            "lookback": 12,
+            "filename": "391597.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -32.53,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -15.766392
+            ],
+            "input_normalization_maximum": [
+              1063.59,
+              409.12,
+              19.16,
+              1.0,
+              26.126406,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              22.210056
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "occupant_count",
+              "heating_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        }
+      },
+      "occupant": {
+        "type": "src.occ_citylearn.LogisticRegressionOccupant",
+        "parameters_filename": "391597_occupant_parameters.csv",
+        "attributes": {
+          "setpoint_increase_model_filename": "391597_setpoint_increase.pkl",
+          "setpoint_decrease_model_filename": "391597_setpoint_decrease.pkl",
+          "delta_output_map": {
+            "0": 0.5,
+            "1": 1.5
+          }
+        }
+      }
+    },
+    "245723": {
+      "type": "src.occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
+      "include": true,
+      "energy_simulation": "245723.csv",
+      "weather": "weather.csv",
+      "carbon_intensity": null,
+      "pricing": "pricing.csv",
+      "inactive_observations": [],
+      "inactive_actions": [],
+      "set_point_hold_time_steps": 4,
+      "heating_device": {
+        "type": "citylearn.energy_model.HeatPump",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.3
+        },
+        "attributes": {
+          "nominal_power": 44.899313354492186,
+          "efficiency": 0.23301898861685594,
+          "target_cooling_temperature": 8.0,
+          "target_heating_temperature": 45.234606506755206
+        }
+      },
+      "dhw_device": {
+        "type": "citylearn.energy_model.ElectricHeater",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.1
+        },
+        "attributes": {
+          "nominal_power": 17.801967811584475,
+          "efficiency": 0.9118965679978843
+        }
+      },
+      "dynamics": {
+        "cooling": {
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
+          "attributes": {
+            "input_size": 12,
+            "hidden_size": 24,
+            "num_layers": 3,
+            "dropout": 0.4,
+            "lookback": 12,
+            "filename": "245723.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -32.53,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -18.948042
+            ],
+            "input_normalization_maximum": [
+              1063.59,
+              409.12,
+              19.16,
+              1.0,
+              37.463642,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              23.154581
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "occupant_count",
+              "cooling_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        },
+        "heating": {
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
+          "attributes": {
+            "input_size": 12,
+            "hidden_size": 24,
+            "num_layers": 3,
+            "dropout": 0.4,
+            "lookback": 12,
+            "filename": "245723.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -32.53,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -18.948042
+            ],
+            "input_normalization_maximum": [
+              1063.59,
+              409.12,
+              19.16,
+              1.0,
+              37.463642,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              23.154581
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "occupant_count",
+              "heating_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        }
+      },
+      "occupant": {
+        "type": "src.occ_citylearn.LogisticRegressionOccupant",
+        "parameters_filename": "245723_occupant_parameters.csv",
+        "attributes": {
+          "setpoint_increase_model_filename": "245723_setpoint_increase.pkl",
+          "setpoint_decrease_model_filename": "245723_setpoint_decrease.pkl",
+          "delta_output_map": {
+            "0": 0.5,
+            "1": 1.5
+          }
+        }
+      }
+    },
+    "525859": {
+      "type": "src.occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
+      "include": true,
+      "energy_simulation": "525859.csv",
+      "weather": "weather.csv",
+      "carbon_intensity": null,
+      "pricing": "pricing.csv",
+      "inactive_observations": [],
+      "inactive_actions": [],
+      "set_point_hold_time_steps": 4,
+      "heating_device": {
+        "type": "citylearn.energy_model.HeatPump",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.3
+        },
+        "attributes": {
+          "nominal_power": 12.23021650314331,
+          "efficiency": 0.2929289314413295,
+          "target_cooling_temperature": 8.0,
+          "target_heating_temperature": 47.86447503066443
+        }
+      },
+      "dhw_device": {
+        "type": "citylearn.energy_model.ElectricHeater",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.1
+        },
+        "attributes": {
+          "nominal_power": 24.19848098754883,
+          "efficiency": 0.913648522565994
+        }
+      },
+      "dynamics": {
+        "cooling": {
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
+          "attributes": {
+            "input_size": 12,
+            "hidden_size": 32,
+            "num_layers": 2,
+            "dropout": 0.4,
+            "lookback": 12,
+            "filename": "525859.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -32.53,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -9.414004
+            ],
+            "input_normalization_maximum": [
+              1063.59,
+              409.12,
+              19.16,
+              3.0,
+              12.511335,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              22.4186
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "occupant_count",
+              "cooling_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        },
+        "heating": {
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
+          "attributes": {
+            "input_size": 12,
+            "hidden_size": 32,
+            "num_layers": 2,
+            "dropout": 0.4,
+            "lookback": 12,
+            "filename": "525859.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -32.53,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -9.414004
+            ],
+            "input_normalization_maximum": [
+              1063.59,
+              409.12,
+              19.16,
+              3.0,
+              12.511335,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              22.4186
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "occupant_count",
+              "heating_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        }
+      },
+      "occupant": {
+        "type": "src.occ_citylearn.LogisticRegressionOccupant",
+        "parameters_filename": "525859_occupant_parameters.csv",
+        "attributes": {
+          "setpoint_increase_model_filename": "525859_setpoint_increase.pkl",
+          "setpoint_decrease_model_filename": "525859_setpoint_decrease.pkl",
+          "delta_output_map": {
+            "0": 0.5,
+            "1": 1.5
+          }
+        }
+      }
+    },
+    "376570": {
+      "type": "src.occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
+      "include": true,
+      "energy_simulation": "376570.csv",
+      "weather": "weather.csv",
+      "carbon_intensity": null,
+      "pricing": "pricing.csv",
+      "inactive_observations": [],
+      "inactive_actions": [],
+      "set_point_hold_time_steps": 4,
+      "heating_device": {
+        "type": "citylearn.energy_model.HeatPump",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.3
+        },
+        "attributes": {
+          "nominal_power": 36.57485809326172,
+          "efficiency": 0.20243475841877184,
+          "target_cooling_temperature": 8.0,
+          "target_heating_temperature": 45.912938462453674
+        }
+      },
+      "dhw_device": {
+        "type": "citylearn.energy_model.ElectricHeater",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.1
+        },
+        "attributes": {
+          "nominal_power": 17.515301418304446,
+          "efficiency": 0.8670539022952269
+        }
+      },
+      "dynamics": {
+        "cooling": {
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
+          "attributes": {
+            "input_size": 12,
+            "hidden_size": 56,
+            "num_layers": 2,
+            "dropout": 0.0,
+            "lookback": 12,
+            "filename": "376570.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -32.53,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -16.17939
+            ],
+            "input_normalization_maximum": [
+              1063.59,
+              409.12,
+              19.16,
+              2.0,
+              26.338991,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              23.92742
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "occupant_count",
+              "cooling_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        },
+        "heating": {
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
+          "attributes": {
+            "input_size": 12,
+            "hidden_size": 56,
+            "num_layers": 2,
+            "dropout": 0.0,
+            "lookback": 12,
+            "filename": "376570.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -32.53,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -16.17939
+            ],
+            "input_normalization_maximum": [
+              1063.59,
+              409.12,
+              19.16,
+              2.0,
+              26.338991,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              23.92742
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "occupant_count",
+              "heating_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        }
+      },
+      "occupant": {
+        "type": "src.occ_citylearn.LogisticRegressionOccupant",
+        "parameters_filename": "376570_occupant_parameters.csv",
+        "attributes": {
+          "setpoint_increase_model_filename": "376570_setpoint_increase.pkl",
+          "setpoint_decrease_model_filename": "376570_setpoint_decrease.pkl",
+          "delta_output_map": {
+            "0": 0.5,
+            "1": 1.5
+          }
+        }
+      }
+    },
+    "373117": {
+      "type": "src.occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
+      "include": true,
+      "energy_simulation": "373117.csv",
+      "weather": "weather.csv",
+      "carbon_intensity": null,
+      "pricing": "pricing.csv",
+      "inactive_observations": [],
+      "inactive_actions": [],
+      "set_point_hold_time_steps": 4,
+      "heating_device": {
+        "type": "citylearn.energy_model.HeatPump",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.3
+        },
+        "attributes": {
+          "nominal_power": 38.6791259765625,
+          "efficiency": 0.22002610833827646,
+          "target_cooling_temperature": 8.0,
+          "target_heating_temperature": 46.86106936982037
+        }
+      },
+      "dhw_device": {
+        "type": "citylearn.energy_model.ElectricHeater",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.1
+        },
+        "attributes": {
+          "nominal_power": 37.04339294433594,
+          "efficiency": 0.8711853483980965
+        }
+      },
+      "dynamics": {
+        "cooling": {
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
+          "attributes": {
+            "input_size": 12,
+            "hidden_size": 24,
+            "num_layers": 3,
+            "dropout": 0.5,
+            "lookback": 12,
+            "filename": "373117.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -32.53,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -14.145227
+            ],
+            "input_normalization_maximum": [
+              1063.59,
+              409.12,
+              19.16,
+              1.0,
+              30.002197,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              24.220861
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "occupant_count",
+              "cooling_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        },
+        "heating": {
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
+          "attributes": {
+            "input_size": 12,
+            "hidden_size": 24,
+            "num_layers": 3,
+            "dropout": 0.5,
+            "lookback": 12,
+            "filename": "373117.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -32.53,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -14.145227
+            ],
+            "input_normalization_maximum": [
+              1063.59,
+              409.12,
+              19.16,
+              1.0,
+              30.002197,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              24.220861
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "occupant_count",
+              "heating_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        }
+      },
+      "occupant": {
+        "type": "src.occ_citylearn.LogisticRegressionOccupant",
+        "parameters_filename": "373117_occupant_parameters.csv",
+        "attributes": {
+          "setpoint_increase_model_filename": "373117_setpoint_increase.pkl",
+          "setpoint_decrease_model_filename": "373117_setpoint_decrease.pkl",
+          "delta_output_map": {
+            "0": 0.5,
+            "1": 1.5
+          }
+        }
+      }
+    },
+    "411001": {
+      "type": "src.occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
+      "include": true,
+      "energy_simulation": "411001.csv",
+      "weather": "weather.csv",
+      "carbon_intensity": null,
+      "pricing": "pricing.csv",
+      "inactive_observations": [],
+      "inactive_actions": [],
+      "set_point_hold_time_steps": 4,
+      "heating_device": {
+        "type": "citylearn.energy_model.HeatPump",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.3
+        },
+        "attributes": {
+          "nominal_power": 18.670065021514894,
+          "efficiency": 0.2287433760796289,
+          "target_cooling_temperature": 8.0,
+          "target_heating_temperature": 45.92134599158673
+        }
+      },
+      "dhw_device": {
+        "type": "citylearn.energy_model.ElectricHeater",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.1
+        },
+        "attributes": {
+          "nominal_power": 6.4629925251007085,
+          "efficiency": 0.9193209872617785
+        }
+      },
+      "dynamics": {
+        "cooling": {
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
+          "attributes": {
+            "input_size": 12,
+            "hidden_size": 56,
+            "num_layers": 3,
+            "dropout": 0.0,
+            "lookback": 12,
+            "filename": "411001.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -32.53,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -15.332755
+            ],
+            "input_normalization_maximum": [
+              1063.59,
+              409.12,
+              19.16,
+              1.0,
+              15.181135,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              23.611042
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "occupant_count",
+              "cooling_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        },
+        "heating": {
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
+          "attributes": {
+            "input_size": 12,
+            "hidden_size": 56,
+            "num_layers": 3,
+            "dropout": 0.0,
+            "lookback": 12,
+            "filename": "411001.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -32.53,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -15.332755
+            ],
+            "input_normalization_maximum": [
+              1063.59,
+              409.12,
+              19.16,
+              1.0,
+              15.181135,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              23.611042
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "occupant_count",
+              "heating_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        }
+      },
+      "occupant": {
+        "type": "src.occ_citylearn.LogisticRegressionOccupant",
+        "parameters_filename": "411001_occupant_parameters.csv",
+        "attributes": {
+          "setpoint_increase_model_filename": "411001_setpoint_increase.pkl",
+          "setpoint_decrease_model_filename": "411001_setpoint_decrease.pkl",
+          "delta_output_map": {
+            "0": 0.5,
+            "1": 1.5
+          }
+        }
+      }
+    },
+    "387179": {
+      "type": "src.occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
+      "include": true,
+      "energy_simulation": "387179.csv",
+      "weather": "weather.csv",
+      "carbon_intensity": null,
+      "pricing": "pricing.csv",
+      "inactive_observations": [],
+      "inactive_actions": [],
+      "set_point_hold_time_steps": 4,
+      "heating_device": {
+        "type": "citylearn.energy_model.HeatPump",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.3
+        },
+        "attributes": {
+          "nominal_power": 15.279061508178712,
+          "efficiency": 0.2031107890469703,
+          "target_cooling_temperature": 8.0,
+          "target_heating_temperature": 45.86583865933562
+        }
+      },
+      "dhw_device": {
+        "type": "citylearn.energy_model.ElectricHeater",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.1
+        },
+        "attributes": {
+          "nominal_power": 22.73022327423096,
+          "efficiency": 0.8959555854295844
+        }
+      },
+      "dynamics": {
+        "cooling": {
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
+          "attributes": {
+            "input_size": 12,
+            "hidden_size": 64,
+            "num_layers": 3,
+            "dropout": 0.2,
+            "lookback": 12,
+            "filename": "387179.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -32.53,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -12.111035
+            ],
+            "input_normalization_maximum": [
+              1063.59,
+              409.12,
+              19.16,
+              1.0,
+              11.044797,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              23.453857
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "occupant_count",
+              "cooling_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        },
+        "heating": {
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
+          "attributes": {
+            "input_size": 12,
+            "hidden_size": 64,
+            "num_layers": 3,
+            "dropout": 0.2,
+            "lookback": 12,
+            "filename": "387179.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -32.53,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -12.111035
+            ],
+            "input_normalization_maximum": [
+              1063.59,
+              409.12,
+              19.16,
+              1.0,
+              11.044797,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              23.453857
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "occupant_count",
+              "heating_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        }
+      },
+      "occupant": {
+        "type": "src.occ_citylearn.LogisticRegressionOccupant",
+        "parameters_filename": "387179_occupant_parameters.csv",
+        "attributes": {
+          "setpoint_increase_model_filename": "387179_setpoint_increase.pkl",
+          "setpoint_decrease_model_filename": "387179_setpoint_decrease.pkl",
+          "delta_output_map": {
+            "0": 0.5,
+            "1": 1.5
+          }
+        }
+      }
+    },
+    "425540": {
+      "type": "src.occ_citylearn.LogisticRegressionOccupantInteractionBuilding",
+      "include": true,
+      "energy_simulation": "425540.csv",
+      "weather": "weather.csv",
+      "carbon_intensity": null,
+      "pricing": "pricing.csv",
+      "inactive_observations": [],
+      "inactive_actions": [],
+      "set_point_hold_time_steps": 4,
+      "heating_device": {
+        "type": "citylearn.energy_model.HeatPump",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.3
+        },
+        "attributes": {
+          "nominal_power": 37.44460849761963,
+          "efficiency": 0.2509701674076153,
+          "target_cooling_temperature": 8.0,
+          "target_heating_temperature": 47.83344922263034
+        }
+      },
+      "dhw_device": {
+        "type": "citylearn.energy_model.ElectricHeater",
+        "autosize": false,
+        "autosize_attributes": {
+          "safety_factor": 1.1
+        },
+        "attributes": {
+          "nominal_power": 35.12913093566895,
+          "efficiency": 0.900721046398385
+        }
+      },
+      "dynamics": {
+        "cooling": {
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
+          "attributes": {
+            "input_size": 12,
+            "hidden_size": 64,
+            "num_layers": 3,
+            "dropout": 0.2,
+            "lookback": 12,
+            "filename": "425540.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -32.53,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -13.422444
+            ],
+            "input_normalization_maximum": [
+              1063.59,
+              409.12,
+              19.16,
+              2.0,
+              32.827988,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              24.175133
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "occupant_count",
+              "cooling_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        },
+        "heating": {
+          "type": "src.occ_citylearn.OccupantInteractionLSTMDynamics",
+          "attributes": {
+            "input_size": 12,
+            "hidden_size": 64,
+            "num_layers": 3,
+            "dropout": 0.2,
+            "lookback": 12,
+            "filename": "425540.pth",
+            "input_normalization_minimum": [
+              0.0,
+              0.0,
+              -32.53,
+              0.0,
+              0.0,
+              0.5,
+              6.123234000000001e-17,
+              -1.0,
+              -1.0,
+              -0.9749279,
+              -0.90096885,
+              -13.422444
+            ],
+            "input_normalization_maximum": [
+              1063.59,
+              409.12,
+              19.16,
+              2.0,
+              32.827988,
+              1.0,
+              0.8660254,
+              1.0,
+              1.0,
+              0.9749279,
+              1.0,
+              24.175133
+            ],
+            "input_observation_names": [
+              "direct_solar_irradiance",
+              "diffuse_solar_irradiance",
+              "outdoor_dry_bulb_temperature",
+              "occupant_count",
+              "heating_demand",
+              "month_sin",
+              "month_cos",
+              "hour_sin",
+              "hour_cos",
+              "day_type_sin",
+              "day_type_cos",
+              "indoor_dry_bulb_temperature"
+            ]
+          }
+        }
+      },
+      "occupant": {
+        "type": "src.occ_citylearn.LogisticRegressionOccupant",
+        "parameters_filename": "425540_occupant_parameters.csv",
+        "attributes": {
+          "setpoint_increase_model_filename": "425540_setpoint_increase.pkl",
+          "setpoint_decrease_model_filename": "425540_setpoint_decrease.pkl",
           "delta_output_map": {
             "0": 0.5,
             "1": 1.5
