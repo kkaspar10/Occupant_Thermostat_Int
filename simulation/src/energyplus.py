@@ -74,6 +74,9 @@ def build_schema():
             else:
                 schema[t][k]['active'] = False
 
+    key = 'occupant_interaction_indoor_dry_bulb_temperature_set_point_delta'
+    schema['observations'][key] = {'active': True if key in  settings[f'active_observations'] else False, 'shared_in_central_agent': False}
+
     # set reward function
     schema['reward_function'] = settings['reward_function']
 
@@ -157,6 +160,7 @@ def build_schema():
                     'input_size': dynamics_normalization_minimum.shape[1],
                     'hidden_size': lstm_config[bldg_name]['n_hidden'],
                     'num_layers': lstm_config[bldg_name]['n_layers'],
+                    'dropout': lstm_config[bldg_name]['dropout'],
                     'lookback': settings['dynamics']['attributes']['lookback'],
                     'filename': f'{dynamics_bldg_name}.pth',
                     'input_normalization_minimum': dynamics_normalization_minimum.loc[int(dynamics_bldg_name)].values.tolist(),

@@ -5,10 +5,12 @@ from typing import Iterable, List, Mapping, Tuple, Union
 from citylearn.base import Environment, EpisodeTracker
 from citylearn.building import Building, LSTMDynamicsBuilding
 from citylearn.citylearn import CityLearnEnv
+from citylearn.dynamics import LSTMDynamics
 from citylearn.data import EnergySimulation, TimeSeriesData
 from citylearn.reward_function import RewardFunction
 import numpy as np
 import pandas as pd
+import torch.nn
 from src.utilities import FileHandler
 
 class OccupantInteractionBuildingEnergySimulation(EnergySimulation):
@@ -123,6 +125,33 @@ class LogisticRegressionOccupant(Occupant):
             'decrease_setpoint': np.zeros(self.episode_tracker.episode_time_steps, dtype='float32'),
             'random': np.zeros(self.episode_tracker.episode_time_steps, dtype='float32'),
         }
+
+class OccupantInteractionLSTMDynamics(LSTMDynamics):
+    def __init__(self, filepath: Union[Path, str], input_observation_names: List[str], input_normalization_minimum: List[float], input_normalization_maximum: List[float], input_size: int, hidden_size: int, num_layers: int, lookback: int, dropout: float) -> None:
+        super().__init__(filepath, input_observation_names, input_normalization_minimum, input_normalization_maximum, input_size, hidden_size, num_layers, lookback)
+        self.dropout = torch.nn.Dropout(dropout)
+
+    def forward(self, x, h):
+        lstm_out, h = self.l_lstm(x, h)
+        lstm_out = self.dropout(lstm_out)
+        out = lstm_out[:, -1, :]
+        out_linear_transf = self.l_linear(out)
+        return out_linear_transf, h
+    
+    def reset(self):
+        state_dict = None
+        state_dict_key = 'model_state_dict'
+
+        try:
+            state_dict = torch.load(self.filepath)
+
+        except RuntimeError:
+            state_dict = torch.load(self.filepath, map_location=torch.device('cpu'))
+        
+        state_dict = state_dict[state_dict_key] if state_dict_key in state_dict.keys() else state_dict
+        self.load_state_dict(state_dict)
+        self._hidden_state = self.init_hidden(1)
+        self._model_input = [[None]*(self.lookback + 1) for _ in self.input_observation_names]
 
 class OccupantInteractionBuilding(LSTMDynamicsBuilding):
     def __init__(self, *args, occupant: Occupant = None, ignore_occupant: bool = None, **kwargs):

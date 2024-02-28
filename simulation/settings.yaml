@@ -26,12 +26,12 @@ max_workers: 5
 building_selection:
     count: 20
     setpoint_ids:
+    - Cluster_0_SPs # tolerant
     - Cluster_0_SPs
     - Cluster_0_SPs
     - Cluster_0_SPs
     - Cluster_0_SPs
-    - Cluster_0_SPs
-    - Cluster_1_SPs
+    - Cluster_1_SPs # average
     - Cluster_1_SPs
     - Cluster_1_SPs
     - Cluster_1_SPs
@@ -84,9 +84,10 @@ active_observations:
 - outdoor_dry_bulb_temperature_predicted_6h
 - indoor_dry_bulb_temperature
 - indoor_dry_bulb_temperature_set_point
-- occupant_interaction_indoor_dry_bulb_temperature_set_point_delta
+# - occupant_interaction_indoor_dry_bulb_temperature_set_point_delta
 - indoor_dry_bulb_temperature_delta
 - net_electricity_consumption
+- electricity_pricing
 - electricity_pricing_predicted_6h
 - electricity_pricing_predicted_12h
 - electricity_pricing_predicted_24h
@@ -110,7 +111,7 @@ dhw_device_type: citylearn.energy_model.ElectricHeater
 dhw_device_autosize_safety_factor: 1.1
 set_point_hold_time_steps: 4
 dynamics:
-    type: citylearn.dynamics.LSTMDynamics
+    type: src.occ_citylearn.OccupantInteractionLSTMDynamics
     default_lstm_model: 508889
     attributes:
         hidden_size: 16
