@@ -1,62 +1,142 @@
 {
-  "199613": {
-    "n_hidden": 64,
+  "4421": {
+    "n_hidden": 48,
     "n_layers": 2,
     "dropout": 0.0,
-    "learning_rate": 0.003910882
+    "learning_rate": 0.0042843601959429,
+    "weight_decay": 0.0008656584842424
   },
   "20199": {
     "n_hidden": 32,
-    "n_layers": 2,
-    "dropout": 0.3,
-    "learning_rate": 0.006788326
-  },
-  "247942": {
-    "n_hidden": 40,
-    "n_layers": 3,
-    "dropout": 0.5,
-    "learning_rate": 0.009353991
-  },
-  "4421": {
-    "n_hidden": 8,
     "n_layers": 1,
-    "dropout": 0.1,
-    "learning_rate": 0.004936191
-  },
-  "481052": {
-    "n_hidden": 64,
-    "n_layers": 2,
-    "dropout": 0.1,
-    "learning_rate": 0.007826405
-  },
-  "498771": {
-    "n_hidden": 16,
-    "n_layers": 3,
-    "dropout": 0.5,
-    "learning_rate": 0.006835681
-  },
-  "508889": {
-    "n_hidden": 56,
-    "n_layers": 3,
-    "dropout": 0.4,
-    "learning_rate": 0.00632655
-  },
-  "546814": {
-    "n_hidden": 56,
-    "n_layers": 2,
-    "dropout": 0.4,
-    "learning_rate": 0.00717106
+    "dropout": 0.0,
+    "learning_rate": 0.003585438065788,
+    "weight_decay": 1.6984599712147345e-05
   },
   "75252": {
-    "n_hidden": 32,
+    "n_hidden": 16,
     "n_layers": 3,
-    "dropout": 0.5,
-    "learning_rate": 0.009211993
+    "dropout": 0.0,
+    "learning_rate": 0.0031877788363107,
+    "weight_decay": 0.0013694021305329
   },
   "79194": {
-    "n_hidden": 64,
-    "n_layers": 1,
+    "n_hidden": 40,
+    "n_layers": 2,
     "dropout": 0.1,
-    "learning_rate": 0.008657918
+    "learning_rate": 0.0063715843846904,
+    "weight_decay": 0.0008976741797435
+  },
+  "199613": {
+    "n_hidden": 64,
+    "n_layers": 3,
+    "dropout": 0.4,
+    "learning_rate": 0.0030423694881253,
+    "weight_decay": 0.0006803135144951
+  },
+  "245723": {
+    "n_hidden": 24,
+    "n_layers": 3,
+    "dropout": 0.4,
+    "learning_rate": 0.0060857740131608,
+    "weight_decay": 3.488463075551721e-06
+  },
+  "247942": {
+    "n_hidden": 24,
+    "n_layers": 2,
+    "dropout": 0.3,
+    "learning_rate": 0.0050687154519431,
+    "weight_decay": 3.686169796634502e-05
+  },
+  "373117": {
+    "n_hidden": 24,
+    "n_layers": 3,
+    "dropout": 0.5,
+    "learning_rate": 0.0011720336206945,
+    "weight_decay": 2.3747264165474497e-06
+  },
+  "376570": {
+    "n_hidden": 56,
+    "n_layers": 2,
+    "dropout": 0.0,
+    "learning_rate": 0.004720237937913,
+    "weight_decay": 0.0090060277062899
+  },
+  "387179": {
+    "n_hidden": 64,
+    "n_layers": 3,
+    "dropout": 0.2,
+    "learning_rate": 0.0076747924442782,
+    "weight_decay": 0.0682134732381526
+  },
+  "391597": {
+    "n_hidden": 40,
+    "n_layers": 3,
+    "dropout": 0.2,
+    "learning_rate": 0.0043801521536961,
+    "weight_decay": 1.6143449800581732e-06
+  },
+  "411001": {
+    "n_hidden": 56,
+    "n_layers": 3,
+    "dropout": 0.0,
+    "learning_rate": 0.0030544546700184,
+    "weight_decay": 9.759966962373602e-06
+  },
+  "425540": {
+    "n_hidden": 64,
+    "n_layers": 3,
+    "dropout": 0.2,
+    "learning_rate": 0.0072940212451756,
+    "weight_decay": 0.0012255808126243
+  },
+  "430942": {
+    "n_hidden": 56,
+    "n_layers": 3,
+    "dropout": 0.3,
+    "learning_rate": 0.0033804903625082,
+    "weight_decay": 0.0079966619166158
+  },
+  "450491": {
+    "n_hidden": 24,
+    "n_layers": 3,
+    "dropout": 0.0,
+    "learning_rate": 0.0052476972007839,
+    "weight_decay": 0.0002334519458562
+  },
+  "481052": {
+    "n_hidden": 32,
+    "n_layers": 3,
+    "dropout": 0.4,
+    "learning_rate": 0.0068015461405662,
+    "weight_decay": 0.0001786939676807
+  },
+  "498771": {
+    "n_hidden": 56,
+    "n_layers": 3,
+    "dropout": 0.4,
+    "learning_rate": 0.002716934825287,
+    "weight_decay": 2.8137605149131864e-06
+  },
+  "508889": {
+    "n_hidden": 16,
+    "n_layers": 2,
+    "dropout": 0.1,
+    "learning_rate": 0.0076000197386955,
+    "weight_decay": 0.0006370746371757
+  },
+  "525859": {
+    "n_hidden": 32,
+    "n_layers": 2,
+    "dropout": 0.4,
+    "learning_rate": 0.0064128620176105,
+    "weight_decay": 0.0011755385859893
+  },
+  "546814": {
+    "n_hidden": 16,
+    "n_layers": 2,
+    "dropout": 0.1,
+    "learning_rate": 0.0048748896015727,
+    "weight_decay": 5.210181289913368e-05
   }
 }
