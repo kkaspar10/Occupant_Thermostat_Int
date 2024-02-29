@@ -118,10 +118,10 @@ if __name__ == '__main__':
 
     # Multiple deployment
     # ------------------------------- ENTER IN MODEL PIPELINE -----------------------------------------------------#
-    # for key in dict_building:
+    for key in dict_building:
         config = AttributeDict(config)
 
-        key = 75252
+        # key = 75252
 
         df = dict_building[key]
 
@@ -325,57 +325,61 @@ if __name__ == '__main__':
             wandb.watch(lstm, criterion, log="all", log_freq=10)
 
         # ---------------------------------------------------------- TRAINING ------------------------------------------------------------------- #
-        LOSS_TRAIN = []
-        LOSS_VAL = []
-        for epoch in range(config.epochs):
-            loss_train, loss_val, \
-                ylab_train, ypred_train, \
-                ylab_val, ypred_val = training(model=lstm, train_loader=train_loader, val_loader=validation_loader,
-                                               optimizer=optimizer, criterion=criterion, config=config,
-                                               maxT=maxT, minT=minT)
+        if config.load_model is False:
+            LOSS_TRAIN = []
+            LOSS_VAL = []
+            for epoch in range(config.epochs):
+                loss_train, loss_val, \
+                    ylab_train, ypred_train, \
+                    ylab_val, ypred_val = training(model=lstm, train_loader=train_loader, val_loader=validation_loader,
+                                                   optimizer=optimizer, criterion=criterion, config=config,
+                                                   maxT=maxT, minT=minT)
 
-            LOSS_TRAIN.append(loss_train)
-            LOSS_VAL.append(loss_val)
+                LOSS_TRAIN.append(loss_train)
+                LOSS_VAL.append(loss_val)
+
+                if config.wandb_on:
+                    train_log(train_loss=LOSS_TRAIN, val_loss=LOSS_VAL, epoch=epoch)
+                else:
+                    if epoch % config.log_interval == 0:
+                        print("Epoch: %d, Train loss: %1.5f, Val loss: %1.5f" % (
+                        epoch, LOSS_TRAIN[epoch], LOSS_VAL[epoch]))
+
+            # METRICS
+            MAPE_train = mean_absolute_percentage_error(ylab_train, ypred_train)
+            RMSE_train = mean_squared_error(ylab_train, ypred_train, squared=False)
+
+            MAPE_val = mean_absolute_percentage_error(ylab_val, ypred_val)
+            RMSE_val = mean_squared_error(ylab_val, ypred_val, squared=False)
 
             if config.wandb_on:
-                train_log(train_loss=LOSS_TRAIN, val_loss=LOSS_VAL, epoch=epoch)
-            else:
-                if epoch % config.log_interval == 0:
-                    print("Epoch: %d, Train loss: %1.5f, Val loss: %1.5f" % (epoch, LOSS_TRAIN[epoch], LOSS_VAL[epoch]))
-
-        # METRICS
-        MAPE_train = mean_absolute_percentage_error(ylab_train, ypred_train)
-        RMSE_train = mean_squared_error(ylab_train, ypred_train, squared=False)
-
-        MAPE_val = mean_absolute_percentage_error(ylab_val, ypred_val)
-        RMSE_val = mean_squared_error(ylab_val, ypred_val, squared=False)
-
-        if config.wandb_on:
-            log_metrics(MAPE=MAPE_train, RMSE=RMSE_train, set='Train')
-            log_metrics(MAPE=MAPE_val, RMSE=RMSE_val, set='Validation')
+                log_metrics(MAPE=MAPE_train, RMSE=RMSE_train, set='Train')
+                log_metrics(MAPE=MAPE_val, RMSE=RMSE_val, set='Validation')
 
         # --------------------------------------------------------- SAVE MODEL ----------------------------------------------------------------- #
-        run_name = df['resstock_county_id'].unique()[0] + '_' + str(df['resstock_building_id'].unique()[0])
+            run_name = df['resstock_county_id'].unique()[0] + '_' + str(df['resstock_building_id'].unique()[0])
 
-        print('Il nome del file è', run_name)
+            print('Il nome del file è', run_name)
 
-        if config.save_local:
-            checkpoint = {
-                'model_state_dict': lstm.state_dict(),
-                'optimizer_state_dict': optimizer.state_dict(),
-                'epoch': epoch,
-                'train_loss': LOSS_TRAIN[-1],
-                'val_loss': LOSS_VAL[-1],
-            }
-            save_folder = 'simulation\\data\\lstm_pth'
+            if config.save_local:
+                checkpoint = {
+                    'model_state_dict': lstm.state_dict(),
+                    'optimizer_state_dict': optimizer.state_dict(),
+                    'epoch': epoch,
+                    'train_loss': LOSS_TRAIN[-1],
+                    'val_loss': LOSS_VAL[-1],
+                }
+                save_folder = 'simulation\\data\\lstm_pth'
 
-            save_path = save_folder + '\\' + 'model_pth_' + run_name + '.pth'
+                save_path = save_folder + '\\' + 'model_pth_' + run_name + '.pth'
 
-            torch.save(checkpoint, save_path)
-            print('File saved correctly!')
+                torch.save(checkpoint, save_path)
+                print('File saved correctly!')
 
         # ----------------------------------------------------------- LOAD MODEL ------------------------------------------------------------ #
         if config.load_model:
+            save_folder = 'simulation\\data\\lstm_pth'
+
             model_path = save_folder + '\\' + 'model_pth_' + 'VT, Chittenden County_75252.pth'
         else:
             model_path = None
