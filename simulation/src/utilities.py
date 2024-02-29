@@ -15,6 +15,7 @@ class FileHandler:
     SETTINGS_FILEPATH = os.path.join(SIMULATION_ROOT_DIRECTORY, 'settings.yaml')
     DATA_DIRECTORY = os.path.join(SIMULATION_ROOT_DIRECTORY, 'data')
     FIGURES_DIRECTORY = os.path.join(SIMULATION_ROOT_DIRECTORY, 'figures')
+    WORKFLOW_DIRECTORY = os.path.join(SIMULATION_ROOT_DIRECTORY, 'workflow')
     JOURNAL_PAPER_FIGURES_DIRECTORY = os.path.join(FIGURES_DIRECTORY, 'journal_paper')
     DEFAULT_OUTPUT_DIRECTORY = os.path.join(DATA_DIRECTORY, 'citylearn_simulation')
     OSM_DIRECTORY = os.path.join(DATA_DIRECTORY, 'osm')
