@@ -190,6 +190,7 @@ class CityLearnSimulation:
                 'occupant_random_probability': b.occupant.probabilities['random'],
                 'occupant_interaction_indoor_dry_bulb_temperature_set_point_delta': b.energy_simulation.occupant_interaction_indoor_dry_bulb_temperature_set_point_delta,
                 'net_electricity_consumption_cost': b.net_electricity_consumption_cost,
+                'heating_device_cop': b.heating_device.get_cop(b.weather.outdoor_dry_bulb_temperature, heating=True)
             })
 
             data['time_step'] = data.index
