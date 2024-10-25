@@ -56,14 +56,16 @@ The results from the previous simulation should be then found under `simulation/
 Refer to the [docs](https://intelligent-environments-lab.github.io/CityLearn/) for further documentation of the CityLearn API.
 
 ## Citation
+```bash
 @article{kaspar_effects_2024,
-title = {Effects of occupant thermostat preferences and override behavior on residential demand response in CityLearn},
-journal = {Energy and Buildings},
-volume = {324},
-pages = {114830},
-year = {2024},
-issn = {0378-7788},
-doi = {https://doi.org/10.1016/j.enbuild.2024.114830},
-url = {https://www.sciencedirect.com/science/article/pii/S0378778824009460},
-author = {Kathryn Kaspar and Kingsley Nweye and Giacomo Buscemi and Alfonso Capozzoli and Zoltan Nagy and Giuseppe Pinto and Ursula Eicker and Mohamed M. Ouf},
+  title = {Effects of occupant thermostat preferences and override behavior on residential demand response in CityLearn},
+  journal = {Energy and Buildings},
+  volume = {324},
+  pages = {114830},
+  year = {2024},
+  issn = {0378-7788},
+  doi = {https://doi.org/10.1016/j.enbuild.2024.114830},
+  url = {https://www.sciencedirect.com/science/article/pii/S0378778824009460},
+  author = {Kathryn Kaspar and Kingsley Nweye and Giacomo Buscemi and Alfonso Capozzoli and Zoltan Nagy and Giuseppe Pinto and Ursula Eicker and Mohamed M. Ouf},
 }
+```
